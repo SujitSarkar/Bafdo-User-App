@@ -1,0 +1,60 @@
+name: bafdo
+description: A new Flutter project.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  flutter_image_slideshow:
+  dotted_border:
+  flutter_staggered_grid_view:
+  flutter_slidable:
+  device_preview:
+  motion_tab_bar_v2:
+  carousel_pro_nullsafety:
+  carousel_slider:
+  multi_select_flutter:
+  intl_phone_number_input:
+  dotted_line:
+  flutter_spinkit:
+  fluttertoast:
+  ##backend plugin
+  provider:
+  shared_preferences:
+  http:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+# The following section is specific to Flutter.
+flutter:
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/app_icon/app_bar_icon/
+    - assets/app_icon/body_icon/
+    - assets/app_icon/bottom_nav_icon/
+    - assets/app_icon/text_field_icon/
+
+  # example:
+  fonts:
+    - family: mulish
+      fonts:
+        - asset: assets/font/Mulish_VariableFont_wght.ttf
+    - family: poppins
+      fonts:
+        - asset: assets/font/Poppins-Regular.ttf
+        - asset: assets/font/Poppins-SemiBold.ttf
+    - family: taviraj
+      fonts:
+        - asset: assets/font/Taviraj-Regular.ttf
+        - asset: assets/font/Taviraj-SemiBold.ttf
+        - asset: assets/font/Taviraj-Bold.ttf
