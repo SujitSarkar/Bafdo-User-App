@@ -8,6 +8,7 @@ class PaymentNav extends StatefulWidget {
 }
 
 class _PaymentNavState extends State<PaymentNav> {
+  double _animatedHeight = 0.0;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -83,58 +84,20 @@ class _PaymentNavState extends State<PaymentNav> {
             return  Card(
               child:  Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
 
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start
-                      ,children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "Next Payout Due",
-                          style: TextStyle(
-                              fontFamily: 'taviraj',
-                              color: ColorsVariables.textColor,
-                              fontStyle: FontStyle.normal,
-                              fontSize: size.width * .04),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "Sun,Sep 13,Sun,Sep 19",
-                          style: TextStyle(
-                              fontFamily: 'taviraj',
-                              color: ColorsVariables.textColor,
-                              fontStyle: FontStyle.normal,
-                              fontSize: size.width * .04),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "Final Payout will vary based on Order Status",
-                          style: TextStyle(
-                              fontFamily: 'taviraj',
-                              color: ColorsVariables.textColor,
-                              fontStyle: FontStyle.normal,
-                              fontSize: size.width * .03),
-                        ),
-                      ),
-                    ],),
-
-                    Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(children:[
-                          Image.asset(
-                              'assets/app_icon/body_icon/tk.png'),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start
+                          ,children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.only(left: 8.0),
                             child: Text(
-                              "0",
+                              "Next Payout Due",
                               style: TextStyle(
                                   fontFamily: 'taviraj',
                                   color: ColorsVariables.textColor,
@@ -142,10 +105,343 @@ class _PaymentNavState extends State<PaymentNav> {
                                   fontSize: size.width * .04),
                             ),
                           ),
-                          Image.asset(
-                              'assets/app_icon/body_icon/next_icon_grey.png'),
-                        ])
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text(
+                              "Sun,Sep 13,Sun,Sep 19",
+                              style: TextStyle(
+                                  fontFamily: 'taviraj',
+                                  color: ColorsVariables.textColor,
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: size.width * .04),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text(
+                              "Final Payout will vary based on Order Status",
+                              style: TextStyle(
+                                  fontFamily: 'taviraj',
+                                  color: ColorsVariables.textColor,
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: size.width * .03),
+                            ),
+                          ),
+                        ],),
+
+                        Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: InkWell(
+                              onTap: (){
+
+                                setState(() {
+                                  _animatedHeight==0?
+                                  _animatedHeight = 180:_animatedHeight=0;
+                                });
+
+                              },
+                              child: Row(children:[
+                                Image.asset(
+                                    'assets/app_icon/body_icon/tk.png'),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "0",
+                                    style: TextStyle(
+                                        fontFamily: 'taviraj',
+                                        color: ColorsVariables.textColor,
+                                        fontStyle: FontStyle.normal,
+                                        fontSize: size.width * .04),
+                                  ),
+                                ),
+                                Image.asset(
+                                    'assets/app_icon/body_icon/next_icon_grey.png'),
+                              ]),
+                            )
+                        ),
+
+
+                      ],
                     ),
+                AnimatedContainer(
+                  height: _animatedHeight,
+                  width: size.width,
+                  decoration: BoxDecoration(
+                      color: Colors.purple.shade50,
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  duration: const Duration(milliseconds: 120),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5, right: 5, top: 5),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 5,left: 5
+                                    ),
+                                    child: new Text(
+                                      "Delivered Orders",
+                                      style: TextStyle(
+                                          fontFamily: 'taviraj',
+
+                                          color: ColorsVariables.textColor,
+                                          fontStyle: FontStyle.normal,
+                                          fontSize: size.width * .03),
+                                    ),
+                                  ),
+                              Row(children:[
+                                Image.asset(
+                                    'assets/app_icon/body_icon/tk.png'),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "0",
+                                    style: TextStyle(
+                                        fontFamily: 'taviraj',
+                                        color: ColorsVariables.textColor,
+                                        fontStyle: FontStyle.normal,
+                                        fontSize: size.width * .03),
+                                  ),
+                                ),
+                                Image.asset(
+                                    'assets/app_icon/body_icon/next_icon_grey.png'),
+                              ]),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 5,left: 5
+                                ),
+                                child: new Text(
+                                  "Lost Orders",
+                                  style: TextStyle(
+                                      fontFamily: 'taviraj',
+
+                                      color: ColorsVariables.textColor,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: size.width * .03),
+                                ),
+                              ),
+                              Row(children:[
+                                Image.asset(
+                                    'assets/app_icon/body_icon/tk.png'),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "0",
+                                    style: TextStyle(
+                                        fontFamily: 'taviraj',
+                                        color: ColorsVariables.textColor,
+                                        fontStyle: FontStyle.normal,
+                                        fontSize: size.width * .03),
+                                  ),
+                                ),
+                                Image.asset(
+                                    'assets/app_icon/body_icon/next_icon_grey.png'),
+                              ]),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 5,left: 5
+                                ),
+                                child: new Text(
+                                  "RTOs",
+                                  style: TextStyle(
+                                      fontFamily: 'taviraj',
+
+                                      color: ColorsVariables.textColor,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: size.width * .03),
+                                ),
+                              ),
+                              Row(children:[
+                                Image.asset(
+                                    'assets/app_icon/body_icon/tk.png'),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "0",
+                                    style: TextStyle(
+                                        fontFamily: 'taviraj',
+                                        color: ColorsVariables.textColor,
+                                        fontStyle: FontStyle.normal,
+                                        fontSize: size.width * .03),
+                                  ),
+                                ),
+                                Image.asset(
+                                    'assets/app_icon/body_icon/next_icon_grey.png'),
+                              ]),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 5,left: 5
+                                ),
+                                child: new Text(
+                                  "Cancelled Orders",
+                                  style: TextStyle(
+                                      fontFamily: 'taviraj',
+
+                                      color: ColorsVariables.textColor,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: size.width * .03),
+                                ),
+                              ),
+                              Row(children:[
+                                Image.asset(
+                                    'assets/app_icon/body_icon/tk.png'),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "0",
+                                    style: TextStyle(
+                                        fontFamily: 'taviraj',
+                                        color: ColorsVariables.textColor,
+                                        fontStyle: FontStyle.normal,
+                                        fontSize: size.width * .03),
+                                  ),
+                                ),
+                                Image.asset(
+                                    'assets/app_icon/body_icon/next_icon_grey.png'),
+                              ]),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 5,left: 5
+                                ),
+                                child: new Text(
+                                  "Returned Order",
+                                  style: TextStyle(
+                                      fontFamily: 'taviraj',
+
+                                      color: ColorsVariables.textColor,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: size.width * .03),
+                                ),
+                              ),
+                              Row(children:[
+                                Image.asset(
+                                    'assets/app_icon/body_icon/tk.png'),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "0",
+                                    style: TextStyle(
+                                        fontFamily: 'taviraj',
+                                        color: ColorsVariables.textColor,
+                                        fontStyle: FontStyle.normal,
+                                        fontSize: size.width * .03),
+                                  ),
+                                ),
+                                Image.asset(
+                                    'assets/app_icon/body_icon/next_icon_grey.png'),
+                              ]),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 5,left: 5
+                                ),
+                                child: new Text(
+                                  "Bonus",
+                                  style: TextStyle(
+                                      fontFamily: 'taviraj',
+
+                                      color: ColorsVariables.textColor,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: size.width * .03),
+                                ),
+                              ),
+                              Row(children:[
+                                Image.asset(
+                                    'assets/app_icon/body_icon/tk.png'),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "0",
+                                    style: TextStyle(
+                                        fontFamily: 'taviraj',
+                                        color: ColorsVariables.textColor,
+                                        fontStyle: FontStyle.normal,
+                                        fontSize: size.width * .03),
+                                  ),
+                                ),
+                                Image.asset(
+                                    'assets/app_icon/body_icon/next_icon_grey.png'),
+                              ]),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 5,left: 5
+                                ),
+                                child: new Text(
+                                  "Adjustment",
+                                  style: TextStyle(
+                                      fontFamily: 'taviraj',
+
+                                      color: ColorsVariables.textColor,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: size.width * .03),
+                                ),
+                              ),
+                              Row(children:[
+                                Image.asset(
+                                    'assets/app_icon/body_icon/tk.png'),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "0",
+                                    style: TextStyle(
+                                        fontFamily: 'taviraj',
+                                        color: ColorsVariables.textColor,
+                                        fontStyle: FontStyle.normal,
+                                        fontSize: size.width * .03),
+                                  ),
+                                ),
+                                Image.asset(
+                                    'assets/app_icon/body_icon/next_icon_grey.png'),
+                              ]),
+                            ],
+                          ),
+
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
 
 
                   ],

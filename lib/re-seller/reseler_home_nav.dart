@@ -1,7 +1,12 @@
 import 'package:bafdo/colors.dart';
 import 'package:bafdo/custom_widget/feature_category_list_tile.dart';
+import 'package:bafdo/re-seller/reseller_chat_page.dart';
+import 'package:bafdo/re-seller/reseller_catelog_view_page.dart';
+import 'package:bafdo/sub_pages/product_details.dart';
+import 'package:bafdo/sub_pages/product_page.dart';
 
 import 'package:carousel_pro_nullsafety/carousel_pro_nullsafety.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -29,13 +34,55 @@ class _ReselerHomeNavState extends State<ReselerHomeNav> {
 
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.pink.shade400,
-        onPressed: () {},
+        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (_)=>ReselerChatPage()));},
         child: Icon(Icons.message),
       ),
       body: Container(
         child: SingleChildScrollView(
           child: Column(
             children: [
+
+              SizedBox(height: 10,),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      height: size.width*.1,
+                      width: size.width*.5,
+
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1,color: Colors.pink),
+
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+                      ),
+
+                      child: Text('Top Seller',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.black,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .05),),),
+                  ),
+                  InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductPage(navigateFrom: 'Top Seller')));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text('See More',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.grey,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .04),),
+                    ),
+                  ),
+                ],
+              ),
+
               Container(
                 height: size.width * .4,
                 width: size.width,
@@ -43,37 +90,42 @@ class _ReselerHomeNavState extends State<ReselerHomeNav> {
                   scrollDirection: Axis.horizontal,
                   itemCount: 12,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: size.width * .2,
-                            width: size.width * .2,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 2, color: Colors.pink.shade100),
-                              shape: BoxShape.circle,
-                              color: Colors.white,
+                    return InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductDetail()));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: size.width * .2,
+                              width: size.width * .2,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 2, color: Colors.pink.shade100),
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                    'assets/app_icon/body_icon/joy_stick.png'),
+                              ),
                             ),
-                            child: Padding(
+                            Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                  'assets/app_icon/body_icon/joy_stick.png'),
+                              child: Text(
+                                "Joy Stick",
+                                style: TextStyle(
+                                    fontFamily: 'taviraj',
+                                    color: ColorsVariables.textColor,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .04),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Joy Stick",
-                              style: TextStyle(
-                                  fontFamily: 'taviraj',
-                                  color: ColorsVariables.textColor,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: size.width * .04),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -103,18 +155,23 @@ class _ReselerHomeNavState extends State<ReselerHomeNav> {
                     images: imgList.map((item) {
                       return Builder(
                         builder: (BuildContext context) {
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 30.0),
-                            child: Container(
-                              height: 250,
-                              margin: EdgeInsets.symmetric(vertical: 0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Image.asset(
-                                item,
-                                fit: BoxFit.fill,
+                          return InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductDetail()));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 30.0),
+                              child: Container(
+                                height: 250,
+                                margin: EdgeInsets.symmetric(vertical: 0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Image.asset(
+                                  item,
+                                  fit: BoxFit.fill,
+                                ),
                               ),
                             ),
                           );
@@ -138,28 +195,52 @@ class _ReselerHomeNavState extends State<ReselerHomeNav> {
                     shrinkWrap: true,
                     itemCount: 9,
                     itemBuilder: (context, index) {
-                      return FeatureCategoryListTile();
+                      return InkWell(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductDetail()));
+                          },
+                          child: FeatureCategoryListTile());
                     }),
               ),
 
               SizedBox(height: 10,),
-              Align(
-                alignment: Alignment.centerLeft,
-               child: Container(
-                  height: size.width*.1,
-                  width: size.width*.5,
 
-                  decoration: BoxDecoration(color: Colors.pink,
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                   child: Container(
+                      height: size.width*.1,
+                      width: size.width*.5,
+
+                      decoration: BoxDecoration(color: Colors.pink,
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+                      ),
+
+                   child: Text('Anniversary',
+                    textAlign: TextAlign.center,
+                     style: TextStyle(
+                         fontFamily: 'taviraj',
+                         color: Colors.white,
+                         fontStyle: FontStyle.normal,
+                         fontSize: size.width * .05),),),
                   ),
-
-               child: Text('Anniversary',
-                textAlign: TextAlign.center,
-                 style: TextStyle(
-                     fontFamily: 'taviraj',
-                     color: Colors.white,
-                     fontStyle: FontStyle.normal,
-                     fontSize: size.width * .05),),),
+                  InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductPage(navigateFrom: 'Anniversary')));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text('See More',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.grey,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .04),),
+                    ),
+                  ),
+                ],
               ),
 
               Container(
@@ -169,61 +250,87 @@ class _ReselerHomeNavState extends State<ReselerHomeNav> {
                   scrollDirection: Axis.horizontal,
                   itemCount: 12,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: size.width * .3,
-                            width: size.width * .4,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 2, color: Colors.pink.shade100),
-                              shape: BoxShape.rectangle,
-                              color: Colors.transparent,
+                    return InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductDetail()));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: size.width * .3,
+                              width: size.width * .4,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 2, color: Colors.pink.shade100),
+                                shape: BoxShape.rectangle,
+                                color: Colors.transparent,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                    'assets/app_icon/body_icon/joy_stick.png'),
+                              ),
                             ),
-                            child: Padding(
+                            Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                  'assets/app_icon/body_icon/joy_stick.png'),
+                              child: Text(
+                                "Joy Stick",
+                                style: TextStyle(
+                                    fontFamily: 'taviraj',
+                                    color: ColorsVariables.textColor,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .04),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Joy Stick",
-                              style: TextStyle(
-                                  fontFamily: 'taviraj',
-                                  color: ColorsVariables.textColor,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: size.width * .04),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
                 ),
               ),
               SizedBox(height: 10,),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  height: size.width*.1,
-                  width: size.width*.5,
 
-                  decoration: BoxDecoration(color: Colors.pink,
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      height: size.width*.1,
+                      width: size.width*.5,
+
+                      decoration: BoxDecoration(color: Colors.pink,
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+                      ),
+
+                      child: Text('Birthday',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.white,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .05),),),
                   ),
-
-                  child: Text('Birthday',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: 'taviraj',
-                        color: Colors.white,
-                        fontStyle: FontStyle.normal,
-                        fontSize: size.width * .05),),),
+                  InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductPage(navigateFrom: 'Birthday')));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text('See More',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.grey,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .04),),
+                    ),
+                  ),
+                ],
               ),
+
 
               Container(
                 height: size.width * .5,
@@ -232,61 +339,86 @@ class _ReselerHomeNavState extends State<ReselerHomeNav> {
                   scrollDirection: Axis.horizontal,
                   itemCount: 12,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: size.width * .3,
-                            width: size.width * .4,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 2, color: Colors.pink.shade100),
-                              shape: BoxShape.rectangle,
-                              color: Colors.transparent,
+                    return InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductDetail()));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: size.width * .3,
+                              width: size.width * .4,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 2, color: Colors.pink.shade100),
+                                shape: BoxShape.rectangle,
+                                color: Colors.transparent,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                    'assets/app_icon/body_icon/joy_stick.png'),
+                              ),
                             ),
-                            child: Padding(
+                            Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                  'assets/app_icon/body_icon/joy_stick.png'),
+                              child: Text(
+                                "Joy Stick",
+                                style: TextStyle(
+                                    fontFamily: 'taviraj',
+                                    color: ColorsVariables.textColor,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .04),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Joy Stick",
-                              style: TextStyle(
-                                  fontFamily: 'taviraj',
-                                  color: ColorsVariables.textColor,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: size.width * .04),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
                 ),
               ),
               SizedBox(height: 10,),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  height: size.width*.1,
-                  width: size.width*.5,
 
-                  decoration: BoxDecoration(color: Colors.pink,
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      height: size.width*.1,
+                      width: size.width*.5,
+
+                      decoration: BoxDecoration(color: Colors.pink,
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+                      ),
+
+                      child: Text('Him',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.white,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .05),),),
                   ),
-
-                  child: Text('Him',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: 'taviraj',
-                        color: Colors.white,
-                        fontStyle: FontStyle.normal,
-                        fontSize: size.width * .05),),),
+                  InkWell( onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductPage(navigateFrom: 'Him')));
+                  },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text('See More',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.grey,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .04),),
+                    ),
+                  ),
+                ],
               ),
+
 
               Container(
                 height: size.width * .5,
@@ -295,61 +427,87 @@ class _ReselerHomeNavState extends State<ReselerHomeNav> {
                   scrollDirection: Axis.horizontal,
                   itemCount: 12,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: size.width * .3,
-                            width: size.width * .4,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 2, color: Colors.pink.shade100),
-                              shape: BoxShape.rectangle,
-                              color: Colors.transparent,
+                    return InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductDetail()));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: size.width * .3,
+                              width: size.width * .4,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 2, color: Colors.pink.shade100),
+                                shape: BoxShape.rectangle,
+                                color: Colors.transparent,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                    'assets/app_icon/body_icon/joy_stick.png'),
+                              ),
                             ),
-                            child: Padding(
+                            Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                  'assets/app_icon/body_icon/joy_stick.png'),
+                              child: Text(
+                                "Joy Stick",
+                                style: TextStyle(
+                                    fontFamily: 'taviraj',
+                                    color: ColorsVariables.textColor,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .04),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Joy Stick",
-                              style: TextStyle(
-                                  fontFamily: 'taviraj',
-                                  color: ColorsVariables.textColor,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: size.width * .04),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
                 ),
               ),
               SizedBox(height: 10,),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  height: size.width*.1,
-                  width: size.width*.5,
 
-                  decoration: BoxDecoration(color: Colors.pink,
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      height: size.width*.1,
+                      width: size.width*.5,
+
+                      decoration: BoxDecoration(color: Colors.pink,
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+                      ),
+
+                      child: Text('Her',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.white,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .05),),),
                   ),
-
-                  child: Text('Her',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: 'taviraj',
-                        color: Colors.white,
-                        fontStyle: FontStyle.normal,
-                        fontSize: size.width * .05),),),
+                  InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductPage(navigateFrom: 'Her')));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text('See More',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.grey,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .04),),
+                    ),
+                  ),
+                ],
               ),
+
 
               Container(
                 height: size.width * .5,
@@ -358,61 +516,88 @@ class _ReselerHomeNavState extends State<ReselerHomeNav> {
                   scrollDirection: Axis.horizontal,
                   itemCount: 12,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: size.width * .3,
-                            width: size.width * .4,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 2, color: Colors.pink.shade100),
-                              shape: BoxShape.rectangle,
-                              color: Colors.transparent,
+                    return InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductDetail()));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: size.width * .3,
+                              width: size.width * .4,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 2, color: Colors.pink.shade100),
+                                shape: BoxShape.rectangle,
+                                color: Colors.transparent,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                    'assets/app_icon/body_icon/joy_stick.png'),
+                              ),
                             ),
-                            child: Padding(
+                            Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                  'assets/app_icon/body_icon/joy_stick.png'),
+                              child: Text(
+                                "Joy Stick",
+                                style: TextStyle(
+                                    fontFamily: 'taviraj',
+                                    color: ColorsVariables.textColor,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .04),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Joy Stick",
-                              style: TextStyle(
-                                  fontFamily: 'taviraj',
-                                  color: ColorsVariables.textColor,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: size.width * .04),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
                 ),
               ),
               SizedBox(height: 10,),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  height: size.width*.1,
-                  width: size.width*.5,
 
-                  decoration: BoxDecoration(color: Colors.pink,
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      height: size.width*.1,
+                      width: size.width*.5,
+
+                      decoration: BoxDecoration(color: Colors.pink,
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+                      ),
+
+                      child: Text('Kids',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.white,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .05),),),
                   ),
-
-                  child: Text('Kids',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: 'taviraj',
-                        color: Colors.white,
-                        fontStyle: FontStyle.normal,
-                        fontSize: size.width * .05),),),
+                  InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductPage(navigateFrom: 'Kids')));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text('See More',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.grey,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .04),),
+                    ),
+                  ),
+                ],
               ),
+
+
 
               Container(
                 height: size.width * .5,
@@ -421,61 +606,87 @@ class _ReselerHomeNavState extends State<ReselerHomeNav> {
                   scrollDirection: Axis.horizontal,
                   itemCount: 12,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: size.width * .3,
-                            width: size.width * .4,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 2, color: Colors.pink.shade100),
-                              shape: BoxShape.rectangle,
-                              color: Colors.transparent,
+                    return InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductDetail()));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: size.width * .3,
+                              width: size.width * .4,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 2, color: Colors.pink.shade100),
+                                shape: BoxShape.rectangle,
+                                color: Colors.transparent,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                    'assets/app_icon/body_icon/joy_stick.png'),
+                              ),
                             ),
-                            child: Padding(
+                            Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                  'assets/app_icon/body_icon/joy_stick.png'),
+                              child: Text(
+                                "Joy Stick",
+                                style: TextStyle(
+                                    fontFamily: 'taviraj',
+                                    color: ColorsVariables.textColor,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .04),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Joy Stick",
-                              style: TextStyle(
-                                  fontFamily: 'taviraj',
-                                  color: ColorsVariables.textColor,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: size.width * .04),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
                 ),
               ),
               SizedBox(height: 10,),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  height: size.width*.1,
-                  width: size.width*.5,
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      height: size.width*.1,
+                      width: size.width*.5,
 
-                  decoration: BoxDecoration(color: Colors.pink,
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+                      decoration: BoxDecoration(color: Colors.pink,
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+                      ),
+
+                      child: Text('Wedding',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.white,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .05),),),
                   ),
-
-                  child: Text('Wedding',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: 'taviraj',
-                        color: Colors.white,
-                        fontStyle: FontStyle.normal,
-                        fontSize: size.width * .05),),),
+                  InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductPage(navigateFrom: 'Wedding')));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text('See More',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.grey,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .04),),
+                    ),
+                  ),
+                ],
               ),
+
+
 
               Container(
                 height: size.width * .5,
@@ -484,61 +695,86 @@ class _ReselerHomeNavState extends State<ReselerHomeNav> {
                   scrollDirection: Axis.horizontal,
                   itemCount: 12,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: size.width * .3,
-                            width: size.width * .4,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 2, color: Colors.pink.shade100),
-                              shape: BoxShape.rectangle,
-                              color: Colors.transparent,
+                    return InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductDetail()));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: size.width * .3,
+                              width: size.width * .4,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 2, color: Colors.pink.shade100),
+                                shape: BoxShape.rectangle,
+                                color: Colors.transparent,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                    'assets/app_icon/body_icon/joy_stick.png'),
+                              ),
                             ),
-                            child: Padding(
+                            Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                  'assets/app_icon/body_icon/joy_stick.png'),
+                              child: Text(
+                                "Joy Stick",
+                                style: TextStyle(
+                                    fontFamily: 'taviraj',
+                                    color: ColorsVariables.textColor,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .04),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Joy Stick",
-                              style: TextStyle(
-                                  fontFamily: 'taviraj',
-                                  color: ColorsVariables.textColor,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: size.width * .04),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
                 ),
               ),
               SizedBox(height: 10,),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  height: size.width*.1,
-                  width: size.width*.5,
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      height: size.width*.1,
+                      width: size.width*.5,
 
-                  decoration: BoxDecoration(color: Colors.pink,
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+                      decoration: BoxDecoration(color: Colors.pink,
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+                      ),
+
+                      child: Text('House Warming',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.white,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .05),),),
                   ),
-
-                  child: Text('House Warming',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: 'taviraj',
-                        color: Colors.white,
-                        fontStyle: FontStyle.normal,
-                        fontSize: size.width * .05),),),
+                  InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductPage(navigateFrom: 'House Warming')));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text('See More',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.grey,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .04),),
+                    ),
+                  ),
+                ],
               ),
+
 
               Container(
                 height: size.width * .5,
@@ -547,61 +783,87 @@ class _ReselerHomeNavState extends State<ReselerHomeNav> {
                   scrollDirection: Axis.horizontal,
                   itemCount: 12,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: size.width * .3,
-                            width: size.width * .4,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 2, color: Colors.pink.shade100),
-                              shape: BoxShape.rectangle,
-                              color: Colors.transparent,
+                    return InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductDetail()));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: size.width * .3,
+                              width: size.width * .4,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 2, color: Colors.pink.shade100),
+                                shape: BoxShape.rectangle,
+                                color: Colors.transparent,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                    'assets/app_icon/body_icon/joy_stick.png'),
+                              ),
                             ),
-                            child: Padding(
+                            Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                  'assets/app_icon/body_icon/joy_stick.png'),
+                              child: Text(
+                                "Joy Stick",
+                                style: TextStyle(
+                                    fontFamily: 'taviraj',
+                                    color: ColorsVariables.textColor,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .04),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Joy Stick",
-                              style: TextStyle(
-                                  fontFamily: 'taviraj',
-                                  color: ColorsVariables.textColor,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: size.width * .04),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
                 ),
               ),
               SizedBox(height: 10,),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  height: size.width*.1,
-                  width: size.width*.5,
 
-                  decoration: BoxDecoration(color: Colors.pink,
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      height: size.width*.1,
+                      width: size.width*.5,
+
+                      decoration: BoxDecoration(color: Colors.pink,
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(50),bottomRight: Radius.circular(50))
+                      ),
+
+                      child: Text('Personalised',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.white,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .05),),),
                   ),
-
-                  child: Text('Personalised',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: 'taviraj',
-                        color: Colors.white,
-                        fontStyle: FontStyle.normal,
-                        fontSize: size.width * .05),),),
+                  InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductPage(navigateFrom: 'Personalised')));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text('See More',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.grey,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .04),),
+                    ),
+                  ),
+                ],
               ),
+
 
               Container(
                 height: size.width * .5,
@@ -610,37 +872,42 @@ class _ReselerHomeNavState extends State<ReselerHomeNav> {
                   scrollDirection: Axis.horizontal,
                   itemCount: 12,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: size.width * .3,
-                            width: size.width * .4,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 2, color: Colors.pink.shade100),
-                              shape: BoxShape.rectangle,
-                              color: Colors.transparent,
+                    return InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductDetail()));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: size.width * .3,
+                              width: size.width * .4,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 2, color: Colors.pink.shade100),
+                                shape: BoxShape.rectangle,
+                                color: Colors.transparent,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                    'assets/app_icon/body_icon/joy_stick.png'),
+                              ),
                             ),
-                            child: Padding(
+                            Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                  'assets/app_icon/body_icon/joy_stick.png'),
+                              child: Text(
+                                "Joy Stick",
+                                style: TextStyle(
+                                    fontFamily: 'taviraj',
+                                    color: ColorsVariables.textColor,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .04),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Joy Stick",
-                              style: TextStyle(
-                                  fontFamily: 'taviraj',
-                                  color: ColorsVariables.textColor,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: size.width * .04),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
