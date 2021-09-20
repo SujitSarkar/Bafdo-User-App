@@ -4,6 +4,9 @@ import 'package:bafdo/re-seller/reseler_home_nav.dart';
 import 'package:bafdo/re-seller/reseler_my_order_nav.dart';
 import 'package:bafdo/re-seller/reseler_my_shop_nav.dart';
 import 'package:bafdo/re-seller/reseller_payment_nav.dart';
+import 'package:bafdo/sub_pages/cart_page.dart';
+import 'package:bafdo/sub_pages/notifications_page.dart';
+import 'package:bafdo/sub_pages/product_search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -116,7 +119,10 @@ class _ReselerHomeState extends State<ReselerHome>
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductSearchPage()));
+
+                      },
                     child: Container(
                       height: size.width * .09,
                       width: size.width * .09,
@@ -136,7 +142,7 @@ class _ReselerHomeState extends State<ReselerHome>
                     clipBehavior: Clip.none,
                     children: [
                       InkWell(
-                        onTap: () {},
+                        onTap: () {  Navigator.push(context, MaterialPageRoute(builder: (_)=>CartPage()));},
                         child: CircleAvatar(
                           backgroundColor: Colors.white,
                           radius: 22,
@@ -173,7 +179,7 @@ class _ReselerHomeState extends State<ReselerHome>
                     clipBehavior: Clip.none,
                     children: [
                       InkWell(
-                        onTap: () {},
+                        onTap: () {  Navigator.push(context, MaterialPageRoute(builder: (_)=>NotificationPage()));},
                         child: CircleAvatar(
                           backgroundColor: Colors.white,
                           radius: 22,
@@ -217,7 +223,7 @@ class _ReselerHomeState extends State<ReselerHome>
           Icons.home,
           Icons.card_travel,
           Icons.shop,
-          Icons.event_note,
+          Icons.production_quantity_limits,
           Icons.monetization_on_rounded
         ],
 

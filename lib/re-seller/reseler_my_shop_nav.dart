@@ -91,22 +91,27 @@ class _ReselerMyShopState extends State<ReselerMyShop>  with SingleTickerProvide
                                       top: size.width * .013,
                                       right: size.width * .05,
                                       left: size.width * .05),
-                                  child: DottedBorder(
-                                    borderType: BorderType.RRect,
-                                    radius: Radius.circular(size.width * .02),
+                                  child: InkWell(
+                                    onTap: (){
 
-                                     child:Center(child: Column(
-                                       mainAxisAlignment: MainAxisAlignment.center,
-                                       crossAxisAlignment: CrossAxisAlignment.center,
-                                       children: [
+                                    },
+                                    child: DottedBorder(
+                                      borderType: BorderType.RRect,
+                                      radius: Radius.circular(size.width * .02),
 
-                                         Text('Add New Collection',textAlign: TextAlign.center,),
-                                         Icon(Icons.add, size: size.width * .12)
+                                       child:Center(child: Column(
+                                         mainAxisAlignment: MainAxisAlignment.center,
+                                         crossAxisAlignment: CrossAxisAlignment.center,
+                                         children: [
 
-                                       ],),),
+                                           Text('Add New Collection',textAlign: TextAlign.center,),
+                                           Icon(Icons.add, size: size.width * .12)
+
+                                         ],),),
 
 
 
+                                    ),
                                   ),
                                 );
                               }

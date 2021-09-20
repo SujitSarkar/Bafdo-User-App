@@ -387,6 +387,7 @@ class _HomeNavState extends State<HomeNav> {
                                 context,
                                 publicProvider.categories!.data![index].name??'',
                                 'https://bafdo.com/public/${publicProvider.categories!.data![index].banner??''}'),
+
                           );
                         }),
                     Positioned(
