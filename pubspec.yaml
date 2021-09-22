@@ -32,6 +32,7 @@ dependencies:
   http:
   google_sign_in:
   firebase_auth:
+  firebase_core:
   flutter_facebook_auth:
   twitter_login:
 

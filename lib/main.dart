@@ -2,11 +2,14 @@ import 'package:bafdo/pages/splash_Screen_page.dart';
 import 'package:bafdo/provider/auth_provider.dart';
 import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/variables/color_variable.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-void main(){
+void main()async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(

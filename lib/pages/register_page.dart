@@ -1,10 +1,6 @@
-import 'package:bafdo/bottom_nav_screens/home_nav.dart';
 import 'package:bafdo/colors.dart';
-import 'package:bafdo/custom_widget/custom_appbar.dart';
 import 'package:bafdo/pages/login_page.dart';
-import 'package:bafdo/pages/login_with_number.dart';
 import 'package:bafdo/provider/auth_provider.dart';
-import 'package:bafdo/re-seller/reseller_home.dart';
 import 'package:bafdo/seller_collection/seller_home.dart';
 import 'package:bafdo/widgets/form_decoration.dart';
 import 'package:bafdo/widgets/gradient_button.dart';

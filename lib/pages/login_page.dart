@@ -305,7 +305,11 @@ class _LogInPageState extends State<LogInPage> {
   Widget _socialButtonBuilder(Size size, String assetImage, AuthProvider authProvider) {
     return InkWell(
       onTap: () async{
-        if(assetImage=='assets/app_icon/body_icon/google.png') authProvider.loginWithGoogle(context);
+        if(assetImage=='assets/app_icon/body_icon/google.png'){
+          await authProvider.loginWithGoogle(context).then((value){
+            print(value.user!.displayName);
+          });
+        }
       },
       child: Image.asset(assetImage, height: size.width * .12),
       borderRadius: BorderRadius.all(Radius.circular(5)),
