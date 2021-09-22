@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "176484068197",
+    "project_id": "bafdo-2021",
+    "storage_bucket": "bafdo-2021.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176484068197:android:7309b438df0971c289cf8c",
+        "android_client_info": {
+          "package_name": "com.bafdo.bafdo_user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "176484068197-1dbntfn90ftmghi25f42ur2cp213nsbp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bafdo.bafdo_user",
+            "certificate_hash": "f7392e8bbb76af27a660752fa332be102914fda5"
+          }
+        },
+        {
+          "client_id": "176484068197-ets1301uei9j2ssc9tq1gq31td77mi9f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMR1Dm5J_mOxHNqq22N0KagGQKhTMQMa8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "176484068197-ets1301uei9j2ssc9tq1gq31td77mi9f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,9 +3,13 @@ import 'dart:io';
 import 'package:bafdo/model/signup_model.dart';
 import 'package:bafdo/model/userinfo_model.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:twitter_login/entity/auth_result.dart';
+import 'package:twitter_login/twitter_login.dart';
+
 
 class AuthProvider extends ChangeNotifier{
 
@@ -68,6 +72,43 @@ class AuthProvider extends ChangeNotifier{
       showToast(error.toString());
       return Future.value(false);
     }
+  }
+
+  Future<UserCredential> loginWithGoogle(BuildContext context)async{
+    await GoogleSignIn().signOut();
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    showLoadingDialog(context);
+    final GoogleSignInAuthentication googleAuth =
+    await googleUser!.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    return
+    await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+
+  Future<UserCredential> signInWithTwitter() async {
+    // Create a TwitterLogin instance
+    final twitterLogin = new TwitterLogin(
+        apiKey: '<your consumer key>',
+        apiSecretKey:' <your consumer secret>',
+        redirectURI: '<your_scheme>://'
+    );
+
+    // Trigger the sign-in flow
+    AuthResult authResult = await twitterLogin.login();
+
+    // Create a credential from the access token
+    final twitterAuthCredential = TwitterAuthProvider.credential(
+      accessToken: authResult.authToken!,
+      secret: authResult.authTokenSecret!,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
+
   }
 
 }

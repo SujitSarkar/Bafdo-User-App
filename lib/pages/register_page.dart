@@ -13,6 +13,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../home.dart';
+
 class RegisterPage extends StatefulWidget {
   @override
   _RegisterPageState createState() => _RegisterPageState();
@@ -340,7 +342,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     preferences.setString('email_or_phone', authProvider.userInfoModel.user.phone);
                     closeLoadingDialog(context);
                     showToast(authProvider.userInfoModel.message);
-                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeNav()), (route) => false);
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
                 });
               }else{
                 closeLoadingDialog(context);

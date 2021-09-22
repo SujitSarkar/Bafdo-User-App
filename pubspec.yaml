@@ -28,10 +28,15 @@ dependencies:
   provider:
   shared_preferences:
   http:
+  google_sign_in:
+  firebase_auth:
+  flutter_facebook_auth:
+  twitter_login:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  change_app_package_name: ^1.0.0
 
 # The following section is specific to Flutter.
 flutter:

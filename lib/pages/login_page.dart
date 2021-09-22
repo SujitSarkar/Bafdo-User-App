@@ -253,13 +253,13 @@ class _LogInPageState extends State<LogInPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _socialButtonBuilder(
-                      size, 'assets/app_icon/body_icon/google.png'),
+                      size, 'assets/app_icon/body_icon/google.png',authProvider),
                   SizedBox(width: size.width * .02),
                   _socialButtonBuilder(
-                      size, 'assets/app_icon/body_icon/facebook.png'),
+                      size, 'assets/app_icon/body_icon/facebook.png',authProvider),
                   SizedBox(width: size.width * .02),
                   _socialButtonBuilder(
-                      size, 'assets/app_icon/body_icon/twitter.png'),
+                      size, 'assets/app_icon/body_icon/twitter.png',authProvider),
                 ],
               ),
               SizedBox(height: size.width * .08),
@@ -302,9 +302,11 @@ class _LogInPageState extends State<LogInPage> {
         ),
       );
 
-  Widget _socialButtonBuilder(Size size, String assetImage) {
+  Widget _socialButtonBuilder(Size size, String assetImage, AuthProvider authProvider) {
     return InkWell(
-      onTap: () {},
+      onTap: () async{
+        if(assetImage=='assets/app_icon/body_icon/google.png') authProvider.loginWithGoogle(context);
+      },
       child: Image.asset(assetImage, height: size.width * .12),
       borderRadius: BorderRadius.all(Radius.circular(5)),
       splashColor: Colors.pink.shade100,
@@ -328,7 +330,7 @@ class _LogInPageState extends State<LogInPage> {
                 }
                 closeLoadingDialog(context);
                 showToast(authProvider.userInfoModel.message);
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeNav()), (route) => false);
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
               }else{
                 closeLoadingDialog(context);
               }
