@@ -13,7 +13,7 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog>
     with SingleTickerProviderStateMixin {
   AnimationController? controller;
   Animation<double>? scaleAnimation;
-
+  TextEditingController _searchController = TextEditingController();
   @override
   void initState() {
     super.initState();

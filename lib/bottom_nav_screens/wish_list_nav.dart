@@ -3,6 +3,7 @@ import 'package:bafdo/custom_widget/custom_appbar.dart';
 import 'package:bafdo/custom_widget/feature_category_list_tile.dart';
 import 'package:bafdo/custom_widget/product_list_tile.dart';
 import 'package:bafdo/custom_widget/red_folder_list_tile.dart';
+import '../sub_pages/new_collection_dialog.dart';
 import 'package:bafdo/sub_pages/product_details.dart';
 import 'package:bafdo/sub_pages/wish_list_details.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -100,17 +101,27 @@ class _WishListNavState extends State<WishListNav> {
                     itemCount: categoryList.length + 1,
                     itemBuilder: (context, index) {
                       if (categoryList.length == index) {
-                        return Padding(
-                          padding: EdgeInsets.only(
-                              bottom: size.width * .13,
-                              top: size.width * .013,
-                              right: size.width * .013,
-                              left: size.width * .013),
-                          child: DottedBorder(
-                            borderType: BorderType.RRect,
-                            radius: Radius.circular(size.width * .02),
-                            child: Center(
-                                child: Icon(Icons.add, size: size.width * .12)),
+                        return InkWell(
+                          onTap: (){
+                            showDialog(
+                              context: context,
+                              builder: (_) => NewCollectionDialog(),
+                            );
+
+
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                bottom: size.width * .13,
+                                top: size.width * .013,
+                                right: size.width * .013,
+                                left: size.width * .013),
+                            child: DottedBorder(
+                              borderType: BorderType.RRect,
+                              radius: Radius.circular(size.width * .02),
+                              child: Center(
+                                  child: Icon(Icons.add, size: size.width * .12)),
+                            ),
                           ),
                         );
                       }

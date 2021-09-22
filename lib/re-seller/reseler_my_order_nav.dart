@@ -140,12 +140,158 @@ class _ReselerMyOrderState extends State<ReselerMyOrder> with SingleTickerProvid
                   ],),
 
 
-                  Center(
-                    child: Text('Sorry You Don'+'t have any curated collections now'),
-                  ),
-                  Center(
-                    child: Text('Sorry You Don'+'t have any curated collections now'),
-                  )
+                  Column(children: [
+
+                    Container(
+                      width: size.width,
+                      color: Colors.pink.shade100,
+                      child:     Padding(
+                          padding: EdgeInsets.all(size.width * .03,),
+                          child: Container(
+                            width: size.width * .8,
+
+                            decoration: BoxDecoration(color: Colors.white,
+                                borderRadius: BorderRadius.all(Radius.circular(10))),
+                            child: Padding(padding:EdgeInsets.only(left:size.width * .03,right:size.width * .03, ),
+                              child:  TextFormField(
+
+                                controller: _searchController,
+                                decoration: InputDecoration(
+                                    hintText: 'Search product',
+                                    fillColor: Colors.white,
+                                    hintStyle: TextStyle(
+                                        fontFamily: 'taviraj',
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey,
+                                        fontStyle: FontStyle.normal,
+                                        fontSize: size.width * .04),
+                                    suffixIcon: Image.asset(
+                                      'assets/app_icon/text_field_icon/search_icon.png',
+                                    ),
+                                    enabled: true,
+                                    border: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    disabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none),
+                                cursorColor: Color(0xff131214),
+                              ),
+                            ) ,
+
+
+                          )),
+                    ),
+
+
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+
+                        Expanded(child:   Container(
+                          width: size.width*.4,
+                          decoration: BoxDecoration(border: Border.all(width: 1)),
+                          child: Center(
+                            child:Padding(padding:EdgeInsets.only(top:size.width * .01,bottom:size.width * .01,),
+
+                              child:  Text('Sort',
+                                style: TextStyle(
+                                    fontFamily: 'taviraj',
+                                    color: ColorsVariables.textColor,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .035),) ,) ,
+
+                          ) ,
+                        ),),
+
+                        Expanded(child:  Container( decoration: BoxDecoration(border: Border.all(width: 1)), width: size.width*.4,
+                            child: Center(
+                              child: Padding(padding:EdgeInsets.only(top:size.width * .01,bottom:size.width * .01,),
+                                child:  Text('Filtered',
+                                  style: TextStyle(
+                                      fontFamily: 'taviraj',
+                                      color: ColorsVariables.textColor,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: size.width * .035),),),
+                            )
+                        ))
+
+                      ],)
+
+                  ],),
+                  Column(children: [
+
+                    Container(
+                      width: size.width,
+                      color: Colors.pink.shade100,
+                      child:     Padding(
+                          padding: EdgeInsets.all(size.width * .03,),
+                          child: Container(
+                            width: size.width * .8,
+
+                            decoration: BoxDecoration(color: Colors.white,
+                                borderRadius: BorderRadius.all(Radius.circular(10))),
+                            child: Padding(padding:EdgeInsets.only(left:size.width * .03,right:size.width * .03, ),
+                              child:  TextFormField(
+
+                                controller: _searchController,
+                                decoration: InputDecoration(
+                                    hintText: 'Search product',
+                                    fillColor: Colors.white,
+                                    hintStyle: TextStyle(
+                                        fontFamily: 'taviraj',
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey,
+                                        fontStyle: FontStyle.normal,
+                                        fontSize: size.width * .04),
+                                    suffixIcon: Image.asset(
+                                      'assets/app_icon/text_field_icon/search_icon.png',
+                                    ),
+                                    enabled: true,
+                                    border: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    disabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none),
+                                cursorColor: Color(0xff131214),
+                              ),
+                            ) ,
+
+
+                          )),
+                    ),
+
+
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+
+                        Expanded(child:   Container(
+                          width: size.width*.4,
+                          decoration: BoxDecoration(border: Border.all(width: 1)),
+                          child: Center(
+                            child:Padding(padding:EdgeInsets.only(top:size.width * .01,bottom:size.width * .01,),
+
+                              child:  Text('Sort',
+                                style: TextStyle(
+                                    fontFamily: 'taviraj',
+                                    color: ColorsVariables.textColor,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .035),) ,) ,
+
+                          ) ,
+                        ),),
+
+                        Expanded(child:  Container( decoration: BoxDecoration(border: Border.all(width: 1)), width: size.width*.4,
+                            child: Center(
+                              child: Padding(padding:EdgeInsets.only(top:size.width * .01,bottom:size.width * .01,),
+                                child:  Text('Filtered',
+                                  style: TextStyle(
+                                      fontFamily: 'taviraj',
+                                      color: ColorsVariables.textColor,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: size.width * .035),),),
+                            )
+                        ))
+
+                      ],)
+
+                  ],),
 
 
 

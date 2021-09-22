@@ -5,6 +5,7 @@ import 'package:bafdo/pages/login_page.dart';
 import 'package:bafdo/pages/login_with_number.dart';
 import 'package:bafdo/provider/auth_provider.dart';
 import 'package:bafdo/re-seller/reseller_home.dart';
+import 'package:bafdo/seller_collection/seller_home.dart';
 import 'package:bafdo/widgets/form_decoration.dart';
 import 'package:bafdo/widgets/gradient_button.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
@@ -42,12 +43,12 @@ class _RegisterPageState extends State<RegisterPage> {
           InkWell(
               onTap: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => ReselerHome()));
+                    context, MaterialPageRoute(builder: (_) => SellerHome()));
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Re-Seller',
+                  'Seller',
                   style:
                       TextStyle(color: ColorsVariables.textColor, fontSize: 25),
                 ),

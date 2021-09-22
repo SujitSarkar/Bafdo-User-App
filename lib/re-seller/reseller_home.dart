@@ -9,6 +9,7 @@ import 'package:bafdo/sub_pages/notifications_page.dart';
 import 'package:bafdo/sub_pages/product_search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
 
@@ -27,7 +28,7 @@ class _ReselerHomeState extends State<ReselerHome>
   void initState() {
     super.initState();
     _tabController = TabController(
-      initialIndex: 0,
+      initialIndex: 2,
       length: 5,
       vsync: this,
     );
@@ -218,11 +219,12 @@ class _ReselerHomeState extends State<ReselerHome>
       backgroundColor: Colors.white,
       bottomNavigationBar: MotionTabBar(
         initialSelectedTab: "Home",
-        labels: const ["Home", "Catelog", "My Shop", "My Order","Payment"],
+        labels: const ["My Shop", "Catelog", "Home", "My Order","Payment"],
         icons: const [
+
+        FontAwesomeIcons.store,
+          FontAwesomeIcons.book,
           Icons.home,
-          Icons.card_travel,
-          Icons.shop,
           Icons.production_quantity_limits,
           Icons.monetization_on_rounded
         ],
@@ -254,9 +256,9 @@ class _ReselerHomeState extends State<ReselerHome>
         controller: _tabController,
         // ignore: prefer_const_literals_to_create_immutables
         children: <Widget>[
-          ReselerHomeNav(),
-          ReselerCatelogNav(),
           ReselerMyShop(),
+          ReselerCatelogNav(),
+          ReselerHomeNav(),
           ReselerMyOrder(),
           PaymentNav(),
 

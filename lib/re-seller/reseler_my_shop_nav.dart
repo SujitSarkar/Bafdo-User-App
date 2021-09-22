@@ -1,5 +1,7 @@
 import 'package:bafdo/colors.dart';
 import 'package:bafdo/custom_widget/red_folder_list_tile.dart';
+import 'package:bafdo/re-seller/collection_detaills.dart';
+import '../sub_pages/new_collection_dialog.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
@@ -93,6 +95,11 @@ class _ReselerMyShopState extends State<ReselerMyShop>  with SingleTickerProvide
                                       left: size.width * .05),
                                   child: InkWell(
                                     onTap: (){
+                                      showDialog(
+                                        context: context,
+                                        builder: (_) => NewCollectionDialog(),
+                                      );
+
 
                                     },
                                     child: DottedBorder(
@@ -118,10 +125,10 @@ class _ReselerMyShopState extends State<ReselerMyShop>  with SingleTickerProvide
 
                               return InkWell(
                                   onTap: () {
-                                    // Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (_) => WishListDetails()));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => CollectionDetailsPage()));
                                     print(index);
                                   },
                                   child: getCollectionFolder(context, categoryList, index));
