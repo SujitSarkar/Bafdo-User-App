@@ -216,10 +216,10 @@ class _LogInPageState extends State<LogInPage> {
               ///Phone SIgnin button
               InkWell(
                 onTap: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => LoginWithNumber()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => LoginWithNumber()));
                 },
                 child: Container(
                   width: size.width,

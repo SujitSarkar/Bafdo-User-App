@@ -24,6 +24,8 @@ dependencies:
   dotted_line:
   flutter_spinkit:
   fluttertoast:
+  font_awesome_flutter:
+  syncfusion_flutter_charts:
   ##backend plugin
   provider:
   shared_preferences:

@@ -110,8 +110,7 @@ class _CouponsListTileState extends State<CouponsListTile> {
                         bottom: size.width * .08,
                         child: GradientButton(
                           onPressed: () {
-                            // Navigator.push(context,
-                            //     MaterialPageRoute(builder: (context) => OTPPage()));
+
                           },
                           child: Text(
                             'Get',
@@ -149,41 +148,30 @@ class _CouponsListTileState extends State<CouponsListTile> {
             duration: const Duration(milliseconds: 120),
             child: Padding(
               padding: const EdgeInsets.only(left: 5, right: 5, top: 5),
-              child: Column(
-                children: [
-                  DottedLine(
-                    direction: Axis.horizontal,
-                    lineLength: size.width * .9,
-                    lineThickness: 2.0,
-                    dashLength: 4.0,
-                    dashColor: ColorsVariables.dividerColor,
-                    dashGapLength: 4.0,
-                    dashGapColor: Colors.transparent,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 5,
-                            ),
-                            child: new Text(
-                              "Valid: 07/09/2021",
-                              style: TextStyle(
-                                  fontFamily: 'taviraj',
-                                  fontWeight: FontWeight.bold,
-                                  color: ColorsVariables.textColor,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: size.width * .04),
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              new Text(
-                                "Coupon ID: 123456789",
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    DottedLine(
+                      direction: Axis.horizontal,
+                      lineLength: size.width * .9,
+                      lineThickness: 2.0,
+                      dashLength: 4.0,
+                      dashColor: ColorsVariables.dividerColor,
+                      dashGapLength: 4.0,
+                      dashGapColor: Colors.transparent,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 5,
+                              ),
+                              child: new Text(
+                                "Valid: 07/09/2021",
                                 style: TextStyle(
                                     fontFamily: 'taviraj',
                                     fontWeight: FontWeight.bold,
@@ -191,31 +179,44 @@ class _CouponsListTileState extends State<CouponsListTile> {
                                     fontStyle: FontStyle.normal,
                                     fontSize: size.width * .04),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8),
-                                child: Icon(
-                                  Icons.copy,
-                                  color: Colors.pink,
+                            ),
+                            Row(
+                              children: [
+                                new Text(
+                                  "Coupon ID: 123456789",
+                                  style: TextStyle(
+                                      fontFamily: 'taviraj',
+                                      fontWeight: FontWeight.bold,
+                                      color: ColorsVariables.textColor,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: size.width * .04),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                _animatedHeight = 0.0;
-                              });
-                            },
-                            child: Image.asset(
-                                'assets/app_icon/body_icon/up_icon.png')),
-                      ),
-                    ],
-                  ),
-                ],
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: Icon(
+                                    Icons.copy,
+                                    color: Colors.pink,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _animatedHeight = 0.0;
+                                });
+                              },
+                              child: Image.asset(
+                                  'assets/app_icon/body_icon/up_icon.png')),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
