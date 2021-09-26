@@ -27,3 +27,16 @@ InputDecoration formDecoration(Size size) => InputDecoration(
           borderRadius: BorderRadius.all(Radius.circular(6.57)),
           borderSide: BorderSide.none),
     );
+
+InputDecoration myBafdoFormDecoration(Size size) => InputDecoration(
+    contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 3.0),
+    isDense: true,
+    border: new OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        borderSide: new BorderSide(color: Colors.teal)),
+    hintText: 'Name',
+    hintStyle: TextStyle(
+        color: Colors.grey,
+        fontSize: size.width * .05,
+        fontFamily: 'taviraj',
+        fontWeight: FontWeight.w500));

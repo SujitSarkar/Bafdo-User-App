@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!--<?xml version="1.0" encoding="utf-8"?>-->
 <resources>
     <string name="app_name">Bafdo</string>
-    <string name="facebook_app_id">544049286872116</string>
-    <string name="fb_login_protocol_scheme">fb544049286872116</string>
+    <string name="facebook_app_id">1142532272943241</string>
+    <string name="fb_login_protocol_scheme">fb1142532272943241</string>
+    <string name="facebook_client_token">461cd257559e068131e557f45dc15acf</string>
 </resources>

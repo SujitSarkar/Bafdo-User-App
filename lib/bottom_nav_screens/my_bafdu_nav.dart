@@ -1,5 +1,7 @@
 import 'package:bafdo/colors.dart';
 import 'package:bafdo/custom_widget/custom_appbar.dart';
+import 'package:bafdo/custom_widget/outline_button.dart';
+import 'package:bafdo/widgets/form_decoration.dart';
 import 'package:bafdo/widgets/gradient_button.dart';
 import 'package:flutter/material.dart';
 
@@ -169,7 +171,7 @@ class _MaBafdoState extends State<MaBafdo> {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.only(left: 10, right: 10),
+        padding: EdgeInsets.only(left: 15, right: 15),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,16 +262,7 @@ class _MaBafdoState extends State<MaBafdo> {
               Container(
                 height: size.width * .15,
                 child: TextField(
-                  decoration: InputDecoration(
-                      border: new OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: new BorderSide(color: Colors.teal)),
-                      hintText: 'Name',
-                      hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: size.width * .05,
-                          fontFamily: 'taviraj',
-                          fontWeight: FontWeight.w500)),
+                  decoration: myBafdoFormDecoration(size),
                 ),
               ),
               Padding(
@@ -283,14 +276,15 @@ class _MaBafdoState extends State<MaBafdo> {
               ),
               Container(
                 width: size.width * .35,
-                height: size.width * .15,
+                height: size.width * .11,
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     border: Border.all(width: 1, color: Colors.grey)),
-                child: ListTile(
-                  leading: DropdownButtonHideUnderline(
+                child:  DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       elevation: 0,
+                      isDense: true,
                       dropdownColor: Colors.white,
                       items: this._dropDownGenderItem,
                       value: _btnSelectedVal,
@@ -303,7 +297,7 @@ class _MaBafdoState extends State<MaBafdo> {
                       },
                     ),
                   ),
-                ),
+
               ),
               Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 5),
@@ -320,12 +314,14 @@ class _MaBafdoState extends State<MaBafdo> {
                   children: [
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.all(3.0),
+                        padding: const EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                             border: Border.all(width: 1, color: Colors.grey)),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
+                            isDense: true,
+                            isExpanded: true,
                             elevation: 0,
                             dropdownColor: Colors.white,
                             items: this._dropDownYearsItem,
@@ -346,19 +342,19 @@ class _MaBafdoState extends State<MaBafdo> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: size.width * .01,
-                    ),
+                    SizedBox(width: size.width * .02),
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                             border: Border.all(width: 1, color: Colors.grey)),
                         child: Padding(
-                          padding: const EdgeInsets.all(3.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton<String>(
                               elevation: 0,
+                              isDense: true,
+                              isExpanded: true,
                               dropdownColor: Colors.white,
                               items: this._dropDownDaysItem,
                               value: _selectedDayValue,
@@ -379,19 +375,19 @@ class _MaBafdoState extends State<MaBafdo> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: size.width * .005,
-                    ),
+                    SizedBox(width: size.width * .02),
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                             border: Border.all(width: 1, color: Colors.grey)),
                         child: Padding(
-                          padding: const EdgeInsets.all(3.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton<String>(
                               elevation: 0,
+                              isDense: true,
+                              isExpanded: true,
                               dropdownColor: Colors.white,
                               items: this._dropDownMonthsItem,
                               value: _selectedMothValue,
@@ -424,31 +420,11 @@ class _MaBafdoState extends State<MaBafdo> {
                         fontFamily: 'taviraj',
                         fontWeight: FontWeight.w500)),
               ),
-              Container(
-                height: size.width * .15,
-                child: TextField(
-                  decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            phoneVarified = !phoneVarified;
-                          });
-                        },
-                        icon: phoneVarified == true
-                            ? Image.asset(
-                                'assets/app_icon/body_icon/varified_icon.png')
-                            : Icon(Icons.edit_rounded),
-                      ),
-                      border: new OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: new BorderSide(color: Colors.teal)),
-                      hintText: '+88017454545',
-                      hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: size.width * .05,
-                          fontFamily: 'taviraj',
-                          fontWeight: FontWeight.w500)),
-                ),
+              TextField(
+                decoration: myBafdoFormDecoration(size).copyWith(
+                  suffixIcon: Icon(Icons.edit_rounded),
+                  hintText: '+88017454545',
+                )
               ),
               Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 5),
@@ -459,30 +435,10 @@ class _MaBafdoState extends State<MaBafdo> {
                         fontFamily: 'taviraj',
                         fontWeight: FontWeight.w500)),
               ),
-              Container(
-                height: size.width * .15,
-                child: TextField(
-                  decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            emailVarified = !emailVarified;
-                          });
-                        },
-                        icon: emailVarified == true
-                            ? Image.asset(
-                                'assets/app_icon/body_icon/varified_icon.png')
-                            : Icon(Icons.edit_rounded),
-                      ),
-                      border: new OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: new BorderSide(color: Colors.teal)),
-                      hintText: 'bafdo@gmail.com',
-                      hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: size.width * .05,
-                          fontFamily: 'taviraj',
-                          fontWeight: FontWeight.w500)),
+              TextField(
+                decoration: myBafdoFormDecoration(size).copyWith(
+                  suffixIcon: Icon(Icons.edit_rounded),
+                  hintText: '+bafdo@gmail.com',
                 ),
               ),
               Padding(
@@ -494,76 +450,45 @@ class _MaBafdoState extends State<MaBafdo> {
                         fontFamily: 'taviraj',
                         fontWeight: FontWeight.w500)),
               ),
-              Container(
-                height: size.width * .15,
-                child: TextField(
-                  decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.edit_rounded),
-                      ),
-                      border: new OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: new BorderSide(color: Colors.teal)),
-                      hintText: 'House 16,Uttora 12',
-                      hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: size.width * .05,
-                          fontFamily: 'taviraj',
-                          fontWeight: FontWeight.w500)),
+              TextField(
+                decoration: myBafdoFormDecoration(size).copyWith(
+                  suffixIcon: Icon(Icons.edit_rounded),
+                  hintText: 'House 16, Uttara 12',
                 ),
               ),
-              SizedBox(
-                height: size.width * .1,
-              ),
+              SizedBox(height: size.width * .1),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  OutlinedButton(
-                    onPressed: () {},
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(width: 1.0, color: Colors.grey),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          left: size.width * .1,
-                          right: size.width * .1,
-                          top: 13,
-                          bottom: 13),
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(
-                            fontFamily: 'taviraj',
-                            fontWeight: FontWeight.w500,
-                            color: ColorsVariables.textColor,
-                            fontStyle: FontStyle.normal,
-                            fontSize: size.width * .045),
-                      ),
-                    ),
-                  ),
+                  CustomOutlineButton(
+                      child: Text('Cancel'),
+                      onPressed: (){},
+                      borderRadius: 5.0,
+                      height: size.width*.1,
+                      width: size.width * .4,
+                      borderColor: Colors.grey,
+                      splashColor: Colors.pink.shade200),
                   SizedBox(
                     width: size.width * .1,
                   ),
-                  Center(
-                    child: GradientButton(
-                      onPressed: () {},
-                      child: Text(
-                        'Save',
-                        style: TextStyle(
-                            fontFamily: 'taviraj',
-                            fontWeight: FontWeight.w500,
-                            color: ColorsVariables.splashSkip,
-                            fontStyle: FontStyle.normal,
-                            fontSize: size.width * .045),
-                      ),
-                      borderRadius: 6.97,
-                      height: size.width * .13,
-                      width: size.width * .4,
-                      gradientColors: [
-                        Colors.pink.shade600,
-                        Colors.pink.shade400
-                      ],
+                  GradientButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Save',
+                      style: TextStyle(
+                          fontFamily: 'taviraj',
+                          fontWeight: FontWeight.w500,
+                          color: ColorsVariables.splashSkip,
+                          fontStyle: FontStyle.normal,
+                          fontSize: size.width * .045),
                     ),
+                    borderRadius: 6.97,
+                    height: size.width * .1,
+                    width: size.width * .4,
+                    gradientColors: [
+                      Colors.pink.shade600,
+                      Colors.pink.shade400
+                    ],
                   ),
                 ],
               ),
@@ -658,9 +583,12 @@ class _MaBafdoState extends State<MaBafdo> {
                       fontSize: size.width * .045),
                 ),
                 borderRadius: 6.97,
-                height: size.width * .13,
+                height: size.width * .1,
                 width: size.width * .4,
-                gradientColors: [Colors.pink.shade600, Colors.pink.shade400],
+                gradientColors: [
+                  Colors.pink.shade600,
+                  Colors.pink.shade400
+                ],
               ),
               SizedBox(
                 height: size.width * .5,

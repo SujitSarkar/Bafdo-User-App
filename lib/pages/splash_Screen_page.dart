@@ -47,7 +47,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
 
             if (seconds == 0) {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LogInPage()));
+                  MaterialPageRoute(builder: (context) => LoginWithNumber()));
             }
           }
         },
@@ -107,7 +107,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => LogInPage()));
+                                      builder: (context) => LoginWithNumber()));
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(

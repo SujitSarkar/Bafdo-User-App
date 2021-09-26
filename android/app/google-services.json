@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "176484068197",
-    "project_id": "bafdo-2021",
-    "storage_bucket": "bafdo-2021.appspot.com"
+    "project_number": "559220905094",
+    "project_id": "bafdo2021",
+    "storage_bucket": "bafdo2021.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:176484068197:android:7309b438df0971c289cf8c",
+        "mobilesdk_app_id": "1:559220905094:android:1ae6a3c6b1e81b38d82d07",
         "android_client_info": {
-          "package_name": "com.bafdo.bafdo_user"
+          "package_name": "com.bafdo.bafdo_user_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "176484068197-1dbntfn90ftmghi25f42ur2cp213nsbp.apps.googleusercontent.com",
+          "client_id": "559220905094-4knr4fdqft672lh226fcr16le5nklv17.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.bafdo.bafdo_user",
+            "package_name": "com.bafdo.bafdo_user_app",
             "certificate_hash": "f7392e8bbb76af27a660752fa332be102914fda5"
           }
         },
         {
-          "client_id": "176484068197-ets1301uei9j2ssc9tq1gq31td77mi9f.apps.googleusercontent.com",
+          "client_id": "559220905094-kgg9a0n6jagh62hkbof9463lno0vu9bg.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDMR1Dm5J_mOxHNqq22N0KagGQKhTMQMa8"
+          "current_key": "AIzaSyCkBZLL5PADyebrW9_pzcvYpFVtBdYupfo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "176484068197-ets1301uei9j2ssc9tq1gq31td77mi9f.apps.googleusercontent.com",
+              "client_id": "559220905094-kgg9a0n6jagh62hkbof9463lno0vu9bg.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

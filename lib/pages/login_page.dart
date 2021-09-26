@@ -8,6 +8,7 @@ import 'package:bafdo/provider/auth_provider.dart';
 import 'package:bafdo/widgets/form_decoration.dart';
 import 'package:bafdo/widgets/gradient_button.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -306,8 +307,19 @@ class _LogInPageState extends State<LogInPage> {
     return InkWell(
       onTap: () async{
         if(assetImage=='assets/app_icon/body_icon/google.png'){
-          await authProvider.loginWithGoogle(context).then((value){
-            print(value.user!.displayName);
+          await authProvider.loginWithGoogle(context).then((cred)async{
+            if(cred!=null){
+              print(cred.user!.email);
+              _socialLogin(cred, authProvider);
+            }else showToast('Error getting user');
+          });
+        }
+        else if(assetImage=='assets/app_icon/body_icon/facebook.png'){
+          await authProvider.signInWithFacebook(context).then((cred)async{
+            if(cred!=null){
+              print(cred.user!.email);
+              _socialLogin(cred, authProvider);
+            }else showToast('Error getting user');
           });
         }
       },
@@ -319,10 +331,10 @@ class _LogInPageState extends State<LogInPage> {
 
   Future<void> _validateDataAndLogin(AuthProvider authProvider)async{
       if(_email.text.isNotEmpty && _password.text.isNotEmpty){
-        if(_email.text.contains('@')&&_email.text.contains('.com')){
+        if(_email.text.contains('@') && _email.text.contains('.com')){
           if(_password.text.length>=8){
             Map<String,String> userMap={
-              'email': _email.text,
+              'phone': _email.text,
               'password': _password.text
             };
             showLoadingDialog(context);
@@ -331,17 +343,42 @@ class _LogInPageState extends State<LogInPage> {
                 if(_checked){
                   SharedPreferences preferences = await SharedPreferences.getInstance();
                   preferences.setString('email_or_phone', authProvider.userInfoModel.user.phone);
+                  preferences.setString('id', authProvider.userInfoModel.user.id.toString());
+                  preferences.setString('name', authProvider.userInfoModel.user.name);
+                  preferences.setString('access_token', authProvider.userInfoModel.accessToken);
                 }
                 closeLoadingDialog(context);
                 showToast(authProvider.userInfoModel.message);
                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
               }else{
                 closeLoadingDialog(context);
+                showToast(authProvider.signupModel.message);
               }
             });
           }else showToast('Password must 8 character');
-        }else showToast('Invalid Email');
+        }else showToast('Invalid email');
       }else showToast('Missing user information');
-
   }
+
+  Future<void> _socialLogin(UserCredential? credential, AuthProvider authProvider)async{
+    Map<String,String> userMap={
+      'email_or_phone': credential!.user!.email!
+    };
+    await authProvider.socialLoginAndGetUserInfo(userMap).then((value) async{
+      if(value){
+        if(_checked){
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          preferences.setString('email_or_phone', authProvider.userInfoModel.user.phone);
+          preferences.setString('id', authProvider.userInfoModel.user.id.toString());
+          preferences.setString('name', authProvider.userInfoModel.user.name);
+          preferences.setString('access_token', authProvider.userInfoModel.accessToken);
+        }
+        closeLoadingDialog(context);
+        showToast(authProvider.userInfoModel.message);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
+      }else showToast('Something went wrong! try again');
+    });
+  }
+
+
 }

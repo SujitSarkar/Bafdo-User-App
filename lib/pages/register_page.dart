@@ -319,36 +319,43 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> _validateDataAndSignup(AuthProvider authProvider)async{
     if(_checked){
       if(_name.text.isNotEmpty && _email.text.isNotEmpty && _password.text.isNotEmpty){
-        if(_email.text.contains('@')&&_email.text.contains('.com')){
+        if(_email.text.contains('@') && _email.text.contains('.com')){
           if(_password.text.length>=8){
             Map<String,String> userMap={
               'name': _name.text,
               'email_or_phone': _email.text,
               'password': _password.text
             };
-            showLoadingDialog(context);
-            await authProvider.userSignup(userMap).then((value)async{
-              if(value){
-                showToast(authProvider.signupModel.message);
-                Map<String,String> map={
-                  'email': _email.text,
-                  'password': _password.text
-                };
-                await authProvider.loginAndGetUserInfo(map).then((value)async{
-                    SharedPreferences preferences = await SharedPreferences.getInstance();
-                    preferences.setString('email_or_phone', authProvider.userInfoModel.user.phone);
-                    closeLoadingDialog(context);
-                    showToast(authProvider.userInfoModel.message);
-                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
-                });
-              }else{
-                closeLoadingDialog(context);
-                showToast('Something went wrong! Try again');
-              }
-            });
+            _loginUser(authProvider, userMap);
           }else showToast('Password must 8 character');
-        }else showToast('Invalid Email');
+        }else showToast('Invalid email');
       }else showToast('Missing user information');
     }else showToast('Select Terms & Condition');
+  }
+
+  Future<void> _loginUser(AuthProvider authProvider, Map<String,String> userMap)async{
+    showLoadingDialog(context);
+    await authProvider.userSignup(userMap).then((value)async{
+      if(value){
+        showToast(authProvider.signupModel.message);
+        Map<String,String> map={
+          'phone': _email.text,
+          'password': _password.text
+        };
+        await authProvider.loginAndGetUserInfo(map).then((value)async{
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          preferences.setString('email_or_phone', authProvider.userInfoModel.user.phone);
+          preferences.setString('id', authProvider.userInfoModel.user.id.toString());
+          preferences.setString('name', authProvider.userInfoModel.user.name);
+          preferences.setString('access_token', authProvider.userInfoModel.accessToken);
+          closeLoadingDialog(context);
+          showToast(authProvider.userInfoModel.message);
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
+        });
+      }else{
+        closeLoadingDialog(context);
+        showToast(authProvider.signupModel.message);
+      }
+    });
   }
 }
