@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:bafdo/model/signup_model.dart';
 import 'package:bafdo/model/userinfo_model.dart';
@@ -45,15 +46,19 @@ class AuthProvider extends ChangeNotifier {
           .post(Uri.parse('https://bafdo.com/api/v2/auth/login'), body: map);
 
       if (response.statusCode == 200) {
-        _userInfoModel = userInfoModelFromJson(response.body);
-        notifyListeners();
-        if (_userInfoModel!.result == true) {
-          return Future.value(true);
-        } else {
-          showToast(_userInfoModel!.message);
-          return Future.value(false);
-        }
-      } else return Future.value(false);
+          _userInfoModel = userInfoModelFromJson(response.body);
+          notifyListeners();
+          if (_userInfoModel!.result == true) {
+            return Future.value(true);
+          } else {
+            showToast(_userInfoModel!.message);
+            return Future.value(false);
+          }
+      } else if(response.statusCode == 401){
+        showToast('Not registered yet');
+        return Future.value(false);
+      }
+      else return Future.value(false);
     } on SocketException {
       showToast('No internet connection !');
       return Future.value(false);

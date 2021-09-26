@@ -352,7 +352,7 @@ class _LogInPageState extends State<LogInPage> {
                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
               }else{
                 closeLoadingDialog(context);
-                showToast(authProvider.signupModel.message);
+                //showToast('Something went wrong! try again');
               }
             });
           }else showToast('Password must 8 character');

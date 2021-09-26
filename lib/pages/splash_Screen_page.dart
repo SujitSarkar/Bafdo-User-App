@@ -23,7 +23,6 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     publicProvider.fetchTopBrands();
     publicProvider.fetchTraditionalCategories();
     publicProvider.fetchSliders();
-    //  _navigateToLogInPage();
     startTimer();
   }
 
