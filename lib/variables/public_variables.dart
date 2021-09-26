@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../colors.dart';
 import 'color_variable.dart';
 
 class PublicVariables{
@@ -30,6 +31,12 @@ class PublicVariables{
     fontSize: 12.0,
     color: Colors.grey.shade900,
     fontFamily: 'taviraj',
+  );
+  static otpTextStyle(Size size)=> TextStyle(
+      fontFamily: 'taviraj',
+      color: ColorsVariables.textColor,
+      fontStyle: FontStyle.normal,
+      fontSize: size.width * .06
   );
 
 }

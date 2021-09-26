@@ -43,10 +43,9 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                 seconds = seconds - 1;
               });
             }
-
             if (seconds == 0) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LoginWithNumber()));
+              _timer!.cancel();
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginWithNumber()), (route) => false);
             }
           }
         },
@@ -103,10 +102,8 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginWithNumber()));
+                              _timer!.cancel();
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginWithNumber()), (route) => false);
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(

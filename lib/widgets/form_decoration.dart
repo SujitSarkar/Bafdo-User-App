@@ -33,7 +33,7 @@ InputDecoration myBafdoFormDecoration(Size size) => InputDecoration(
     isDense: true,
     border: new OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.0),
-        borderSide: new BorderSide(color: Colors.teal)),
+        borderSide: new BorderSide(color: Colors.grey)),
     hintText: 'Name',
     hintStyle: TextStyle(
         color: Colors.grey,

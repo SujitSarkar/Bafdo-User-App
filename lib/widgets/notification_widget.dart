@@ -9,18 +9,22 @@ void showLoadingDialog(BuildContext context) {
       barrierColor: Colors.black.withOpacity(0.6),
       transitionDuration: Duration(milliseconds: 500),
       context: context,
-      pageBuilder: (context, __, ___){
+      pageBuilder: (context, __, ___) {
         return Align(
           alignment: Alignment.center,
-          child: SpinKitSpinningLines(
-              color: Colors.white,
-              size: 60.0),
+          child: SpinKitSpinningLines(color: Colors.white, size: 60.0),
         );
       });
 }
-void closeLoadingDialog(BuildContext context)=> Navigator.pop(context);
 
-void showToast(String? message){
+Widget showLoadingWidget = Align(
+  alignment: Alignment.center,
+  child: SpinKitSpinningLines(color: Colors.pink, size: 60.0),
+);
+
+void closeLoadingDialog(BuildContext context) => Navigator.pop(context);
+
+void showToast(String? message) {
   Fluttertoast.showToast(
       msg: message!,
       toastLength: Toast.LENGTH_SHORT,
@@ -28,6 +32,5 @@ void showToast(String? message){
       timeInSecForIosWeb: 1,
       backgroundColor: Colors.black.withOpacity(0.75),
       textColor: Colors.white,
-      fontSize: 16.0
-  );
+      fontSize: 16.0);
 }
