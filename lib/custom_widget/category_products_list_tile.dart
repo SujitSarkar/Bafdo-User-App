@@ -1,25 +1,23 @@
 import 'package:bafdo/colors.dart';
+import 'package:bafdo/model/product_list_model.dart';
 import 'package:bafdo/model/traditional_product_list_model.dart';
-import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/sub_pages/product_details.dart';
-import 'package:bafdo/sub_pages/product_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bafdo/model/featured_categories_model.dart';
-import 'package:provider/provider.dart';
 
-class FeatureCategoryListTile extends StatefulWidget {
-  TraditinalProductListDatum? productList;
+class CategoryProductListTile extends StatefulWidget {
+  ProductListDatum? productList;
 
 
-  FeatureCategoryListTile({this.productList});
+  CategoryProductListTile({this.productList});
 
   @override
-  _FeatureCategoryListTileState createState() =>
-      _FeatureCategoryListTileState();
+  _CategoryProductListTileState createState() =>
+      _CategoryProductListTileState();
 }
 
-class _FeatureCategoryListTileState extends State<FeatureCategoryListTile> {
+class _CategoryProductListTileState extends State<CategoryProductListTile> {
   bool favorite = false;
 
   @override
@@ -40,7 +38,7 @@ class _FeatureCategoryListTileState extends State<FeatureCategoryListTile> {
         child: Container(
           width: size.width * .43,
           decoration:
-              BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(15))),
+          BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(15))),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,7 +147,7 @@ class _FeatureCategoryListTileState extends State<FeatureCategoryListTile> {
                                             fontStyle: FontStyle.normal,
                                             fontWeight: FontWeight.bold,
                                             decoration:
-                                                TextDecoration.lineThrough,
+                                            TextDecoration.lineThrough,
                                             fontSize: size.width * .03),
                                       ),
                                     ],
@@ -231,7 +229,7 @@ class _OfferListTileState extends State<OfferListTile> {
       elevation: 8,
       child: Container(
         decoration:
-            BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(15))),
+        BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(15))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,14 +269,14 @@ class _OfferListTileState extends State<OfferListTile> {
                         Positioned.fill(
                             child: Center(
                                 child: Text(
-                          "    30% \n     off",
-                          style: TextStyle(
-                              fontFamily: 'taviraj',
-                              color: Colors.white,
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.bold,
-                              fontSize: size.width * .03),
-                        )))
+                                  "    30% \n     off",
+                                  style: TextStyle(
+                                      fontFamily: 'taviraj',
+                                      color: Colors.white,
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: size.width * .03),
+                                )))
                       ],
                     ),
                   ),
@@ -463,75 +461,6 @@ Widget getFavoriteOfferCard(BuildContext context) {
           ],
         ),
       ),
-    ),
-  );
-}
-
-Widget getFeatureCard(BuildContext context,Datum featuredCategories) {
-  final PublicProvider publicProvider = Provider.of<PublicProvider>(context,listen: false);
-  Size size = MediaQuery.of(context).size;
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: InkWell(
-      onTap: ()async{
-        await publicProvider.fetchFeaturedCategoriesProducts(featuredCategories.links!.products!).then((value){
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ProductPage(
-                    navigateFrom: 'Feature  Categories',
-                  )));
-        });
-
-      },
-      child: Stack(
-          children: [
-        Container(
-          width: size.width * .6,
-          height: size.width * .3,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: NetworkImage(
-                  'https://bafdo.com/public/${featuredCategories.banner??''}',
-                ),
-                fit: BoxFit.cover
-            ),
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.all(Radius.circular(15))),
-        ),
-        Positioned.fill(
-          top: size.width * .1,
-          child: Column(
-            children: [
-              Text(
-                featuredCategories.name??'',
-                style: TextStyle(
-                    fontFamily: 'taviraj',
-                    color: Colors.white,
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.bold,
-                    fontSize: size.width * .03),
-              ),
-              Text(
-                '${featuredCategories.links!.products!.length}',
-                style: TextStyle(
-                    fontFamily: 'taviraj',
-                    color: Colors.white,
-                    fontStyle: FontStyle.normal,
-                    fontSize: size.width * .03),
-              ),
-              Text(
-                'Brands',
-                style: TextStyle(
-                    fontFamily: 'taviraj',
-                    color: Colors.white,
-                    fontStyle: FontStyle.normal,
-                    fontSize: size.width * .03),
-              ),
-            ],
-          ),
-        )
-      ]),
     ),
   );
 }

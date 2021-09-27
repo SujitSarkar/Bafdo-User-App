@@ -12,7 +12,6 @@ import 'package:bafdo/widgets/gradient_button.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetail extends StatefulWidget {
-  const ProductDetail({Key? key}) : super(key: key);
 
   @override
   _ProductDetailState createState() => _ProductDetailState();

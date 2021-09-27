@@ -1,4 +1,5 @@
 import 'package:bafdo/colors.dart';
+import 'package:bafdo/custom_widget/category_products_list_tile.dart';
 import 'package:bafdo/custom_widget/special_category_list_tile.dart';
 import 'package:bafdo/custom_widget/feature_category_list_tile.dart';
 import 'package:bafdo/pages/category_page.dart';
@@ -39,6 +40,9 @@ class _HomeNavState extends State<HomeNav> {
     if(publicProvider.brands==null)await publicProvider.fetchBrands();
     if(publicProvider.featuredCategories==null) await publicProvider.fetchFeaturedCategories();
     if(publicProvider.traditionalCategories==null) await publicProvider.fetchTraditionalCategories();
+    if(publicProvider.handPickedProducts==null) await publicProvider.fetchHandPickProducts();
+    if(publicProvider.flashDealProducts==null) await publicProvider.fetchFlashDealProducts();
+    if(publicProvider.dailyFeaturedProducts==null) await publicProvider.fetchDailyFeaturedProducts();
   }
 
   // List<String> _general_gift_categories = [
@@ -319,12 +323,14 @@ class _HomeNavState extends State<HomeNav> {
                                     height: 250,
                                     margin: EdgeInsets.symmetric(vertical: 0),
                                     decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          item,
+                                        ),
+                                          fit: BoxFit.fill
+                                      ),
                                       color: Colors.pink,
                                       borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: Image.network(
-                                      item,
-                                      fit: BoxFit.fill,
                                     ),
                                   );
                                 },
@@ -371,6 +377,7 @@ class _HomeNavState extends State<HomeNav> {
                         gridDelegate:
                             SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 4,
+                          childAspectRatio: 8.4/9,
                           mainAxisSpacing: size.width * 0,
                         ),
                         physics: ClampingScrollPhysics(),
@@ -472,360 +479,296 @@ class _HomeNavState extends State<HomeNav> {
                   height: size.width * .005,
                 ),
 
-                ListView.builder(
-                  physics: ClampingScrollPhysics(),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: publicProvider.traditionalCategories==null?0:publicProvider.traditionalCategories!.data!.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Container(
-                                width: size.width * .6,
-                                padding: EdgeInsets.fromLTRB(size.width * .01, 0, 0, 0),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 15,width: 13,
-                                      child: Image.network(
-                                        'https://bafdo.com/public/${publicProvider.traditionalCategories!.data![index].banner??''}',
-                                      ),
-                                    ),
-                                    Text(
-                                      publicProvider.traditionalCategories!.data![index].name!,
-                                      style: TextStyle(
-                                          fontFamily: 'taviraj',
-                                          fontWeight: FontWeight.w500,
-                                          color: ColorsVariables.textColor,
-                                          fontStyle: FontStyle.normal,
-                                          fontSize: size.width * .045),
-                                    ),
-                                  ],
-                                )),
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ProductPage(
-                                          navigateFrom: 'Traditional Categories',
-                                        )));
-                              },
-                              child: Padding(
-                                padding:
-                                EdgeInsets.symmetric(horizontal: size.width * .04),
-                                child: Text(
-                                  'See More',
-                                  style: TextStyle(
-                                      fontFamily: 'taviraj',
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey,
-                                      fontStyle: FontStyle.normal,
-                                      fontSize: size.width * .04),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: size.height*.15,width: size.width,
-                          child: ListView.builder(
-                              physics: ClampingScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: 2,
-                              itemBuilder: (_,ind){
-                                return Container();
-                                // InkWell(
-                                //   onTap: () {
-                                //     Navigator.push(
-                                //         context,
-                                //         MaterialPageRoute(
-                                //             builder: (_) => ProductDetail()));
-                                //   },
-                                //   child: FeatureCategoryListTile());
-                              }),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: size.width * .04,
-                ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   //  crossAxisAlignment: CrossAxisAlignment.end,
-                //
-                //   children: [
-                //     Padding(
-                //       padding: const EdgeInsets.all(5.0),
-                //       child: Text(
-                //         'Hand Picked',
-                //         style: TextStyle(
-                //             fontFamily: 'taviraj',
-                //             fontWeight: FontWeight.w500,
-                //             color: ColorsVariables.textColor,
-                //             fontStyle: FontStyle.normal,
-                //             fontSize: size.width * .045),
-                //       ),
-                //     ),
-                //     InkWell(
-                //       onTap: () {
-                //         Navigator.push(
-                //             context,
-                //             MaterialPageRoute(
-                //                 builder: (context) => ProductPage(
-                //                       navigateFrom: 'Hand Picked',
-                //                     )));
-                //       },
-                //       child: Padding(
-                //         padding:
-                //             EdgeInsets.symmetric(horizontal: size.width * .04),
-                //         child: Text(
-                //           'See More',
-                //           style: TextStyle(
-                //               fontFamily: 'taviraj',
-                //               fontWeight: FontWeight.w500,
-                //               color: Colors.grey,
-                //               fontStyle: FontStyle.normal,
-                //               fontSize: size.width * .04),
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                // Container(
-                //   height: size.width * .5,
-                //   width: size.width,
-                //   child: ListView.builder(
-                //     scrollDirection: Axis.horizontal,
-                //     itemCount: 3,
-                //     itemBuilder: (context, index) {
-                //       return FeatureCategoryListTile();
-                //     },
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: size.width * .04,
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 5),
-                //   child: Container(
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //       //  crossAxisAlignment: CrossAxisAlignment.end,
-                //
-                //       children: [
-                //         Image.asset(
-                //           'assets/app_icon/body_icon/flash_deal_icon.png',
-                //         ),
-                //         Text(
-                //           'Flash Deal',
-                //           style: TextStyle(
-                //               fontFamily: 'taviraj',
-                //               fontWeight: FontWeight.w500,
-                //               color: ColorsVariables.textColor,
-                //               fontStyle: FontStyle.normal,
-                //               fontSize: size.width * .045),
-                //         ),
-                //         Padding(
-                //           padding: const EdgeInsets.only(left: 5, right: 5),
-                //           child: Text(
-                //             'Ending in',
-                //             style: TextStyle(
-                //                 fontFamily: 'taviraj',
-                //                 fontWeight: FontWeight.w500,
-                //                 color: ColorsVariables.textColor,
-                //                 fontStyle: FontStyle.normal,
-                //                 fontSize: size.width * .04),
-                //           ),
-                //         ),
-                //         Expanded(
-                //           child: Container(
-                //               height: size.width * .07,
-                //               width: size.width * .07,
-                //               alignment: Alignment.center,
-                //               decoration: new BoxDecoration(
-                //                   color: Colors.pink.shade300,
-                //                   border: new Border.all(
-                //                       width: 2.0,
-                //                       color: Color.fromRGBO(0, 0, 0, 0.1)),
-                //                   borderRadius:
-                //                       new BorderRadius.circular(6.97)),
-                //               child: Text(
-                //                 endingHours.toString(),
-                //                 style: TextStyle(
-                //                     fontFamily: 'poppins',
-                //                     fontWeight: FontWeight.w500,
-                //                     color: Colors.white,
-                //                     fontStyle: FontStyle.normal,
-                //                     fontSize: size.width * .04),
-                //               )),
-                //         ),
-                //         Text(' : '),
-                //         Expanded(
-                //           child: Container(
-                //               height: size.width * .07,
-                //               width: size.width * .07,
-                //               alignment: Alignment.center,
-                //               decoration: new BoxDecoration(
-                //                   color: Colors.pink.shade300,
-                //                   border: new Border.all(
-                //                       width: 2.0,
-                //                       color: Color.fromRGBO(0, 0, 0, 0.1)),
-                //                   borderRadius:
-                //                       new BorderRadius.circular(6.97)),
-                //               child: Text(
-                //                 endingSecond.toString(),
-                //                 style: TextStyle(
-                //                     fontFamily: 'poppins',
-                //                     fontWeight: FontWeight.w500,
-                //                     color: Colors.white,
-                //                     fontStyle: FontStyle.normal,
-                //                     fontSize: size.width * .04),
-                //               )),
-                //         ),
-                //         Text(' : '),
-                //         Expanded(
-                //           child: Container(
-                //             height: size.width * .07,
-                //             width: size.width * .07,
-                //             alignment: Alignment.center,
-                //             decoration: new BoxDecoration(
-                //                 color: Colors.pink.shade300,
-                //                 border: new Border.all(
-                //                     width: 2.0,
-                //                     color: Color.fromRGBO(0, 0, 0, 0.1)),
-                //                 borderRadius: new BorderRadius.circular(6.97)),
-                //             child: Center(
-                //                 child: Text(
-                //               endingMinute.toString(),
-                //               style: TextStyle(
-                //                   fontFamily: 'poppins',
-                //                   // fontWeight: FontWeight.w500,
-                //                   color: Colors.white,
-                //                   fontStyle: FontStyle.normal,
-                //                   fontSize: size.width * .04),
-                //             )),
-                //           ),
-                //         ),
-                //         InkWell(
-                //           onTap: () {
-                //             Navigator.push(
-                //                 context,
-                //                 MaterialPageRoute(
-                //                     builder: (context) => ProductPage(
-                //                           navigateFrom: 'Flash Deal',
-                //                         )));
-                //           },
-                //           child: Padding(
-                //             padding: EdgeInsets.symmetric(
-                //                 horizontal: size.width * .02),
-                //             child: Text('See More',
-                //                 style: TextStyle(
-                //                     fontFamily: 'taviraj',
-                //                     color: Colors.grey,
-                //                     fontStyle: FontStyle.normal,
-                //                     fontSize: size.width * .04)),
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
-                // Container(
-                //   height: size.width * .5,
-                //   width: size.width,
-                //   child: ListView.builder(
-                //     scrollDirection: Axis.horizontal,
-                //     itemCount: 3,
-                //     itemBuilder: (context, index) {
-                //       return FeatureCategoryListTile();
-                //     },
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: size.width * .04,
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 5),
-                //   child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //       //  crossAxisAlignment: CrossAxisAlignment.end,
-                //
-                //       children: [
-                //         Row(
-                //           children: [
-                //             Image.asset(
-                //               'assets/app_icon/body_icon/feature_icon.png',
-                //             ),
-                //             Text('Daily Featured',
-                //                 style: TextStyle(
-                //                     fontFamily: 'taviraj',
-                //                     color: ColorsVariables.textColor,
-                //                     fontStyle: FontStyle.normal,
-                //                     fontSize: size.width * .045)),
-                //           ],
-                //         ),
-                //         InkWell(
-                //           onTap: () {
-                //             Navigator.push(
-                //                 context,
-                //                 MaterialPageRoute(
-                //                     builder: (context) => ProductPage(
-                //                           navigateFrom: 'Daily Featured',
-                //                         )));
-                //           },
-                //           child: Padding(
-                //             padding: EdgeInsets.symmetric(
-                //                 horizontal: size.width * .04),
-                //             child: Text('See More',
-                //                 style: TextStyle(
-                //                     fontFamily: 'taviraj',
-                //                     color: Colors.grey,
-                //                     fontStyle: FontStyle.normal,
-                //                     fontSize: size.width * .04)),
-                //           ),
-                //         ),
-                //       ]),
-                // ),
-                // Container(
-                //   height: size.width * .5,
-                //   width: size.width,
-                //   child: ListView.builder(
-                //     scrollDirection: Axis.horizontal,
-                //     itemCount: 3,
-                //     itemBuilder: (context, index) {
-                //       return FeatureCategoryListTile();
-                //     },
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: size.width * .04,
-                // ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       //  crossAxisAlignment: CrossAxisAlignment.end,
 
                       children: [
-                        Text('Feature  Categories',
-                            style: TextStyle(
-                                fontFamily: 'taviraj',
-                                fontWeight: FontWeight.w500,
-                                color: ColorsVariables.textColor,
-                                fontStyle: FontStyle.normal,
-                                fontSize: size.width * .045)),
+                        Container(
+                            width: size.width * .6,
+                            padding: EdgeInsets.fromLTRB(size.width * .01, 0, 0, 0),
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 15,width: 13,
+                                  child: Image.network(
+                                    'https://bafdo.com/public/${publicProvider.traditionalCategories!.data![0].banner??''}',
+                                  ),
+                                ),
+                                Text(
+                                  publicProvider.traditionalCategories!.data![0].name!,
+                                  style: TextStyle(
+                                      fontFamily: 'taviraj',
+                                      fontWeight: FontWeight.w500,
+                                      color: ColorsVariables.textColor,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: size.width * .045),
+                                ),
+                              ],
+                            )),
                         InkWell(
                           onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ProductPage(
-                                          navigateFrom: 'Feature  Categories',
+                                      navigateFrom: publicProvider.traditionalCategories!.data![0].name!,
+                                    )));
+                          },
+                          child: Padding(
+                            padding:
+                            EdgeInsets.symmetric(horizontal: size.width * .04),
+                            child: Text(
+                              'See More',
+                              style: TextStyle(
+                                  fontFamily: 'taviraj',
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey,
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: size.width * .04),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      height: size.width * .5,
+                      width: size.width,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: publicProvider.traditionalCategoriesProducts==null?0:publicProvider.traditionalCategoriesProducts!.data!.length<3?
+                        publicProvider.traditionalCategoriesProducts!.data!.length:3,
+                        itemBuilder: (context, index) {
+                          return FeatureCategoryListTile(productList: publicProvider.traditionalCategoriesProducts!.data![index],);
+                        },
+                      ),
+                    ),
+                SizedBox(
+                  height: size.width * .04,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //  crossAxisAlignment: CrossAxisAlignment.end,
+
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(
+                        'Hand Picked',
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            fontWeight: FontWeight.w500,
+                            color: ColorsVariables.textColor,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .045),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProductPage(
+                                      navigateFrom: 'Hand Picked',
+                                    )));
+                      },
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: size.width * .04),
+                        child: Text(
+                          'See More',
+                          style: TextStyle(
+                              fontFamily: 'taviraj',
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey,
+                              fontStyle: FontStyle.normal,
+                              fontSize: size.width * .04),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  height: size.width * .5,
+                  width: size.width,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: publicProvider.handPickedProducts==null?0:publicProvider.handPickedProducts!.data!.length<3?
+                               publicProvider.handPickedProducts!.data!.length:3,
+                    itemBuilder: (context, index) {
+                      return CategoryProductListTile(productList: publicProvider.handPickedProducts!.data![index]);
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: size.width * .04,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //  crossAxisAlignment: CrossAxisAlignment.end,
+
+                      children: [
+                        Image.asset(
+                          'assets/app_icon/body_icon/flash_deal_icon.png',
+                        ),
+                        Text(
+                          'Flash Deal',
+                          style: TextStyle(
+                              fontFamily: 'taviraj',
+                              fontWeight: FontWeight.w500,
+                              color: ColorsVariables.textColor,
+                              fontStyle: FontStyle.normal,
+                              fontSize: size.width * .045),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5, right: 5),
+                          child: Text(
+                            'Ending in',
+                            style: TextStyle(
+                                fontFamily: 'taviraj',
+                                fontWeight: FontWeight.w500,
+                                color: ColorsVariables.textColor,
+                                fontStyle: FontStyle.normal,
+                                fontSize: size.width * .04),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                              height: size.width * .07,
+                              width: size.width * .07,
+                              alignment: Alignment.center,
+                              decoration: new BoxDecoration(
+                                  color: Colors.pink.shade300,
+                                  border: new Border.all(
+                                      width: 2.0,
+                                      color: Color.fromRGBO(0, 0, 0, 0.1)),
+                                  borderRadius:
+                                      new BorderRadius.circular(6.97)),
+                              child: Text(
+                                endingHours.toString(),
+                                style: TextStyle(
+                                    fontFamily: 'poppins',
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .04),
+                              )),
+                        ),
+                        Text(' : '),
+                        Expanded(
+                          child: Container(
+                              height: size.width * .07,
+                              width: size.width * .07,
+                              alignment: Alignment.center,
+                              decoration: new BoxDecoration(
+                                  color: Colors.pink.shade300,
+                                  border: new Border.all(
+                                      width: 2.0,
+                                      color: Color.fromRGBO(0, 0, 0, 0.1)),
+                                  borderRadius:
+                                      new BorderRadius.circular(6.97)),
+                              child: Text(
+                                endingSecond.toString(),
+                                style: TextStyle(
+                                    fontFamily: 'poppins',
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .04),
+                              )),
+                        ),
+                        Text(' : '),
+                        Expanded(
+                          child: Container(
+                            height: size.width * .07,
+                            width: size.width * .07,
+                            alignment: Alignment.center,
+                            decoration: new BoxDecoration(
+                                color: Colors.pink.shade300,
+                                border: new Border.all(
+                                    width: 2.0,
+                                    color: Color.fromRGBO(0, 0, 0, 0.1)),
+                                borderRadius: new BorderRadius.circular(6.97)),
+                            child: Center(
+                                child: Text(
+                              endingMinute.toString(),
+                              style: TextStyle(
+                                  fontFamily: 'poppins',
+                                  // fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: size.width * .04),
+                            )),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProductPage(
+                                          navigateFrom: 'Flash Deal',
+                                        )));
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width * .02),
+                            child: Text('See More',
+                                style: TextStyle(
+                                    fontFamily: 'taviraj',
+                                    color: Colors.grey,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .04)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  height: size.width * .5,
+                  width: size.width,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: publicProvider.flashDealProducts==null?0:publicProvider.flashDealProducts!.data!.length<3?
+                    publicProvider.flashDealProducts!.data!.length:3,
+                    itemBuilder: (context, index) {
+                      return CategoryProductListTile(productList: publicProvider.flashDealProducts!.data![index],);
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: size.width * .04,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //  crossAxisAlignment: CrossAxisAlignment.end,
+
+                      children: [
+                        Row(
+                          children: [
+                            Image.asset(
+                              'assets/app_icon/body_icon/feature_icon.png',
+                            ),
+                            Text('Daily Featured',
+                                style: TextStyle(
+                                    fontFamily: 'taviraj',
+                                    color: ColorsVariables.textColor,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .045)),
+                          ],
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProductPage(
+                                          navigateFrom: 'Daily Featured',
                                         )));
                           },
                           child: Padding(
@@ -842,7 +785,37 @@ class _HomeNavState extends State<HomeNav> {
                       ]),
                 ),
                 Container(
-                  height: size.width * .8,
+                  height: size.width * .5,
+                  width: size.width,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: publicProvider.dailyFeaturedProducts==null?0:publicProvider.dailyFeaturedProducts!.data!.length<3?
+                                 publicProvider.dailyFeaturedProducts!.data!.length:3,
+                    itemBuilder: (context, index) {
+                      return CategoryProductListTile(productList: publicProvider.dailyFeaturedProducts!.data![index],);
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: size.width * .04,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //  crossAxisAlignment: CrossAxisAlignment.end,
+
+                      children: [
+                        Text('Feature  Categories',
+                            style: TextStyle(
+                                fontFamily: 'taviraj',
+                                fontWeight: FontWeight.w500,
+                                color: ColorsVariables.textColor,
+                                fontStyle: FontStyle.normal,
+                                fontSize: size.width * .045)),
+                      ]),
+                ),
+                Container(
+                  height: size.width * .55,
                   width: size.width,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,

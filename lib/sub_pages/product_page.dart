@@ -1,11 +1,13 @@
 import 'dart:async';
-
 import 'package:bafdo/colors.dart';
+import 'package:bafdo/custom_widget/category_products_list_tile.dart';
 import 'package:bafdo/custom_widget/custom_appbar.dart';
 import 'package:bafdo/custom_widget/feature_category_list_tile.dart';
+import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/sub_pages/product_search_filtered_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:provider/provider.dart';
 
 class ProductPage extends StatefulWidget {
   final String? navigateFrom;
@@ -313,26 +315,66 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   Widget _pages(BuildContext context) {
+    final PublicProvider publicProvider = Provider.of<PublicProvider>(context,listen: false);
     Size size = MediaQuery.of(context).size;
     return Container(
       height: size.height * .8,
       width: size.width,
-      child: new StaggeredGridView.countBuilder(
+      child:widget.navigateFrom == 'Hand Picked'? new StaggeredGridView.countBuilder(
         crossAxisCount: 4,
-        itemCount: 18,
+        itemCount: publicProvider.handPickedProducts!.data!.length,
         itemBuilder: (BuildContext context, int index) {
-          return widget.navigateFrom == 'Hand Picked'
-              ? FeatureCategoryListTile()
-              : widget.navigateFrom == 'Flash Deal'
-                  ? FeatureCategoryListTile()
-                  : widget.navigateFrom == 'Daily Featured'
-                      ? FeatureCategoryListTile()
-                      : widget.navigateFrom == 'Feature  Categories'
-                          ? FeatureCategoryListTile()
-                          : FeatureCategoryListTile();
+          return CategoryProductListTile(productList: publicProvider.handPickedProducts!.data![index]);
         },
         staggeredTileBuilder: (int index) =>
             new StaggeredTile.count(2, index.isEven ? 2 : 3),
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
+      ):widget.navigateFrom == 'Flash Deal'? StaggeredGridView.countBuilder(
+        crossAxisCount: 4,
+        itemCount: publicProvider.flashDealProducts!.data!.length,
+        itemBuilder: (BuildContext context, int index) {
+          return
+            CategoryProductListTile(productList: publicProvider.flashDealProducts!.data![index]);
+
+        },
+        staggeredTileBuilder: (int index) =>
+        new StaggeredTile.count(2, index.isEven ? 2 : 3),
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
+      ):widget.navigateFrom == 'Daily Featured'?
+      StaggeredGridView.countBuilder(
+        crossAxisCount: 4,
+        itemCount: publicProvider.dailyFeaturedProducts!.data!.length,
+        itemBuilder: (BuildContext context, int index) {
+          return CategoryProductListTile(productList: publicProvider.dailyFeaturedProducts!.data![index]);
+
+        },
+        staggeredTileBuilder: (int index) =>
+        new StaggeredTile.count(2, index.isEven ? 2 : 3),
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
+      ):widget.navigateFrom == 'Feature  Categories'?
+      StaggeredGridView.countBuilder(
+        crossAxisCount: 4,
+        itemCount: publicProvider.featuredCategoriesProducts==null?0:publicProvider.featuredCategoriesProducts!.data!.length,
+        itemBuilder: (BuildContext context, int index) {
+          return
+            FeatureCategoryListTile(productList: publicProvider.featuredCategoriesProducts!.data![index],);
+
+        },
+        staggeredTileBuilder: (int index) =>
+        new StaggeredTile.count(2, index.isEven ? 2 : 3),
+        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 4.0,
+      ):StaggeredGridView.countBuilder(
+        crossAxisCount: 4,
+        itemCount: publicProvider.traditionalCategoriesProducts!.data!.length,
+        itemBuilder: (BuildContext context, int index) {
+          return  FeatureCategoryListTile(productList: publicProvider.traditionalCategoriesProducts!.data![index],);
+        },
+        staggeredTileBuilder: (int index) =>
+        new StaggeredTile.count(2, index.isEven ? 2 : 3),
         mainAxisSpacing: 4.0,
         crossAxisSpacing: 4.0,
       ),
