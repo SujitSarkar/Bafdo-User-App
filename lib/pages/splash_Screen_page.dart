@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:bafdo/colors.dart';
+import 'package:bafdo/home.dart';
 import 'package:bafdo/pages/login_page.dart';
 import 'package:bafdo/pages/login_with_number.dart';
 import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/widgets/gradient_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreenPage extends StatefulWidget {
   @override
@@ -13,6 +15,8 @@ class SplashScreenPage extends StatefulWidget {
 }
 
 class _SplashScreenPageState extends State<SplashScreenPage> {
+  SharedPreferences? preferences;
+  String? _emailOrPhone;
   @override
   void initState() {
     super.initState();
@@ -29,7 +33,10 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   Timer? _timer;
   int seconds = 5;
 
-  void startTimer() {
+  void startTimer() async{
+    preferences=await SharedPreferences.getInstance();
+    _emailOrPhone=preferences!.getString('email_or_phone');
+
     const oneSec = const Duration(seconds: 1);
     _timer = new Timer.periodic(
       oneSec,
@@ -45,7 +52,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
             }
             if (seconds == 0) {
               _timer!.cancel();
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginWithNumber()), (route) => false);
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => _emailOrPhone!=null?Home(): LoginWithNumber()), (route) => false);
             }
           }
         },
@@ -103,7 +110,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                           ElevatedButton(
                             onPressed: () {
                               _timer!.cancel();
-                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginWithNumber()), (route) => false);
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) =>_emailOrPhone!=null?Home(): LoginWithNumber()), (route) => false);
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(

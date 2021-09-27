@@ -39,7 +39,7 @@ class _OTPPageState extends State<OTPPage> {
   bool _isLoading=true;
   String? _verificationId;
   Timer? _timer;
-  int seconds = 30;
+  int seconds = 120;
 
   @override
   void initState() {
@@ -115,7 +115,7 @@ class _OTPPageState extends State<OTPPage> {
         _verificationId= verificationId;
         startTimer();
       },
-      timeout: const Duration(seconds: 30),
+      timeout: const Duration(seconds: 120),
       codeAutoRetrievalTimeout: (String verificationId) {
         showToast('OTP resend');
         _verificationId= verificationId;
