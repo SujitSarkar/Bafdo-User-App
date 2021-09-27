@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:bafdo/colors.dart';
 import 'package:bafdo/home.dart';
 import 'package:bafdo/pages/register_page.dart';

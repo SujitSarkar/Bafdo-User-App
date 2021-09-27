@@ -318,6 +318,7 @@ class _LogInPageState extends State<LogInPage> {
           await authProvider.signInWithFacebook(context).then((cred)async{
             if(cred!=null){
               print(cred.user!.email);
+              print(cred.user!.phoneNumber);
               _socialLogin(cred, authProvider);
             }else showToast('Error getting user');
           });
@@ -361,9 +362,17 @@ class _LogInPageState extends State<LogInPage> {
   }
 
   Future<void> _socialLogin(UserCredential? credential, AuthProvider authProvider)async{
-    Map<String,String> userMap={
-      'email_or_phone': credential!.user!.email!
-    };
+    Map<String,String> userMap;
+    if(credential!.user!.email!!=null){
+      userMap={
+        'email_or_phone': credential.user!.email!
+      };
+    }else{
+      userMap={
+        'email_or_phone': credential.user!.phoneNumber!
+      };
+    }
+
     await authProvider.socialLoginAndGetUserInfo(userMap).then((value) async{
       if(value){
         if(_checked){

@@ -318,9 +318,16 @@ class _LoginWithNumberState extends State<LoginWithNumber> {
   }
 
   Future<void> _socialLogin(UserCredential? credential, AuthProvider authProvider)async{
-    Map<String,String> userMap={
-      'email_or_phone': credential!.user!.email!
-    };
+    Map<String,String> userMap;
+    if(credential!.user!.email!!=null){
+      userMap={
+        'email_or_phone': credential.user!.email!
+      };
+    }else{
+      userMap={
+        'email_or_phone': credential.user!.phoneNumber!
+      };
+    }
     await authProvider.socialLoginAndGetUserInfo(userMap).then((value) async{
       if(value){
           SharedPreferences preferences = await SharedPreferences.getInstance();
