@@ -1,3 +1,5 @@
+import 'package:bafdo/model/product_list_model.dart';
+import 'package:bafdo/model/traditional_product_list_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bafdo/model/categories_model.dart';
 import 'package:bafdo/model/brands_top_model.dart';
@@ -13,8 +15,18 @@ class PublicProvider extends ChangeNotifier{
   Brands? _brands;
   FeaturedCategories? _featuredCategories;
   TraditionalCategories? _traditionalCategories;
-  // Sliders? _sliders;
-  // Sliders? get sliders => _sliders;
+  TraditionalProductList? _traditionalCategoriesProducts;
+  TraditionalProductList? get traditionalCategoriesProducts => _traditionalCategoriesProducts;
+  TraditionalProductList? _featuredCategoriesProducts;
+  TraditionalProductList? get featuredCategoriesProducts => _featuredCategoriesProducts;
+
+  ProductList? _handPickedProducts;
+  ProductList? get handPickedProducts => _handPickedProducts;
+  ProductList? _flashDealProducts;
+  ProductList? get flashDealProducts => _flashDealProducts;
+  ProductList? _dailyFeaturedProducts;
+  ProductList? get dailyFeaturedProducts => _dailyFeaturedProducts;
+
   List<String> _sliderlist=[];
   List<String> get  sliderList=>_sliderlist;
   TraditionalCategories? get traditionalCategories => _traditionalCategories;
@@ -80,21 +92,21 @@ class PublicProvider extends ChangeNotifier{
       return null;
     }
   }
-
-  Future<TraditionalCategories?> getTraditionalCategories()async{
+  Future<TraditionalProductList?> getTraditionalProductList(String link)async{
     try{
-      String url = "https://bafdo.com/api/v1/categories/home";
+      String url = "$link";
 
       var response = await http.get(Uri.parse(url));
 
-      TraditionalCategories traditionalCategories = traditionalCategoriesFromJson(response.body);
-      return traditionalCategories;
+      TraditionalProductList traditionalProductList = traditionalProductListFromJson(response.body);
+      return traditionalProductList;
 
     }catch(error){
       print(error.toString());
       return null;
     }
   }
+
   Future<Sliders?> getSliders()async{
     try{
       String url = "https://bafdo.com/api/v1/sliders";
@@ -142,10 +154,95 @@ class PublicProvider extends ChangeNotifier{
     _featuredCategories=result;
     notifyListeners();
   }
+  Future<void> fetchFeaturedCategoriesProducts(String link)async {
+    var result = await getTraditionalProductList(link);
+    _featuredCategoriesProducts=result;
+    notifyListeners();
+  }
+
+  Future<TraditionalCategories?> getTraditionalCategories()async{
+    try{
+      String url = "https://bafdo.com/api/v1/categories/home";
+
+      var response = await http.get(Uri.parse(url));
+
+      TraditionalCategories traditionalCategories = traditionalCategoriesFromJson(response.body);
+      return traditionalCategories;
+
+    }catch(error){
+      print(error.toString());
+      return null;
+    }
+  }
 
   Future<void> fetchTraditionalCategories()async {
     var result = await getTraditionalCategories();
     _traditionalCategories=result;
+    fetchTraditionalCategoriesProducts(_traditionalCategories!.data![0].links!.products!);
+    notifyListeners();
+  }
+
+  Future<void> fetchTraditionalCategoriesProducts(String link)async {
+    var result = await getTraditionalProductList(link);
+    _traditionalCategoriesProducts=result;
+    notifyListeners();
+  }
+
+  Future<ProductList?> getHandPickedProducts()async{
+    try{
+      String url = "https://bafdo.com/api/v2/products/todays-deal";
+
+      var response = await http.get(Uri.parse(url));
+
+      ProductList productList1 = productListFromJson(response.body);
+      return productList1;
+
+    }catch(error){
+      print(error.toString());
+      return null;
+    }
+  }
+  Future<void> fetchHandPickProducts()async {
+    var result = await getHandPickedProducts();
+    _handPickedProducts=result;
+    notifyListeners();
+  }
+  Future<ProductList?> getFlashDealProducts()async{
+    try{
+      String url = "https://bafdo.com/api/v2/products/flash-deal";
+
+      var response = await http.get(Uri.parse(url));
+
+      ProductList productList1 = productListFromJson(response.body);
+      return productList1;
+
+    }catch(error){
+      print(error.toString());
+      return null;
+    }
+  }
+  Future<void> fetchFlashDealProducts()async {
+    var result = await getFlashDealProducts();
+    _flashDealProducts=result;
+    notifyListeners();
+  }
+  Future<ProductList?> getDailyFeaturedProducts()async{
+    try{
+      String url = "https://bafdo.com/api/v2/products/featured";
+
+      var response = await http.get(Uri.parse(url));
+
+      ProductList productList1 = productListFromJson(response.body);
+      return productList1;
+
+    }catch(error){
+      print(error.toString());
+      return null;
+    }
+  }
+  Future<void> fetchDailyFeaturedProducts()async {
+    var result = await getDailyFeaturedProducts();
+    _dailyFeaturedProducts=result;
     notifyListeners();
   }
 }

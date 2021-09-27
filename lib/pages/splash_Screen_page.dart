@@ -27,6 +27,9 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     publicProvider.fetchTopBrands();
     publicProvider.fetchTraditionalCategories();
     publicProvider.fetchSliders();
+    publicProvider.fetchHandPickProducts();
+    publicProvider.fetchFlashDealProducts();
+    publicProvider.fetchDailyFeaturedProducts();
     startTimer();
   }
 
