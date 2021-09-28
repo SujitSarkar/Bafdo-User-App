@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:bafdo/model/pref_user_model.dart';
 import 'package:bafdo/model/signup_model.dart';
 import 'package:bafdo/model/userinfo_model.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
@@ -8,16 +9,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:twitter_login/entity/auth_result.dart';
 import 'package:twitter_login/twitter_login.dart';
 
 class AuthProvider extends ChangeNotifier {
   SignupModel? _signupModel;
   UserInfoModel? _userInfoModel;
+  PrefUserModel? _prefUserModel;
 
   get signupModel => _signupModel;
-
   get userInfoModel => _userInfoModel;
+  get prefUserModel =>_prefUserModel;
+
+  Future<void> getPrefUser()async{
+    if(_prefUserModel==null){
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      PrefUserModel model = PrefUserModel(
+          id: preferences.getString('id'),
+          accessToken: preferences.getString('access_token'),
+          name: preferences.getString('name'),
+          emailOrPhone: preferences.getString('email_or_phone'));
+      _prefUserModel = model;
+      notifyListeners();
+    }
+    print('PrefUserId: ${_prefUserModel!.id}');
+  }
 
   Future<bool> userSignup(Map<String, String> map) async {
     try {
@@ -119,8 +136,10 @@ class AuthProvider extends ChangeNotifier {
   Future<UserCredential?> signInWithFacebook(BuildContext context) async {
     // Trigger the sign-in flow
     try{
-      final LoginResult loginResult = await FacebookAuth.instance.login(permissions: ["public_profile", "email"]);
+      final LoginResult loginResult = await FacebookAuth.instance.login(permissions: ["public_profile","email","user_mobile_phone"
+      ]);
       showLoadingDialog(context);
+
       final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.token);
       UserCredential? cred = await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
       closeLoadingDialog(context);

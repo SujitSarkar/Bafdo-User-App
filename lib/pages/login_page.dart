@@ -308,19 +308,19 @@ class _LogInPageState extends State<LogInPage> {
       onTap: () async{
         if(assetImage=='assets/app_icon/body_icon/google.png'){
           await authProvider.loginWithGoogle(context).then((cred)async{
-            if(cred!=null){
+            if(cred!.user!.email!=null){
               print(cred.user!.email);
               _socialLogin(cred, authProvider);
-            }else showToast('Error getting user');
+            }else showToast('Access denied !');
           });
         }
         else if(assetImage=='assets/app_icon/body_icon/facebook.png'){
           await authProvider.signInWithFacebook(context).then((cred)async{
-            if(cred!=null){
+            if(cred!.user!.email!=null){
               print(cred.user!.email);
               print(cred.user!.phoneNumber);
               _socialLogin(cred, authProvider);
-            }else showToast('Error getting user');
+            }else showToast('Access denied !');
           });
         }
       },
@@ -363,7 +363,7 @@ class _LogInPageState extends State<LogInPage> {
 
   Future<void> _socialLogin(UserCredential? credential, AuthProvider authProvider)async{
     Map<String,String> userMap;
-    if(credential!.user!.email!!=null){
+    if(credential!.user!.email!=null){
       userMap={
         'email_or_phone': credential.user!.email!
       };
@@ -372,7 +372,6 @@ class _LogInPageState extends State<LogInPage> {
         'email_or_phone': credential.user!.phoneNumber!
       };
     }
-
     await authProvider.socialLoginAndGetUserInfo(userMap).then((value) async{
       if(value){
         if(_checked){

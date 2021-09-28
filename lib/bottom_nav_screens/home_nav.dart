@@ -3,12 +3,14 @@ import 'package:bafdo/custom_widget/category_products_list_tile.dart';
 import 'package:bafdo/custom_widget/special_category_list_tile.dart';
 import 'package:bafdo/custom_widget/feature_category_list_tile.dart';
 import 'package:bafdo/pages/category_page.dart';
+import 'package:bafdo/pages/login_with_number.dart';
 import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/sub_pages/coupos_page.dart';
 import 'package:bafdo/sub_pages/notifications_page.dart';
 import 'package:bafdo/sub_pages/product_details.dart';
 import 'package:bafdo/sub_pages/product_page.dart';
 import 'package:bafdo/sub_pages/product_search_page.dart';
+import 'package:bafdo/variables/public_variables.dart';
 import 'package:carousel_pro_nullsafety/carousel_pro_nullsafety.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +18,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeNav extends StatefulWidget {
   HomeNav({Key? key}) : super(key: key);
@@ -33,6 +36,7 @@ class _HomeNavState extends State<HomeNav> {
 
   Future<void> _fetch(PublicProvider publicProvider)async{
     setState(()=> _counter++);
+    if(publicProvider.prefUserModel==null) await publicProvider.getPrefUser();
     if(publicProvider.sliderList.isEmpty) await publicProvider.fetchSliders();
     if(publicProvider.categories==null) await publicProvider.fetchCategories();
     if(publicProvider.topBrands==null)await publicProvider.fetchTopBrands();
@@ -98,7 +102,24 @@ class _HomeNavState extends State<HomeNav> {
     return Scaffold(
       backgroundColor: Color(0xffEFF9F9),
       key: _scaffoldKey,
-      drawer: Drawer(),
+      drawer: Drawer(
+        child: Container(
+          margin: EdgeInsets.only(top: 50),
+          color: Colors.white,
+          child: Column(
+            children: [
+              InkWell(
+                onTap: ()async{
+                  SharedPreferences preferences=await SharedPreferences.getInstance();
+                  preferences.clear();
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginWithNumber()), (route) => false);
+                },
+                child: Text('Logout',style: PublicVariables.outlineBtnTextStyle(size),),
+              )
+            ],
+          ),
+        ),
+      ),
       appBar: AppBar(
         leading: Padding(
           padding: EdgeInsets.fromLTRB(size.width * .025, 0, 0, 0),

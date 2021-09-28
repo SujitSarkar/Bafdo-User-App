@@ -1,5 +1,6 @@
 import 'package:bafdo/model/product_list_model.dart';
 import 'package:bafdo/model/traditional_product_list_model.dart';
+import 'package:bafdo/provider/auth_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bafdo/model/categories_model.dart';
 import 'package:bafdo/model/brands_top_model.dart';
@@ -9,7 +10,7 @@ import 'package:bafdo/model/traditional_categories_model.dart';
 import 'package:bafdo/model/featured_categories_model.dart';
 import 'package:http/http.dart' as http;
 
-class PublicProvider extends ChangeNotifier{
+class PublicProvider extends AuthProvider{
   Categories? _categories;
   TopBrands? _topBrands;
   Brands? _brands;

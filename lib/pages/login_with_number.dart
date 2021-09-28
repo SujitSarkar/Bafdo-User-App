@@ -24,6 +24,7 @@ class LoginWithNumber extends StatefulWidget {
 class _LoginWithNumberState extends State<LoginWithNumber> {
   final TextEditingController controller = TextEditingController(text: '');
 
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -296,16 +297,21 @@ class _LoginWithNumberState extends State<LoginWithNumber> {
       onTap: () async{
         if(assetImage=='assets/app_icon/body_icon/google.png'){
           await authProvider.loginWithGoogle(context).then((cred)async{
-            if(cred!=null){
+            if(cred!.user!.email!=null){
               print(cred.user!.email);
+              print(cred.user!.phoneNumber);
               _socialLogin(cred, authProvider);
-            }else showToast('Error getting user');
+            }else{
+              closeLoadingDialog(context);
+              showToast('Error getting user');
+            }
           });
         }
         else if(assetImage=='assets/app_icon/body_icon/facebook.png'){
           await authProvider.signInWithFacebook(context).then((cred)async{
-            if(cred!=null){
+            if(cred!.user!.email!=null){
               print(cred.user!.email);
+              print(cred.user!.phoneNumber);
               _socialLogin(cred, authProvider);
             }else showToast('Error getting user');
           });
@@ -319,7 +325,7 @@ class _LoginWithNumberState extends State<LoginWithNumber> {
 
   Future<void> _socialLogin(UserCredential? credential, AuthProvider authProvider)async{
     Map<String,String> userMap;
-    if(credential!.user!.email!!=null){
+    if(credential!.user!.email!=null){
       userMap={
         'email_or_phone': credential.user!.email!
       };

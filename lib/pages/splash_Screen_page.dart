@@ -21,6 +21,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   void initState() {
     super.initState();
     final PublicProvider publicProvider = Provider.of<PublicProvider>(context,listen: false);
+    publicProvider.getPrefUser();
     publicProvider.fetchCategories();
     publicProvider.fetchBrands();
     publicProvider.fetchFeaturedCategories();
