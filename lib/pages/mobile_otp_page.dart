@@ -64,7 +64,7 @@ class _OTPPageState extends State<OTPPage> {
             }
             if (seconds == 0) {
               _timer!.cancel();
-            }_timer!.cancel();
+            }
           }
         },
       ),

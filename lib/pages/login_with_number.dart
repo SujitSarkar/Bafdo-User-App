@@ -3,15 +3,12 @@ import 'package:bafdo/pages/login_page.dart';
 import 'package:bafdo/pages/mobile_otp_page.dart';
 import 'package:bafdo/pages/register_page.dart';
 import 'package:bafdo/provider/auth_provider.dart';
-import 'package:bafdo/widgets/form_decoration.dart';
 import 'package:bafdo/widgets/gradient_button.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../home.dart';
 
 class LoginWithNumber extends StatefulWidget {
