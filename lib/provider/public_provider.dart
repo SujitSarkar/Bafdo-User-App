@@ -3,7 +3,6 @@ import 'package:bafdo/model/product_list_model.dart';
 import 'package:bafdo/model/related_product_model.dart';
 import 'package:bafdo/model/traditional_product_list_model.dart';
 import 'package:bafdo/provider/auth_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:bafdo/model/categories_model.dart';
 import 'package:bafdo/model/brands_top_model.dart';
 import 'package:bafdo/model/brands_model.dart';
@@ -43,9 +42,9 @@ class PublicProvider extends AuthProvider{
   TopBrands? get topBrands => _topBrands;
   Categories? get categories => _categories;
 
-  Future<RelatedProducts?> getRelatedProducts(String link)async{
+  Future<RelatedProducts?> getRelatedProducts(int productId)async{
     try{
-      String url = "$link";
+      String url = "https://bafdo.com/api/v2/products/related/$productId";
 
       var response = await http.get(Uri.parse(url));
 
@@ -56,11 +55,6 @@ class PublicProvider extends AuthProvider{
       print(error.toString());
       return null;
     }
-  }
-  Future<void> fetchRelatedProducts(String link)async {
-    var result = await getRelatedProducts(link);
-    _relatedProducts=result;
-    notifyListeners();
   }
 
   Future<ProductDetails?> getProductDetails(int productId)async{
@@ -80,8 +74,13 @@ class PublicProvider extends AuthProvider{
   Future<void> fetchProductDetails(int productId)async {
     var result = await getProductDetails(productId);
     _productDetails=result;
-    await fetchRelatedProducts(_productDetails!.data![0].links!.related!);
+    await fetchRelatedProducts(_productDetails!.data![0].id!);
     print('kkkk');
+    notifyListeners();
+  }
+  Future<void> fetchRelatedProducts(int productId)async {
+    var result = await getRelatedProducts(productId);
+    _relatedProducts=result;
     notifyListeners();
   }
 
