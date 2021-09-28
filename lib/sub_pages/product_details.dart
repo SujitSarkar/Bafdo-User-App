@@ -425,7 +425,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                                   'assets/app_icon/body_icon/tk.png',
                                                 ),
                                                 publicProvider.productDetails!=null?Text(
-                                                  '${publicProvider.productDetails!.data![0].priceLower??''}',
+                                                  '${publicProvider.productDetails!.data![0].priceHighLow??''}',
                                                   style: TextStyle(
                                                       fontFamily: 'taviraj',
                                                       color: ColorsVariables
@@ -442,29 +442,29 @@ class _ProductDetailState extends State<ProductDetail> {
                                             SizedBox(
                                               width: size.width * .01,
                                             ),
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Image.asset(
-                                                  'assets/app_icon/body_icon/tk_grey.png',
-                                                ),
-                                                publicProvider.productDetails!=null?Text(
-                                                  '${publicProvider.productDetails!.data![0].priceLower??''}',
-                                                  style: TextStyle(
-                                                      fontFamily: 'taviraj',
-                                                      color: Colors.grey,
-                                                      fontStyle:
-                                                          FontStyle.normal,
-                                                      decoration: TextDecoration
-                                                          .lineThrough,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize:
-                                                          size.width * .04),
-                                                ):Text(''),
-                                              ],
-                                            ),
+                                            // Row(
+                                            //   crossAxisAlignment:
+                                            //       CrossAxisAlignment.start,
+                                            //   children: [
+                                            //     Image.asset(
+                                            //       'assets/app_icon/body_icon/tk_grey.png',
+                                            //     ),
+                                            //     publicProvider.productDetails!=null?Text(
+                                            //       '${publicProvider.productDetails!.data![0].priceLower??''}',
+                                            //       style: TextStyle(
+                                            //           fontFamily: 'taviraj',
+                                            //           color: Colors.grey,
+                                            //           fontStyle:
+                                            //               FontStyle.normal,
+                                            //           decoration: TextDecoration
+                                            //               .lineThrough,
+                                            //           fontWeight:
+                                            //               FontWeight.bold,
+                                            //           fontSize:
+                                            //               size.width * .04),
+                                            //     ):Text(''),
+                                            //   ],
+                                            // ),
                                           ],
                                         ),
 
@@ -473,53 +473,53 @@ class _ProductDetailState extends State<ProductDetail> {
                                     SizedBox(height: size.width * .03),
                                     Row(
                                       children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: Color(0xffC31A65),
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      size.width * .01)),
-                                          padding: EdgeInsets.fromLTRB(
-                                              size.width * .004,
-                                              size.width * .001,
-                                              size.width * .004,
-                                              size.width * .001),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 5,
-                                                right: 5,
-                                                top: 2,
-                                                bottom: 2),
-                                            child: Row(
-                                              children: [
-                                                publicProvider.productDetails!=null?Text(
-                                                  '${publicProvider.productDetails!.data![0].discount??''}',
-                                                  style: TextStyle(
-                                                    color: Color(0xffC31A65),
-                                                    fontSize: size.width * .025,
-                                                  ),
-                                                ):Text(''),
-                                                Text(
-                                                  '%OFF',
-                                                  style: TextStyle(
-                                                    color: Color(0xffC31A65),
-                                                    fontSize: size.width * .025,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
+                                        // Container(
+                                        //   decoration: BoxDecoration(
+                                        //       border: Border.all(
+                                        //         color: Color(0xffC31A65),
+                                        //       ),
+                                        //       borderRadius:
+                                        //           BorderRadius.circular(
+                                        //               size.width * .01)),
+                                        //   padding: EdgeInsets.fromLTRB(
+                                        //       size.width * .004,
+                                        //       size.width * .001,
+                                        //       size.width * .004,
+                                        //       size.width * .001),
+                                        //   child: Padding(
+                                        //     padding: const EdgeInsets.only(
+                                        //         left: 5,
+                                        //         right: 5,
+                                        //         top: 2,
+                                        //         bottom: 2),
+                                        //     child: Row(
+                                        //       children: [
+                                        //         publicProvider.productDetails!=null?Text(
+                                        //           '${publicProvider.productDetails!.data![0].discount??''}',
+                                        //           style: TextStyle(
+                                        //             color: Color(0xffC31A65),
+                                        //             fontSize: size.width * .025,
+                                        //           ),
+                                        //         ):Text(''),
+                                        //         Text(
+                                        //           '%OFF',
+                                        //           style: TextStyle(
+                                        //             color: Color(0xffC31A65),
+                                        //             fontSize: size.width * .025,
+                                        //           ),
+                                        //         )
+                                        //       ],
+                                        //     ),
+                                        //   ),
+                                        // ),
                                         SizedBox(width: size.width * .05),
                                         publicProvider.productDetails!=null?Row(
                                           children: [
                                             publicProvider.productDetails!.data![0].rating==1?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):publicProvider.productDetails!.data![0].rating==0.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
-                                            publicProvider.productDetails!.data![0].rating==2.0?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):publicProvider.productDetails!.data![0].rating==1.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
-                                            publicProvider.productDetails!.data![0].rating==3.0?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):publicProvider.productDetails!.data![0].rating==2.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
-                                            publicProvider.productDetails!.data![0].rating==4.0?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):publicProvider.productDetails!.data![0].rating==3.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
-                                            publicProvider.productDetails!.data![0].rating==5.0?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):publicProvider.productDetails!.data![0].rating==4.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
+                                            publicProvider.productDetails!.data![0].rating==2?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):publicProvider.productDetails!.data![0].rating==1.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
+                                            publicProvider.productDetails!.data![0].rating==3?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):publicProvider.productDetails!.data![0].rating==2.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
+                                            publicProvider.productDetails!.data![0].rating==4?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):publicProvider.productDetails!.data![0].rating==3.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
+                                            publicProvider.productDetails!.data![0].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):publicProvider.productDetails!.data![0].rating==4.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
 
                                             SizedBox(
                                               width: size.width * .02,
@@ -547,63 +547,63 @@ class _ProductDetailState extends State<ProductDetail> {
                                       )
                                     ):Container(),
                                     SizedBox(height: size.width * .03),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          '108 Reviews',
-                                          style: TextStyle(
-                                              fontFamily: 'taviraj',
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.grey,
-                                              fontStyle: FontStyle.normal,
-                                              fontSize: size.width * .03),
-                                        ),
-                                        SizedBox(
-                                          width: size.width * .03,
-                                        ),
-                                        Container(
-                                          height: size.width * .04,
-                                          child: VerticalDivider(
-                                            color: Color(0xff85848A),
-                                            thickness: 2,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: size.width * .03,
-                                        ),
-                                        Text(
-                                          '1021 Orders',
-                                          style: TextStyle(
-                                              fontFamily: 'taviraj',
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.grey,
-                                              fontStyle: FontStyle.normal,
-                                              fontSize: size.width * .03),
-                                        ),
-                                        SizedBox(
-                                          width: size.width * .03,
-                                        ),
-                                        Container(
-                                          height: size.width * .04,
-                                          child: VerticalDivider(
-                                            color: Color(0xff85848A),
-                                            thickness: 2,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: size.width * .03,
-                                        ),
-                                        Text(
-                                          '2020 Wish',
-                                          style: TextStyle(
-                                              fontFamily: 'taviraj',
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.grey,
-                                              fontStyle: FontStyle.normal,
-                                              fontSize: size.width * .03),
-                                        ),
-                                      ],
-                                    )
+                                    // Row(
+                                    //   children: [
+                                    //     Text(
+                                    //       '108 Reviews',
+                                    //       style: TextStyle(
+                                    //           fontFamily: 'taviraj',
+                                    //           fontWeight: FontWeight.w500,
+                                    //           color: Colors.grey,
+                                    //           fontStyle: FontStyle.normal,
+                                    //           fontSize: size.width * .03),
+                                    //     ),
+                                    //     SizedBox(
+                                    //       width: size.width * .03,
+                                    //     ),
+                                    //     Container(
+                                    //       height: size.width * .04,
+                                    //       child: VerticalDivider(
+                                    //         color: Color(0xff85848A),
+                                    //         thickness: 2,
+                                    //       ),
+                                    //     ),
+                                    //     SizedBox(
+                                    //       width: size.width * .03,
+                                    //     ),
+                                    //     Text(
+                                    //       '1021 Orders',
+                                    //       style: TextStyle(
+                                    //           fontFamily: 'taviraj',
+                                    //           fontWeight: FontWeight.w500,
+                                    //           color: Colors.grey,
+                                    //           fontStyle: FontStyle.normal,
+                                    //           fontSize: size.width * .03),
+                                    //     ),
+                                    //     SizedBox(
+                                    //       width: size.width * .03,
+                                    //     ),
+                                    //     Container(
+                                    //       height: size.width * .04,
+                                    //       child: VerticalDivider(
+                                    //         color: Color(0xff85848A),
+                                    //         thickness: 2,
+                                    //       ),
+                                    //     ),
+                                    //     SizedBox(
+                                    //       width: size.width * .03,
+                                    //     ),
+                                    //     Text(
+                                    //       '2020 Wish',
+                                    //       style: TextStyle(
+                                    //           fontFamily: 'taviraj',
+                                    //           fontWeight: FontWeight.w500,
+                                    //           color: Colors.grey,
+                                    //           fontStyle: FontStyle.normal,
+                                    //           fontSize: size.width * .03),
+                                    //     ),
+                                    //   ],
+                                    // )
                                   ],
                                 ),
                               )),
@@ -685,105 +685,105 @@ class _ProductDetailState extends State<ProductDetail> {
                       ),
                     ),
                     SizedBox(height: size.width * .04),
-                    Container(
-                      width: size.width,
-                      color: Color(0xffF1F9F9),
-                      padding: EdgeInsets.fromLTRB(
-                          size.width * .045,
-                          size.width * .015,
-                          size.width * .045,
-                          size.width * .015),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Discount & Coupon',
-                                style: TextStyle(
-                                    fontFamily: 'taviraj',
-                                    color: ColorsVariables.textColor,
-                                    fontStyle: FontStyle.normal,
-                                    fontSize: size.width * .04),
-                              ),
-                              Row(
-                                children: [
-                                  Stack(children: [
-                                    Image.asset(
-                                        'assets/app_icon/body_icon/pink_button.png'),
-                                    Positioned.fill(
-                                        child: Center(
-                                            child: Text(
-                                      '20%off',
-                                      style: TextStyle(
-                                          fontFamily: 'taviraj',
-                                          color: Colors.white,
-                                          fontStyle: FontStyle.normal,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: size.width * .035),
-                                    )))
-                                  ]),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Stack(children: [
-                                    Image.asset(
-                                        'assets/app_icon/body_icon/pink_button.png'),
-                                    Positioned.fill(
-                                        child: Center(
-                                            child: Text(
-                                      '10%off',
-                                      style: TextStyle(
-                                          fontFamily: 'taviraj',
-                                          color: Colors.white,
-                                          fontStyle: FontStyle.normal,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: size.width * .035),
-                                    )))
-                                  ]),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Text(
-                            'Get',
-                            style: TextStyle(
-                                fontFamily: 'taviraj',
-                                fontWeight: FontWeight.w500,
-                                color: Colors.pink,
-                                fontStyle: FontStyle.normal,
-                                fontSize: size.width * .035),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: size.width * .04),
-                    Container(
-                      width: size.width,
-                      color: Color(0xffF1F9F9),
-                      padding: EdgeInsets.fromLTRB(
-                          size.width * .045,
-                          size.width * .045,
-                          size.width * .045,
-                          size.width * .045),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Overview',
-                            style: TextStyle(
-                                fontFamily: 'taviraj',
-                                fontWeight: FontWeight.w500,
-                                color: Colors.pink,
-                                fontStyle: FontStyle.normal,
-                                fontSize: size.width * .035),
-                          ),
-                          Image.asset('assets/app_icon/body_icon/next_icon.png')
-                        ],
-                      ),
-                    ),
+                    // Container(
+                    //   width: size.width,
+                    //   color: Color(0xffF1F9F9),
+                    //   padding: EdgeInsets.fromLTRB(
+                    //       size.width * .045,
+                    //       size.width * .015,
+                    //       size.width * .045,
+                    //       size.width * .015),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: [
+                    //       Column(
+                    //         mainAxisAlignment: MainAxisAlignment.start,
+                    //         crossAxisAlignment: CrossAxisAlignment.start,
+                    //         children: [
+                    //           Text(
+                    //             'Discount & Coupon',
+                    //             style: TextStyle(
+                    //                 fontFamily: 'taviraj',
+                    //                 color: ColorsVariables.textColor,
+                    //                 fontStyle: FontStyle.normal,
+                    //                 fontSize: size.width * .04),
+                    //           ),
+                    //           Row(
+                    //             children: [
+                    //               Stack(children: [
+                    //                 Image.asset(
+                    //                     'assets/app_icon/body_icon/pink_button.png'),
+                    //                 Positioned.fill(
+                    //                     child: Center(
+                    //                         child: Text(
+                    //                   '20%off',
+                    //                   style: TextStyle(
+                    //                       fontFamily: 'taviraj',
+                    //                       color: Colors.white,
+                    //                       fontStyle: FontStyle.normal,
+                    //                       fontWeight: FontWeight.w500,
+                    //                       fontSize: size.width * .035),
+                    //                 )))
+                    //               ]),
+                    //               SizedBox(
+                    //                 width: 20,
+                    //               ),
+                    //               Stack(children: [
+                    //                 Image.asset(
+                    //                     'assets/app_icon/body_icon/pink_button.png'),
+                    //                 Positioned.fill(
+                    //                     child: Center(
+                    //                         child: Text(
+                    //                   '10%off',
+                    //                   style: TextStyle(
+                    //                       fontFamily: 'taviraj',
+                    //                       color: Colors.white,
+                    //                       fontStyle: FontStyle.normal,
+                    //                       fontWeight: FontWeight.w500,
+                    //                       fontSize: size.width * .035),
+                    //                 )))
+                    //               ]),
+                    //             ],
+                    //           ),
+                    //         ],
+                    //       ),
+                    //       Text(
+                    //         'Get',
+                    //         style: TextStyle(
+                    //             fontFamily: 'taviraj',
+                    //             fontWeight: FontWeight.w500,
+                    //             color: Colors.pink,
+                    //             fontStyle: FontStyle.normal,
+                    //             fontSize: size.width * .035),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // SizedBox(height: size.width * .04),
+                    // Container(
+                    //   width: size.width,
+                    //   color: Color(0xffF1F9F9),
+                    //   padding: EdgeInsets.fromLTRB(
+                    //       size.width * .045,
+                    //       size.width * .045,
+                    //       size.width * .045,
+                    //       size.width * .045),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: [
+                    //       Text(
+                    //         'Overview',
+                    //         style: TextStyle(
+                    //             fontFamily: 'taviraj',
+                    //             fontWeight: FontWeight.w500,
+                    //             color: Colors.pink,
+                    //             fontStyle: FontStyle.normal,
+                    //             fontSize: size.width * .035),
+                    //       ),
+                    //       Image.asset('assets/app_icon/body_icon/next_icon.png')
+                    //     ],
+                    //   ),
+                    // ),
                     SizedBox(height: size.width * .04),
                     Container(
                       width: size.width,
