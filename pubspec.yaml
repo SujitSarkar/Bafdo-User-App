@@ -35,6 +35,8 @@ dependencies:
   firebase_core:
   flutter_facebook_auth:
   twitter_login:
+  flutter_html:
+  skeletons:
 
 dev_dependencies:
   flutter_test:
