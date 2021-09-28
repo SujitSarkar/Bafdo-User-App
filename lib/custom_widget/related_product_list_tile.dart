@@ -1,24 +1,25 @@
 import 'package:bafdo/colors.dart';
-import 'package:bafdo/model/product_list_model.dart';
 import 'package:bafdo/model/traditional_product_list_model.dart';
 import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/sub_pages/product_details.dart';
+import 'package:bafdo/sub_pages/product_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:bafdo/model/featured_categories_model.dart';
+import 'package:bafdo/model/related_product_model.dart';
 import 'package:provider/provider.dart';
 
-class CategoryProductListTile extends StatefulWidget {
-  ProductListDatum? productList;
+class RelatedProductListTile extends StatefulWidget {
+  Datum? productList;
 
-  CategoryProductListTile({this.productList});
+
+  RelatedProductListTile({this.productList});
 
   @override
-  _CategoryProductListTileState createState() =>
-      _CategoryProductListTileState();
+  _RelatedProductListTileState createState() =>
+      _RelatedProductListTileState();
 }
 
-class _CategoryProductListTileState extends State<CategoryProductListTile> {
+class _RelatedProductListTileState extends State<RelatedProductListTile> {
   bool favorite = false;
 
   @override
@@ -30,14 +31,14 @@ class _CategoryProductListTileState extends State<CategoryProductListTile> {
       ),
       elevation: 5,
       child: InkWell(
-        onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ProductDetail(productId: widget.productList!.id!)));
+        onTap: (){
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ProductDetail(productId: widget.productList!.id!)));
         },
         child: Container(
           width: size.width * .43,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(15))),
+          decoration:
+          BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(15))),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +54,7 @@ class _CategoryProductListTileState extends State<CategoryProductListTile> {
                     child: Stack(children: [
                       Center(
                         child: Image.network(
-                          'https://bafdo.com/public/${widget.productList!.thumbnailImage ?? ''}',
+                          'https://bafdo.com/public/${widget.productList!.thumbnailImage??''}',
                           fit: BoxFit.fill,
                         ),
                       ),
@@ -68,8 +69,7 @@ class _CategoryProductListTileState extends State<CategoryProductListTile> {
                           },
                           child: Image.asset(
                             'assets/app_icon/body_icon/favorite.png',
-                            color:
-                                favorite == false ? Colors.grey : Colors.pink,
+                            color: favorite == false ? Colors.grey : Colors.pink,
                           ),
                         ),
                       )
@@ -110,8 +110,7 @@ class _CategoryProductListTileState extends State<CategoryProductListTile> {
                               Row(
                                 children: [
                                   Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       // Align(
@@ -135,8 +134,7 @@ class _CategoryProductListTileState extends State<CategoryProductListTile> {
                                     width: size.width * .01,
                                   ),
                                   Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       // Image.asset(
                                       //   'assets/app_icon/body_icon/tk_grey.png',
@@ -149,7 +147,7 @@ class _CategoryProductListTileState extends State<CategoryProductListTile> {
                                             fontStyle: FontStyle.normal,
                                             fontWeight: FontWeight.bold,
                                             decoration:
-                                                TextDecoration.lineThrough,
+                                            TextDecoration.lineThrough,
                                             fontSize: size.width * .03),
                                       ),
                                     ],
@@ -231,7 +229,7 @@ class _OfferListTileState extends State<OfferListTile> {
       elevation: 8,
       child: Container(
         decoration:
-            BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(15))),
+        BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(15))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,14 +269,14 @@ class _OfferListTileState extends State<OfferListTile> {
                         Positioned.fill(
                             child: Center(
                                 child: Text(
-                          "    30% \n     off",
-                          style: TextStyle(
-                              fontFamily: 'taviraj',
-                              color: Colors.white,
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.bold,
-                              fontSize: size.width * .03),
-                        )))
+                                  "    30% \n     off",
+                                  style: TextStyle(
+                                      fontFamily: 'taviraj',
+                                      color: Colors.white,
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: size.width * .03),
+                                )))
                       ],
                     ),
                   ),

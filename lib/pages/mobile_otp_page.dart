@@ -64,7 +64,7 @@ class _OTPPageState extends State<OTPPage> {
             }
             if (seconds == 0) {
               _timer!.cancel();
-            }
+            }_timer!.cancel();
           }
         },
       ),
@@ -90,6 +90,7 @@ class _OTPPageState extends State<OTPPage> {
                 preferences.setString('name', authProvider!.userInfoModel.user.name);
                 preferences.setString('access_token', authProvider!.userInfoModel.accessToken);
                 setState(()=>_isLoading=false);
+                _timer!.cancel();
                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
               }else showToast('Something went wrong! try again');
             });
@@ -269,6 +270,7 @@ class _OTPPageState extends State<OTPPage> {
             preferences.setString('name', authProvider!.userInfoModel.user.name);
             preferences.setString('access_token', authProvider!.userInfoModel.accessToken);
             setState(()=>_isLoading=false);
+            _timer!.cancel();
             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
           }else showToast('Something went wrong! try again');
         });

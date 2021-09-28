@@ -32,10 +32,8 @@ class _FeatureCategoryListTileState extends State<FeatureCategoryListTile> {
       elevation: 5,
       child: InkWell(
         onTap: (){
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ProductDetail()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ProductDetail(productId: widget.productList!.id!)));
         },
         child: Container(
           width: size.width * .43,

@@ -505,7 +505,7 @@ class _HomeNavState extends State<HomeNav> {
                       //  crossAxisAlignment: CrossAxisAlignment.end,
 
                       children: [
-                        Container(
+                        publicProvider.traditionalCategories!=null?Container(
                             width: size.width * .6,
                             padding: EdgeInsets.fromLTRB(size.width * .01, 0, 0, 0),
                             child: Row(
@@ -526,7 +526,7 @@ class _HomeNavState extends State<HomeNav> {
                                       fontSize: size.width * .045),
                                 ),
                               ],
-                            )),
+                            )):Container(),
                         InkWell(
                           onTap: () {
                             Navigator.push(
