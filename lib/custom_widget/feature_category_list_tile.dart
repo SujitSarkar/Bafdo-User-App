@@ -3,6 +3,7 @@ import 'package:bafdo/model/traditional_product_list_model.dart';
 import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/sub_pages/product_details.dart';
 import 'package:bafdo/sub_pages/product_page.dart';
+import 'package:bafdo/widgets/notification_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bafdo/model/featured_categories_model.dart';
@@ -21,10 +22,24 @@ class FeatureCategoryListTile extends StatefulWidget {
 
 class _FeatureCategoryListTileState extends State<FeatureCategoryListTile> {
   bool favorite = false;
+  int _counter=0;
 
   @override
   Widget build(BuildContext context) {
+    final PublicProvider publicProvider = Provider.of<PublicProvider>(context,listen: false);
     Size size = MediaQuery.of(context).size;
+    if(_counter==0){
+      setState(() {
+        _counter++;
+      });
+      publicProvider.isProductWished(widget.productList!.id!).then((value){
+        if(publicProvider.message=='Product present in wishlist'){
+          setState(() {
+            favorite=true;
+          });
+        }
+      });
+    }
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
@@ -66,6 +81,17 @@ class _FeatureCategoryListTileState extends State<FeatureCategoryListTile> {
                             setState(() {
                               favorite = !favorite;
                             });
+                            if(favorite == true){
+                              publicProvider.addWishList(widget.productList!.id!).then((value)async{
+                                await publicProvider.fetchWishList();
+                                showToast("Added to wishlist");
+                              });
+                            }else{
+                              publicProvider.deleteWishList(widget.productList!.id!).then((value)async{
+                                await publicProvider.fetchWishList();
+                                showToast("Removed from wishlist");
+                              });
+                            }
                           },
                           child: Image.asset(
                             'assets/app_icon/body_icon/favorite.png',
@@ -174,15 +200,15 @@ class _FeatureCategoryListTileState extends State<FeatureCategoryListTile> {
                                     Image.asset(
                                         'assets/app_icon/body_icon/star.png',
                                         scale: .7),
-                                    Text(
-                                      '  (101)',
-                                      style: TextStyle(
-                                          fontFamily: 'taviraj',
-                                          color: Colors.grey,
-                                          fontStyle: FontStyle.normal,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: size.width * .03),
-                                    ),
+                                    // Text(
+                                    //   '  (101)',
+                                    //   style: TextStyle(
+                                    //       fontFamily: 'taviraj',
+                                    //       color: Colors.grey,
+                                    //       fontStyle: FontStyle.normal,
+                                    //       fontWeight: FontWeight.bold,
+                                    //       fontSize: size.width * .03),
+                                    // ),
                                   ],
                                 ),
                               ),
@@ -192,9 +218,19 @@ class _FeatureCategoryListTileState extends State<FeatureCategoryListTile> {
                         Positioned(
                             right: 5,
                             bottom: 5,
-                            child: Icon(
-                              Icons.add_circle_outline,
-                              size: size.width * .08,
+                            child: InkWell(
+                              onTap: (){
+                                showLoadingDialog(context);
+                                publicProvider.addCart(widget.productList!.id!, 1).then((value)async{
+                                  await publicProvider.fetchCartList();
+                                  closeLoadingDialog(context);
+                                  showToast('Product added to cart');
+                                });
+                              },
+                              child: Icon(
+                                Icons.add_circle_outline,
+                                size: size.width * .08,
+                              ),
                             ))
                       ],
                     ),

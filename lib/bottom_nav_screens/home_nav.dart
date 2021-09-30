@@ -5,6 +5,7 @@ import 'package:bafdo/custom_widget/feature_category_list_tile.dart';
 import 'package:bafdo/pages/category_page.dart';
 import 'package:bafdo/pages/login_with_number.dart';
 import 'package:bafdo/provider/public_provider.dart';
+import 'package:bafdo/sub_pages/cart_page.dart';
 import 'package:bafdo/sub_pages/coupos_page.dart';
 import 'package:bafdo/sub_pages/notifications_page.dart';
 import 'package:bafdo/sub_pages/product_details.dart';
@@ -47,6 +48,8 @@ class _HomeNavState extends State<HomeNav> {
     if(publicProvider.handPickedProducts==null) await publicProvider.fetchHandPickProducts();
     if(publicProvider.flashDealProducts==null) await publicProvider.fetchFlashDealProducts();
     if(publicProvider.dailyFeaturedProducts==null) await publicProvider.fetchDailyFeaturedProducts();
+    if(publicProvider.carts==null)await publicProvider.fetchCartList();
+    await publicProvider.fetchWishList();
   }
 
   // List<String> _general_gift_categories = [
@@ -194,7 +197,7 @@ class _HomeNavState extends State<HomeNav> {
                   InkWell(
                     onTap: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => CouponsPage()));
+                          MaterialPageRoute(builder: (_) => CartPage()));
                     },
                     child: Container(
                       decoration: BoxDecoration(
