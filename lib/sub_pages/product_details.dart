@@ -1,6 +1,7 @@
 import 'package:bafdo/bottom_nav_screens/wish_list_nav.dart';
 import 'package:bafdo/colors.dart';
 import 'package:bafdo/custom_widget/related_product_list_tile.dart';
+import 'package:bafdo/widgets/notification_widget.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:bafdo/custom_widget/custom_appbar.dart';
 import 'package:bafdo/home.dart';
@@ -12,6 +13,7 @@ import 'package:bafdo/sub_pages/product_search_page.dart';
 import 'package:bafdo/widgets/gradient_button.dart';
 import 'package:carousel_pro_nullsafety/carousel_pro_nullsafety.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:provider/provider.dart';
 
@@ -25,13 +27,16 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
+  SharedPreferences? preferences;
   int _counter=0;
   bool thumbValue = false;
+  int reviewCount=1;
 
   int _currentIndex = 1;
 
   bool wishListSelect = false;
   bool _isLoading = false;
+  int quantity=0;
 
   Future<void> fetch(PublicProvider publicProvider)async {
     setState(() {
@@ -41,6 +46,7 @@ class _ProductDetailState extends State<ProductDetail> {
       setState(() {
         _isLoading=false;
       });
+      quantity=publicProvider.carts![0].cartItems!.length;
     });
   }
 
@@ -53,6 +59,13 @@ class _ProductDetailState extends State<ProductDetail> {
         _counter++;
       });
      fetch(publicProvider);
+      publicProvider.isProductWished(widget.productId!).then((value){
+        if(publicProvider.message=='Product present in wishlist'){
+          setState(() {
+            wishListSelect=true;
+          });
+        }
+      });
     }
     return Scaffold(
       appBar: PreferredSize(
@@ -306,22 +319,44 @@ class _ProductDetailState extends State<ProductDetail> {
 
                                   });
                                 },
-                                child:wishListSelect ==true? CircleAvatar(
-                                  radius: 20,
-                                  child: Image.asset(
-                                    'assets/app_icon/body_icon/pink_love.png',
-                                    fit: BoxFit.fill,
-                                  ),
-                                ):CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: Colors.grey,
+                                child:wishListSelect ==true? InkWell(
+                                  onTap: (){
+                                    publicProvider.deleteWishList(widget.productId!).then((value)async{
+                                      await publicProvider.fetchWishList();
+                                      setState(() {
+                                        wishListSelect=false;
+                                      });
+                                      showToast("Removed from wishlist");
+                                    });
+                                  },
                                   child: CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    radius: 19,
-
+                                    radius: 20,
                                     child: Image.asset(
-                                      'assets/app_icon/body_icon/favorite.png',
+                                      'assets/app_icon/body_icon/pink_love.png',
                                       fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ):InkWell(
+                                  onTap: (){
+                                      publicProvider.addWishList(widget.productId!).then((value)async{
+                                        await publicProvider.fetchWishList();
+                                        setState(() {
+                                          wishListSelect=false;
+                                        });
+                                        showToast("Added to wishlist");
+                                      });
+                                  },
+                                  child: CircleAvatar(
+                                    radius: 20,
+                                    backgroundColor: Colors.grey,
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      radius: 19,
+
+                                      child: Image.asset(
+                                        'assets/app_icon/body_icon/favorite.png',
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -363,7 +398,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                           borderRadius: BorderRadius.circular(16),
                                         ),
                                         child: Image.network(
-                                          'https://bafdo.com/public/$item',
+                                          'https://bafdo.com/public/${item.path}',
                                           fit: BoxFit.fill,
                                         ),
                                       );
@@ -515,11 +550,30 @@ class _ProductDetailState extends State<ProductDetail> {
                                         SizedBox(width: size.width * .05),
                                         publicProvider.productDetails!=null?Row(
                                           children: [
-                                            publicProvider.productDetails!.data![0].rating==1?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):publicProvider.productDetails!.data![0].rating==0.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
-                                            publicProvider.productDetails!.data![0].rating==2?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):publicProvider.productDetails!.data![0].rating==1.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
-                                            publicProvider.productDetails!.data![0].rating==3?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):publicProvider.productDetails!.data![0].rating==2.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
-                                            publicProvider.productDetails!.data![0].rating==4?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):publicProvider.productDetails!.data![0].rating==3.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
-                                            publicProvider.productDetails!.data![0].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):publicProvider.productDetails!.data![0].rating==4.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
+                                            publicProvider.productDetails!.data![0].rating==1?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                                                :publicProvider.productDetails!.data![0].rating==2?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                                                :publicProvider.productDetails!.data![0].rating==3?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                                                :publicProvider.productDetails!.data![0].rating==4?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                                                :publicProvider.productDetails!.data![0].rating==0.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65))
+                                                :publicProvider.productDetails!.data![0].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))                                                :Icon(Icons.star_border,size: size.width * .032,),
+                                            publicProvider.productDetails!.data![0].rating==2?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                                                :publicProvider.productDetails!.data![0].rating==3?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                                                :publicProvider.productDetails!.data![0].rating==4?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                                                :publicProvider.productDetails!.data![0].rating==1.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65))
+                                                :publicProvider.productDetails!.data![0].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                                                :Icon(Icons.star_border,size: size.width * .032,),
+                                            publicProvider.productDetails!.data![0].rating==3?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                                                :publicProvider.productDetails!.data![0].rating==4?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                                                :publicProvider.productDetails!.data![0].rating==2.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65))
+                                                :publicProvider.productDetails!.data![0].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                                                :Icon(Icons.star_border,size: size.width * .032,),
+                                            publicProvider.productDetails!.data![0].rating==4?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                                                :publicProvider.productDetails!.data![0].rating==3.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65))
+                                                :publicProvider.productDetails!.data![0].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                                                :Icon(Icons.star_border,size: size.width * .032,),
+                                            publicProvider.productDetails!.data![0].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                                                :publicProvider.productDetails!.data![0].rating==4.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65))
+                                                :Icon(Icons.star_border,size: size.width * .032,),
 
                                             SizedBox(
                                               width: size.width * .02,
@@ -540,10 +594,22 @@ class _ProductDetailState extends State<ProductDetail> {
                                     SizedBox(height: size.width * .03),
                                     publicProvider.productDetails!=null?Container(
                                       padding: EdgeInsets.only(
-                                        right: size.width * .1,
+                                        right: size.width * .4,
                                       ),
-                                      child:  Html(
-                                        data: publicProvider.productDetails!.data![0].description??'',
+                                      child:  Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Sold By:',style: TextStyle(
+                                              fontFamily: 'poppins',
+                                              color: Colors.grey,
+                                              fontStyle: FontStyle.normal,
+                                              fontSize: size.width * .03),),
+                                          Text(publicProvider.productDetails!.data![0].shopName!,style: TextStyle(
+                                              fontFamily: 'taviraj',
+                                              color: ColorsVariables.textColor,
+                                              fontStyle: FontStyle.normal,
+                                              fontSize: size.width * .04),)
+                                        ],
                                       )
                                     ):Container(),
                                     SizedBox(height: size.width * .03),
@@ -646,6 +712,7 @@ class _ProductDetailState extends State<ProductDetail> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Text(''),
                               Text(
                                 'Color, Size, Packaging',
                                 style: TextStyle(
@@ -654,14 +721,15 @@ class _ProductDetailState extends State<ProductDetail> {
                                     fontStyle: FontStyle.normal,
                                     fontSize: size.width * .04),
                               ),
-                              Text(
-                                'Grey, M, Dhaka BD',
-                                style: TextStyle(
-                                    fontFamily: 'poppins',
-                                    color: Colors.grey,
-                                    fontStyle: FontStyle.normal,
-                                    fontSize: size.width * .04),
-                              )
+                              Text('')
+                              // Text(
+                              //   'Grey, M, Dhaka BD',
+                              //   style: TextStyle(
+                              //       fontFamily: 'poppins',
+                              //       color: Colors.grey,
+                              //       fontStyle: FontStyle.normal,
+                              //       fontSize: size.width * .04),
+                              // )
                             ],
                           ),
                           InkWell(
@@ -959,17 +1027,14 @@ class _ProductDetailState extends State<ProductDetail> {
                     //   ),
                     // ),
                     //SizedBox(height: size.width * .04),
-                    Container(
-                      width: size.width,
-                      height: size.width,
-                      child: ListView.builder(
-                          itemCount: 1,
-                          physics: ClampingScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return getReviewTemplate(context);
-                          }),
-                    ),
+                    ListView.builder(
+                        itemCount: publicProvider.reviews==null?0:publicProvider.reviews!.data!.length==0?0:reviewCount,
+                        physics: ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return getReviewTemplate(context,publicProvider,index);
+                        }),
+                    SizedBox(height: size.width * .02),
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: Align(
@@ -1033,12 +1098,14 @@ class _ProductDetailState extends State<ProductDetail> {
                               color: Colors.grey,
                               shape: BoxShape.circle,
                             ),
-                            child: Text(
-                              '3',
+                            child: publicProvider.carts!=null?Text(
+                              '${quantity}',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: size.width * .02),
-                            ),
+                            ):Text('0',style: TextStyle(
+                                color: Colors.white,
+                                fontSize: size.width * .02),),
                           ),
                         )
                           ],
@@ -1052,10 +1119,15 @@ class _ProductDetailState extends State<ProductDetail> {
                       children: [
                         InkWell(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CartPage()));
+                            showLoadingDialog(context);
+                            publicProvider.addCart(widget.productId!, 1).then((value)async{
+                              await publicProvider.fetchCartList();
+                              closeLoadingDialog(context);
+                              setState(() {
+                                quantity=publicProvider.carts![0].cartItems!.length;
+                              });
+                              showToast('Product added to cart');
+                            });
                           },
                           child: Container(
                             width: size.width * .36,
@@ -1081,7 +1153,7 @@ class _ProductDetailState extends State<ProductDetail> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => OrderDetails()));
+                                    builder: (context) => CartPage()));
                           },
                           child: Container(
                               width: size.width * .36,
@@ -1117,12 +1189,9 @@ class _ProductDetailState extends State<ProductDetail> {
     );
   }
 
-  Widget getReviewTemplate(BuildContext context) {
+  Widget getReviewTemplate(BuildContext context,PublicProvider publicProvider,int index) {
     Size size = MediaQuery.of(context).size;
 
-
-
-    var rating = '1.0';
     return Container(
       width: size.width,
       color: Color(0xffF1F9F9),
@@ -1132,7 +1201,7 @@ class _ProductDetailState extends State<ProductDetail> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Reviews (109)',
+            'Reviews (${publicProvider.reviews!.data!.length})',
             style: TextStyle(
                 color: Colors.black,
                 fontSize: size.width * .04,
@@ -1144,9 +1213,12 @@ class _ProductDetailState extends State<ProductDetail> {
               Container(
                 width: size.width * .08,
                 height: size.width * .08,
-                child: CircleAvatar(
+                child: publicProvider.reviews!.data![index].avatar==''?CircleAvatar(
                     backgroundImage: AssetImage(
-                      'assets/app_icon/body_icon/boys.png',
+                      'assets/app_icon/body_icon/priyo_male.png',
+                    )):CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      publicProvider.reviews!.data![index].avatar!,
                     )),
               ),
               SizedBox(
@@ -1156,7 +1228,7 @@ class _ProductDetailState extends State<ProductDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Edward willson',
+                    publicProvider.reviews!.data![index].userName!,
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: size.width * .03,
@@ -1164,7 +1236,7 @@ class _ProductDetailState extends State<ProductDetail> {
                     ),
                   ),
                   Text(
-                    '20 June, 2021',
+                    publicProvider.reviews!.data![index].time!,
                     style: TextStyle(
                       color: Color(0xff85848A),
                       fontSize: size.width * .02,
@@ -1173,96 +1245,123 @@ class _ProductDetailState extends State<ProductDetail> {
                   ),
                 ],
               ),
-              SizedBox(
-                width: size.width * .3,
-              ),
-              ElevatedButton(
-                onPressed: () {
-
-
-
-                },
-                style: ButtonStyle(
-                    elevation: MaterialStateProperty.all<double>(0),
-                    backgroundColor:
-                    MaterialStateProperty.all<Color>(Color(0xffF6DBE5)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(size.width * .3),
-                            side: BorderSide(
-                              color: Color(0xffF6DBE5),
-                            )))),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-
-                    Icon(Icons.thumb_up_alt_outlined,color: ColorsVariables.pinkColor,size: 15,),
-                    // Image.asset(
-                    //   'assets/app_icon/body_icon/thumb_up.png',
-                    // ),
-                    SizedBox(
-                      width: size.width * .01,
-                    ),
-                    Text(
-                      'Helpful (6)',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: size.width * .025,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              )
+              // SizedBox(
+              //   width: size.width * .3,
+              // ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //
+              //   },
+              //   style: ButtonStyle(
+              //       elevation: MaterialStateProperty.all<double>(0),
+              //       backgroundColor:
+              //       MaterialStateProperty.all<Color>(Color(0xffF6DBE5)),
+              //       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              //           RoundedRectangleBorder(
+              //               borderRadius: BorderRadius.circular(size.width * .3),
+              //               side: BorderSide(
+              //                 color: Color(0xffF6DBE5),
+              //               )))),
+              //   child: Row(
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     children: [
+              //
+              //       Icon(Icons.thumb_up_alt_outlined,color: ColorsVariables.pinkColor,size: 15,),
+              //       // Image.asset(
+              //       //   'assets/app_icon/body_icon/thumb_up.png',
+              //       // ),
+              //       SizedBox(
+              //         width: size.width * .01,
+              //       ),
+              //       Text(
+              //         'Helpful (6)',
+              //         style: TextStyle(
+              //           color: Colors.black,
+              //           fontSize: size.width * .025,
+              //           fontWeight: FontWeight.w500,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // )
             ],
+          ),
+          SizedBox(
+            height: size.width * .01,
           ),
           Row(
             children: [
 
-              rating=='1.0'?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):rating=='0.5'?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
-              rating=='2.0'?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):rating=='1.5'?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
-              rating=='3.0'?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):rating=='2.5'?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
-              rating=='4.0'?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):rating=='3.5'?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
-              rating=='5.0'?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65)):rating=='4.5'?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65)):Icon(Icons.star_border,size: size.width * .032,),
+              publicProvider.reviews!.data![index].rating==1?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                  :publicProvider.reviews!.data![index].rating==2?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                  :publicProvider.reviews!.data![index].rating==3?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                  :publicProvider.reviews!.data![index].rating==4?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                  :publicProvider.reviews!.data![index].rating==0.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65))
+                  :publicProvider.reviews!.data![index].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))                                                :Icon(Icons.star_border,size: size.width * .032,),
+              publicProvider.reviews!.data![index].rating==2?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                  :publicProvider.reviews!.data![index].rating==3?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                  :publicProvider.reviews!.data![index].rating==4?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                  :publicProvider.reviews!.data![index].rating==1.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65))
+                  :publicProvider.reviews!.data![index].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                  :Icon(Icons.star_border,size: size.width * .032,),
+              publicProvider.reviews!.data![index].rating==3?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                  :publicProvider.reviews!.data![index].rating==4?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                  :publicProvider.reviews!.data![index].rating==2.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65))
+                  :publicProvider.reviews!.data![index].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                  :Icon(Icons.star_border,size: size.width * .032,),
+              publicProvider.reviews!.data![index].rating==4?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                  :publicProvider.reviews!.data![index].rating==3.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65))
+                  :publicProvider.reviews!.data![index].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                  :Icon(Icons.star_border,size: size.width * .032,),
+              publicProvider.reviews!.data![index].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
+                  :publicProvider.reviews!.data![index].rating==4.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65))
+                  :Icon(Icons.star_border,size: size.width * .032,),
 
 
 
 
-              Text(
-                '  (101)',
-                style: TextStyle(
-                    fontFamily: 'taviraj',
-                    color: Colors.grey,
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.bold,
-                    fontSize: size.width * .03),
-              ),
+              // Text(
+              //   '  (101)',
+              //   style: TextStyle(
+              //       fontFamily: 'taviraj',
+              //       color: Colors.grey,
+              //       fontStyle: FontStyle.normal,
+              //       fontWeight: FontWeight.bold,
+              //       fontSize: size.width * .03),
+              // ),
             ],
           ),
-          Text(
-              'This is a very good gamepad for those who look for cheap and smooth gameplay.the analog buttons feel '),
-          Container(
-            height: size.width * .3,
-            width: size.width,
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 6,
-                itemBuilder: (context, index) {
-                  return Container(
-                      height: size.width * .15,
-                      width: size.width * .3,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(
-                          'assets/app_icon/body_icon/joy_stick.png',
-                          fit: BoxFit.fill,
-                        ),
-                      ));
-                }),
+          SizedBox(
+            height: size.width * .02,
           ),
-          Center(
+          Text(
+              publicProvider.reviews!.data![index].comment!),
+          // Container(
+          //   height: size.width * .3,
+          //   width: size.width,
+          //   child: ListView.builder(
+          //       scrollDirection: Axis.horizontal,
+          //       itemCount: 6,
+          //       itemBuilder: (context, index) {
+          //         return Container(
+          //             height: size.width * .15,
+          //             width: size.width * .3,
+          //             child: Padding(
+          //               padding: const EdgeInsets.all(8.0),
+          //               child: Image.asset(
+          //                 'assets/app_icon/body_icon/joy_stick.png',
+          //                 fit: BoxFit.fill,
+          //               ),
+          //             ));
+          //       }),
+          // ),
+          reviewCount!=publicProvider.reviews!.data!.length?Center(
             child: GradientButton(
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  reviewCount=publicProvider.reviews!.data!.length;
+                });
+              },
               child: Text(
                 'See more',
                 style: TextStyle(
@@ -1277,7 +1376,7 @@ class _ProductDetailState extends State<ProductDetail> {
               width: size.width * .3,
               gradientColors: [Colors.pink.shade600, Colors.pink.shade400],
             ),
-          ),
+          ):Container(),
         ],
       ),
     );
