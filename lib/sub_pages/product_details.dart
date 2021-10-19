@@ -7,7 +7,6 @@ import 'package:bafdo/custom_widget/custom_appbar.dart';
 import 'package:bafdo/home.dart';
 import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/sub_pages/cart_page.dart';
-import 'package:bafdo/sub_pages/order_details.dart';
 import 'package:bafdo/sub_pages/product_details_dialog.dart';
 import 'package:bafdo/sub_pages/product_search_page.dart';
 import 'package:bafdo/widgets/gradient_button.dart';
@@ -18,7 +17,7 @@ import 'package:skeletons/skeletons.dart';
 import 'package:provider/provider.dart';
 
 class ProductDetail extends StatefulWidget {
-  int? productId;
+  final int? productId;
 
   ProductDetail({this.productId});
 
@@ -27,43 +26,31 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
-  SharedPreferences? preferences;
+  //SharedPreferences? preferences;
   int _counter=0;
   bool thumbValue = false;
   int reviewCount=1;
-
   int _currentIndex = 1;
-
   bool wishListSelect = false;
   bool _isLoading = false;
-  int quantity=0;
 
   Future<void> fetch(PublicProvider publicProvider)async {
-    setState(() {
-      _isLoading=true;
-    });
+    setState(()=> _isLoading=true);
     await publicProvider.fetchProductDetails(widget.productId!).then((value){
-      setState(() {
-        _isLoading=false;
-      });
-      quantity=publicProvider.carts![0].cartItems!.length;
+      setState(()=>_isLoading=false);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final PublicProvider publicProvider = Provider.of<PublicProvider>(context,listen: false);
+    final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
     Size size = MediaQuery.of(context).size;
     if(_counter==0){
-      setState(() {
-        _counter++;
-      });
+      setState(()=> _counter++);
      fetch(publicProvider);
       publicProvider.isProductWished(widget.productId!).then((value){
         if(publicProvider.message=='Product present in wishlist'){
-          setState(() {
-            wishListSelect=true;
-          });
+          setState(()=>wishListSelect=true);
         }
       });
     }
@@ -227,6 +214,7 @@ class _ProductDetailState extends State<ProductDetail> {
           ),
         ),
       ),
+
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: _isLoading?Column(
@@ -313,53 +301,28 @@ class _ProductDetailState extends State<ProductDetail> {
                               right: 0,
                               child: InkWell(
                                 onTap: (){
-
-                                  setState(() {
-                                    wishListSelect = !wishListSelect;
-
-                                  });
-                                },
-                                child:wishListSelect ==true? InkWell(
-                                  onTap: (){
+                                  setState(()=>wishListSelect = !wishListSelect);
+                                  if(wishListSelect == true){
+                                    publicProvider.addWishList(widget.productId!).then((value)async{
+                                      await publicProvider.fetchWishList();
+                                      showToast("Added to wishlist");
+                                    });
+                                  }else{
                                     publicProvider.deleteWishList(widget.productId!).then((value)async{
                                       await publicProvider.fetchWishList();
-                                      setState(() {
-                                        wishListSelect=false;
-                                      });
                                       showToast("Removed from wishlist");
                                     });
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 20,
-                                    child: Image.asset(
-                                      'assets/app_icon/body_icon/pink_love.png',
-                                      fit: BoxFit.fill,
-                                    ),
+                                  }
+                                },
+                                child:CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  radius: 20,
+                                  child: Image.asset(
+                                    wishListSelect?'assets/app_icon/body_icon/pink_love.png'
+                                        :'assets/app_icon/body_icon/favorite.png',
+                                    fit: BoxFit.fill,
                                   ),
-                                ):InkWell(
-                                  onTap: (){
-                                      publicProvider.addWishList(widget.productId!).then((value)async{
-                                        await publicProvider.fetchWishList();
-                                        setState(() {
-                                          wishListSelect=false;
-                                        });
-                                        showToast("Added to wishlist");
-                                      });
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 20,
-                                    backgroundColor: Colors.grey,
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      radius: 19,
-
-                                      child: Image.asset(
-                                        'assets/app_icon/body_icon/favorite.png',
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                )
                               )),
 
                           Padding(
@@ -367,7 +330,6 @@ class _ProductDetailState extends State<ProductDetail> {
                             child: Container(
                               width: size.width,
                                    height: size.width * .75,
-
                               child: publicProvider.productDetails!=null?Carousel(
                                 boxFit: BoxFit.cover,
                                 autoplay: false,
@@ -409,11 +371,7 @@ class _ProductDetailState extends State<ProductDetail> {
 
                               ):Container(),
                             ),
-                          ),
-
-
-
-
+                          )
                         ],
                       ),
                     ),
@@ -1069,6 +1027,8 @@ class _ProductDetailState extends State<ProductDetail> {
               ),
             ),
           ),
+
+          ///Bottom Button Section
           Positioned(
             bottom: 0,
             child: Container(
@@ -1082,33 +1042,36 @@ class _ProductDetailState extends State<ProductDetail> {
                       height: size.width * .2,
                       padding: EdgeInsets.fromLTRB(0, 3, 0, 0),
                       child: Center(
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                        Image.asset(
-                            'assets/app_icon/app_bar_icon/cart_grey.png'),
-                        Positioned(
-                          right: -5,
-                          top: -8,
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: size.width * .04,
-                            height: size.width * .04,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              shape: BoxShape.circle,
+                        child: GestureDetector(
+                          onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>CartPage())),
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                          Image.asset(
+                              'assets/app_icon/app_bar_icon/cart_grey.png'),
+                          Positioned(
+                            right: -5,
+                            top: -8,
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: size.width * .04,
+                              height: size.width * .04,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                shape: BoxShape.circle,
+                              ),
+                              child:Text(
+                                '${publicProvider.carts!=null
+                                    ? publicProvider.carts!.isNotEmpty
+                                    ?publicProvider.carts![0].cartItems!.length:'0':'0'}',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: size.width * .02),
+                              ),
                             ),
-                            child: publicProvider.carts!=null?Text(
-                              '${quantity}',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: size.width * .02),
-                            ):Text('0',style: TextStyle(
-                                color: Colors.white,
-                                fontSize: size.width * .02),),
+                          )
+                            ],
                           ),
-                        )
-                          ],
                         ),
                       )),
                   Container(
@@ -1121,12 +1084,14 @@ class _ProductDetailState extends State<ProductDetail> {
                           onTap: () {
                             showLoadingDialog(context);
                             publicProvider.addCart(widget.productId!, 1).then((value)async{
-                              await publicProvider.fetchCartList();
-                              closeLoadingDialog(context);
-                              setState(() {
-                                quantity=publicProvider.carts![0].cartItems!.length;
-                              });
-                              showToast('Product added to cart');
+                              if(value){
+                                await publicProvider.fetchCartList();
+                                closeLoadingDialog(context);
+                                showToast('Product added to cart');
+                              }else{
+                                closeLoadingDialog(context);
+                                showToast('Stock out');
+                              }
                             });
                           },
                           child: Container(

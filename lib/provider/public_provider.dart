@@ -172,6 +172,7 @@ class PublicProvider extends AuthProvider{
       return null;
     }
   }
+
   Future<void> fetchFeaturedCategories()async {
     var result = await getFeaturedCategories();
     _featuredCategories=result;
@@ -329,15 +330,19 @@ class PublicProvider extends AuthProvider{
     notifyListeners();
   }
 
-  Future<void> addCart(int productId,int quantity) async {
-    //print(prefUserModel.accessToken);
+  Future<bool> addCart(int productId,int quantity) async {
+    try{
+      var postBody = jsonEncode({"id": "$productId","user_id": prefUserModel.id,"quantity": "$quantity"});
 
-    var post_body = jsonEncode({"id": "$productId","user_id": prefUserModel.id,"quantity": "$quantity"});
+      final response = await http.post(Uri.parse("https://bafdo.com/api/v2/carts/add"),
+          headers: { "Content-Type":"application/json", "Authorization": "Bearer ${prefUserModel.accessToken}"},body: postBody );
 
-    final response = await http.post(Uri.parse("https://bafdo.com/api/v2/carts/add"),
-        headers: { "Content-Type":"application/json", "Authorization": "Bearer ${prefUserModel.accessToken}"},body: post_body );
-
-    print(response.body.toString());
+      var jsonData = jsonDecode(response.body);
+      if(jsonData['result']==true) return true;
+      else return false;
+    }catch(error){
+      return false;
+    }
   }
 
   Future<List<CartModel>> getCartList() async {

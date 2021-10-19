@@ -1,7 +1,8 @@
 import 'package:bafdo/colors.dart';
-import 'package:bafdo/sub_pages/coupos_page.dart';
-import 'package:bafdo/sub_pages/notifications_page.dart';
 import 'package:bafdo/sub_pages/product_search_page.dart';
+import 'package:bafdo/widgets/drawer_nav_page.dart';
+import 'package:bafdo/widgets/form_decoration.dart';
+import 'package:bafdo/widgets/nav_page-appbar.dart';
 import 'package:flutter/material.dart';
 
 class FestivalPage extends StatefulWidget {
@@ -12,149 +13,21 @@ class FestivalPage extends StatefulWidget {
 }
 
 class _FestivalPageState extends State<FestivalPage> {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController _searchController = TextEditingController();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color(0xffEFF9F9),
       key: _scaffoldKey,
-      drawer: Drawer(),
-      appBar: AppBar(
-        leading: Padding(
-          padding: EdgeInsets.fromLTRB(size.width * .025, 0, 0, 0),
-          child: InkWell(
-            onTap: () {
-              _scaffoldKey.currentState!.openDrawer();
-            },
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: size.width * .1,
-              child: Image.asset(
-                'assets/app_icon/app_bar_icon/menu.png',
-              ),
-            ),
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        centerTitle: true,
-        title: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            width: size.width * .2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/app_icon/app_bar_icon/bafdo_with_logo.png',
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: size.width * .002,
-                      width: size.width * .01,
-                      color: Colors.grey,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: size.width * .01,
-                      ),
-                      //size == 14.91
-                      child: Text(
-                        'GO WITH BEST',
-                        style: TextStyle(
-                            fontFamily: 'taviraj',
-                            color: ColorsVariables.textColor,
-                            fontStyle: FontStyle.normal,
-                            fontSize: size.width * .018),
-                      ),
-                    ),
-                    Container(
-                      height: size.width * .002,
-                      width: size.width * .01,
-                      color: Colors.grey,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-        actions: [
-          Container(
-            width: size.width * .4,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, size.width * .045, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => CouponsPage()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                      ),
-                      child: Image.asset(
-                        'assets/app_icon/body_icon/cart.png',
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: size.width * .025,
-                  ),
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => NotificationPage()));
-                        },
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 22,
-                          child: Image.asset(
-                            'assets/app_icon/app_bar_icon/notification.png',
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 0.0,
-                        right: -5.0,
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: size.width * .04,
-                          height: size.width * .04,
-                          decoration: BoxDecoration(
-                            color: Colors.pink,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Text(
-                            '3',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: size.width * .02),
-                          ),
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-          )
-        ],
+      backgroundColor: Color(0xffEFF9F9),
+      drawer: DrawerNavPage(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.0),
+        child: NavPageAppBar(openDrawer: ()=>_scaffoldKey.currentState!.openDrawer()),
       ),
-      body: _bodyUI(context,),
+      body: _bodyUI(context),
     );
   }
 
@@ -170,38 +43,10 @@ class _FestivalPageState extends State<FestivalPage> {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => ProductSearchPage()));
             },
-            child: Container(
-              width: size.width,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(size.width * .03),
-                  )),
-              child: Padding(
-                  padding: EdgeInsets.fromLTRB(size.width * .03, 0, 0, 0),
-                  child: Container(
-                    width: size.width * .6,
-                    child: TextFormField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                          hintText: 'Search product',
-                          hintStyle: TextStyle(
-                              fontFamily: 'taviraj',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                              fontStyle: FontStyle.normal,
-                              fontSize: size.width * .04),
-                          suffixIcon: Image.asset(
-                            'assets/app_icon/text_field_icon/search_icon.png',
-                          ),
-                          enabled: false,
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none),
-                      cursorColor: Color(0xff131214),
-                    ),
-                  )),
+            child: TextFormField(
+              controller: _searchController,
+              decoration: searchFormDecoration(size),
+              cursorColor: Color(0xff131214),
             ),
           ),
         ),
@@ -213,8 +58,6 @@ class _FestivalPageState extends State<FestivalPage> {
             image: DecorationImage(
               image: AssetImage('assets/app_icon/body_icon/festival_backgound.png')
             ),
-            
-            
             
             borderRadius: BorderRadius.all(Radius.circular(15))
           ),

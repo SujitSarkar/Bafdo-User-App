@@ -1,6 +1,7 @@
 import 'package:bafdo/colors.dart';
 import 'package:bafdo/custom_widget/custom_appbar.dart';
-
+import 'package:bafdo/widgets/gradient_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CheckoutPage extends StatefulWidget {
@@ -40,289 +41,252 @@ class _CheckoutPageState extends State<CheckoutPage> {
           trailing2: Container(),
         ),
       ),
-      body: Container(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Shipping to',
-                        style: TextStyle(
-                            fontFamily: 'taviraj',
-                            color: ColorsVariables.textColor,
-                            fontWeight: FontWeight.w500,
-                            fontStyle: FontStyle.normal,
-                            fontSize: size.width * .04)),
-                    Image.asset(
-                        'assets/app_icon/body_icon/drop_circuler_add.png')
-                  ],
-                ),
-              ),
-              Container(
-                height: size.width * .6,
-                width: size.width,
-                child: ListView.builder(
-                  // scrollDirection: Axis.vertical,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: 2,
-                  itemBuilder: (context, index) {
-                    return _checkoutListTile(index);
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Text('Payment Method',
-                      style: TextStyle(
-                          fontFamily: 'taviraj',
-                          color: ColorsVariables.textColor,
-                          fontStyle: FontStyle.normal,
-                          fontSize: size.width * .04)),
-                ),
-              ),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(9.0),
-                ),
-                child: Container(
-                  height: size.width * .5,
-                  width: size.width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: ListView(
+        physics: BouncingScrollPhysics(),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Shipping to',
+                    style: TextStyle(
+                        fontFamily: 'taviraj',
+                        color: ColorsVariables.textColor,
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.normal,
+                        fontSize: size.width * .04)),
+                Image.asset(
+                    'assets/app_icon/body_icon/drop_circuler_add.png')
+              ],
+            ),
+          ),
+          ListView.builder(
+            // scrollDirection: Axis.vertical,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: 2,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return _checkoutListTile(index);
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Payment Method',
+                style: TextStyle(
+                    fontFamily: 'taviraj',
+                    color: ColorsVariables.textColor,
+                    fontStyle: FontStyle.normal,
+                    fontSize: size.width * .04)),
+          ),
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(9.0),
+            ),
+            child: Container(
+              height: size.width * .4,
+              width: size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                paymentItem = 'nogot';
-                              });
-                            },
-                            child: paymentItem == 'nogot'
-                                ? Image.asset(
-                                    'assets/app_icon/body_icon/squire_pink_box.png')
-                                : Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Image.asset(
-                                        'assets/app_icon/body_icon/squire_grey_box.png'),
-                                  ),
-                          ),
-                          Container(
-                            height: size.width * .15,
-                            width: size.width * .15,
-                            child: Image.asset(
-                              'assets/app_icon/body_icon/nogot_logo.png',
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                paymentItem = 'bkash';
-                              });
-                            },
-                            child: paymentItem == 'bkash'
-                                ? Image.asset(
-                                    'assets/app_icon/body_icon/squire_pink_box.png')
-                                : Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Image.asset(
-                                        'assets/app_icon/body_icon/squire_grey_box.png'),
-                                  ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              height: size.width * .15,
-                              width: size.width * .15,
-                              child: Image.asset(
-                                'assets/app_icon/body_icon/bkash_logo.png',
-                                fit: BoxFit.fill,
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            paymentItem = 'nogot';
+                          });
+                        },
+                        child: paymentItem == 'nogot'
+                            ?Image.asset(
+                                'assets/app_icon/body_icon/squire_pink_box.png')
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                    'assets/app_icon/body_icon/squire_grey_box.png'),
                               ),
-                            ),
-                          ),
-                        ],
                       ),
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                paymentItem = 'ssl';
-                              });
-                            },
-                            child: paymentItem == 'ssl'
-                                ? Image.asset(
-                                    'assets/app_icon/body_icon/squire_pink_box.png')
-                                : Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Image.asset(
-                                        'assets/app_icon/body_icon/squire_grey_box.png'),
-                                  ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              height: size.width * .15,
-                              width: size.width * .15,
-                              child: Image.asset(
-                                'assets/app_icon/body_icon/ssl_logo.png',
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                          ),
-                        ],
+                      Image.asset(
+                        'assets/app_icon/body_icon/nogot_logo.png',height:size.width * .15,width:  size.width * .15,
+
                       ),
                     ],
                   ),
-                ),
-              ),
-              Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(9.0),
-                  ),
-                  child: Column(
+                  Row(
                     children: [
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 10, top: 10, right: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Shipping fee',
-                                style: TextStyle(
-                                    fontFamily: 'taviraj',
-                                    color: ColorsVariables.textColor,
-                                    fontStyle: FontStyle.normal,
-                                    fontSize: size.width * .04)),
-                            Row(
-                              children: [
-                                Image.asset('assets/app_icon/body_icon/tk.png'),
-                                Text('20.00',
-                                    style: TextStyle(
-                                        fontFamily: 'taviraj',
-                                        color: ColorsVariables.textColor,
-                                        fontStyle: FontStyle.normal,
-                                        fontSize: size.width * .04)),
-                              ],
-                            ),
-                          ],
-                        ),
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            paymentItem = 'bkash';
+                          });
+                        },
+                        child: paymentItem == 'bkash'
+                            ? Image.asset(
+                                'assets/app_icon/body_icon/squire_pink_box.png')
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                    'assets/app_icon/body_icon/squire_grey_box.png'),
+                              ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Sub total',
-                                style: TextStyle(
-                                    fontFamily: 'taviraj',
-                                    color: ColorsVariables.textColor,
-                                    fontStyle: FontStyle.normal,
-                                    fontSize: size.width * .04)),
-                            Row(
-                              children: [
-                                Image.asset('assets/app_icon/body_icon/tk.png'),
-                                Text('79.95',
-                                    style: TextStyle(
-                                        fontFamily: 'taviraj',
-                                        color: ColorsVariables.textColor,
-                                        fontStyle: FontStyle.normal,
-                                        fontSize: size.width * .04)),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        height: 1,
-                        color: ColorsVariables.dividerColor,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8, bottom: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Total',
-                                style: TextStyle(
-                                    fontFamily: 'taviraj',
-                                    color: ColorsVariables.textColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontStyle: FontStyle.normal,
-                                    fontSize: size.width * .04)),
-                            Row(
-                              children: [
-                                Image.asset('assets/app_icon/body_icon/tk.png'),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text('99.95',
-                                      style: TextStyle(
-                                          fontFamily: 'taviraj',
-                                          color: ColorsVariables.textColor,
-                                          fontStyle: FontStyle.normal,
-                                          fontSize: size.width * .04)),
-                                ),
-                              ],
-                            ),
-                          ],
+                        child: Image.asset(
+                          'assets/app_icon/body_icon/bkash_logo.png',height:size.width * .15,width:  size.width * .15,
+
                         ),
                       ),
                     ],
-                  )),
-              Padding(
-                padding: EdgeInsets.only(top: size.width * .1),
-                child: Container(
-                    width: size.width * .8,
-                    height: size.width * .13,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                          Color(0xffC31A65).withOpacity(1),
-                          Color(0xffFA4494).withOpacity(1)
-                        ]),
-                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    child: Text(
-                      'Payment',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                        fontSize: size.width * .04,
+                  ),
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            paymentItem = 'ssl';
+                          });
+                        },
+                        child: paymentItem == 'ssl'
+                            ? Image.asset(
+                                'assets/app_icon/body_icon/squire_pink_box.png')
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                    'assets/app_icon/body_icon/squire_grey_box.png'),
+                              ),
                       ),
-                    )),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          'assets/app_icon/body_icon/ssl_logo.png',height:size.width * .20,width:  size.width * .15,
+
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              // GradientButton(
-              //   height: size.width * .3,
-              //   width: size.width,
-              //   child: Text('Payment',
-              //       style: TextStyle(
-              //           fontFamily: 'taviraj',
-              //           color: ColorsVariables.textColor,
-              //           fontStyle: FontStyle.normal,
-              //           fontSize: size.width * .04)),
-              // ),
-              SizedBox(
-                height: 300,
-              ),
-              Center(
-                  child: Text('Checkout Page',
-                      style: TextStyle(
-                          fontFamily: 'taviraj',
-                          color: ColorsVariables.textColor,
-                          fontStyle: FontStyle.normal,
-                          fontSize: size.width * .04))),
-            ],
+            ),
           ),
-        ),
+          Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(9.0),
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Shipping fee',
+                            style: TextStyle(
+                                fontFamily: 'taviraj',
+                                color: ColorsVariables.textColor,
+                                fontStyle: FontStyle.normal,
+                                fontSize: size.width * .04)),
+                        Row(
+                          children: [
+                            Image.asset('assets/app_icon/body_icon/tk.png'),
+                            Text('20.00',
+                                style: TextStyle(
+                                    fontFamily: 'taviraj',
+                                    color: ColorsVariables.textColor,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .04)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Sub total',
+                            style: TextStyle(
+                                fontFamily: 'taviraj',
+                                color: ColorsVariables.textColor,
+                                fontStyle: FontStyle.normal,
+                                fontSize: size.width * .04)),
+                        Row(
+                          children: [
+                            Image.asset('assets/app_icon/body_icon/tk.png'),
+                            Text('79.95',
+                                style: TextStyle(
+                                    fontFamily: 'taviraj',
+                                    color: ColorsVariables.textColor,
+                                    fontStyle: FontStyle.normal,
+                                    fontSize: size.width * .04)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: ColorsVariables.dividerColor,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Total',
+                            style: TextStyle(
+                                fontFamily: 'taviraj',
+                                color: ColorsVariables.textColor,
+                                fontWeight: FontWeight.bold,
+                                fontStyle: FontStyle.normal,
+                                fontSize: size.width * .04)),
+                        Row(
+                          children: [
+                            Image.asset('assets/app_icon/body_icon/tk.png'),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text('99.95',
+                                  style: TextStyle(
+                                      fontFamily: 'taviraj',
+                                      color: ColorsVariables.textColor,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: size.width * .04)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )),
+
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: GradientButton(
+
+              onPressed: (){},
+
+              child: Text(
+                'Payment',
+                style: TextStyle(
+                    fontFamily: 'taviraj',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: size.width * .045),
+              ),
+              borderRadius: 6.97,
+              height: size.width * .13,
+              width: size.width,
+              gradientColors: [Colors.pink.shade600, Colors.pink.shade400],
+            ),
+          ),
+
+          SizedBox(
+            height: 50,
+          ),
+
+        ],
       ),
     );
   }

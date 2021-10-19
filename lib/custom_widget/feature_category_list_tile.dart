@@ -10,7 +10,7 @@ import 'package:bafdo/model/featured_categories_model.dart';
 import 'package:provider/provider.dart';
 
 class FeatureCategoryListTile extends StatefulWidget {
-  TraditinalProductListDatum? productList;
+  final TraditinalProductListDatum? productList;
 
 
   FeatureCategoryListTile({this.productList});
@@ -26,17 +26,13 @@ class _FeatureCategoryListTileState extends State<FeatureCategoryListTile> {
 
   @override
   Widget build(BuildContext context) {
-    final PublicProvider publicProvider = Provider.of<PublicProvider>(context,listen: false);
-    Size size = MediaQuery.of(context).size;
+    final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
+    final Size size = MediaQuery.of(context).size;
     if(_counter==0){
-      setState(() {
-        _counter++;
-      });
+      setState(()=>_counter++);
       publicProvider.isProductWished(widget.productList!.id!).then((value){
         if(publicProvider.message=='Product present in wishlist'){
-          setState(() {
-            favorite=true;
-          });
+          setState(()=> favorite=true);
         }
       });
     }
@@ -78,9 +74,7 @@ class _FeatureCategoryListTileState extends State<FeatureCategoryListTile> {
                         top: 10,
                         child: InkWell(
                           onTap: () {
-                            setState(() {
-                              favorite = !favorite;
-                            });
+                            setState(()=> favorite = !favorite);
                             if(favorite == true){
                               publicProvider.addWishList(widget.productList!.id!).then((value)async{
                                 await publicProvider.fetchWishList();

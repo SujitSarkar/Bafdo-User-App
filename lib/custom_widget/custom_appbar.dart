@@ -2,10 +2,10 @@ import 'package:bafdo/colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget {
-  Widget leading;
-  Widget? title;
-  Widget trailing1;
-  Widget trailing2;
+  final Widget leading;
+  final Widget? title;
+  final Widget trailing1;
+  final Widget trailing2;
 
   CustomAppBar({
     required this.leading,

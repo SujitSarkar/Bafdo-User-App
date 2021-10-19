@@ -1,8 +1,11 @@
 import 'package:bafdo/colors.dart';
 import 'package:bafdo/custom_widget/custom_appbar.dart';
 import 'package:bafdo/custom_widget/outline_button.dart';
+import 'package:bafdo/variables/public_variables.dart';
+import 'package:bafdo/widgets/drawer_nav_page.dart';
 import 'package:bafdo/widgets/form_decoration.dart';
 import 'package:bafdo/widgets/gradient_button.dart';
+import 'package:bafdo/widgets/nav_page-appbar.dart';
 import 'package:flutter/material.dart';
 
 class MaBafdo extends StatefulWidget {
@@ -13,135 +16,7 @@ class MaBafdo extends StatefulWidget {
 }
 
 class _MaBafdoState extends State<MaBafdo> {
-  static const genderItems = <String>['Male', 'Female', 'Others'];
-  static const yearItems = <String>[
-    '1990',
-    '1991',
-    '1992',
-    '1993',
-    '1994',
-    '1995',
-    '1996',
-    '1997',
-    '1998',
-    '1999',
-    '2000',
-    '2001',
-    '2002',
-    '2003',
-    '2004',
-    '2005',
-    '2006',
-    '2007',
-    '2008',
-    '2009',
-    '2010',
-    '2011',
-    '2012',
-    '2013',
-    '2014',
-    '2015',
-    '2016',
-    '2017',
-    '2018',
-    '2019',
-    '2020',
-    '2021',
-    '2022',
-    '2023',
-    '2024',
-    '2025',
-    '2026',
-    '2027',
-    '2028',
-    '2029',
-    '2030',
-    '2031',
-    '2032',
-    '2033',
-    '2034',
-    '2035',
-    '2036',
-    '2037',
-    '2038',
-    '2039',
-    '2040',
-    '2041',
-    '2042',
-    '2043',
-    '2044',
-    '2045',
-    '2046',
-    '2047',
-    '2048',
-    '2049',
-    '2050',
-  ];
-  static const dayItems = <String>[
-    '01',
-    '02',
-    '03',
-    '04',
-    '05',
-    '06',
-    '07',
-    '08',
-    '09',
-    '10',
-    '11',
-    '12',
-    '13',
-    '14',
-    '15',
-    '16',
-    '17',
-    '18',
-    '19',
-    '20',
-    '21',
-    '22',
-    '23',
-    '24',
-    '25',
-    '26',
-    '27',
-    '28',
-    '29',
-    '30',
-    '31',
-  ];
-  static const monthItems = <String>[
-    'January',
-    'Februery',
-    'March',
-    'April',
-    'May',
-    'Jun',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
 
-  final List<DropdownMenuItem<String>> _dropDownGenderItem = genderItems
-      .map((String value) =>
-          DropdownMenuItem<String>(value: value, child: Text(value)))
-      .toList();
-  final List<DropdownMenuItem<String>> _dropDownYearsItem = yearItems
-      .map((String value) =>
-          DropdownMenuItem<String>(value: value, child: Text(value)))
-      .toList();
-  final List<DropdownMenuItem<String>> _dropDownDaysItem = dayItems
-      .map((String value) =>
-          DropdownMenuItem<String>(value: value, child: Text(value)))
-      .toList();
-
-  final List<DropdownMenuItem<String>> _dropDownMonthsItem =
-      monthItems.map((String value) {
-    return DropdownMenuItem<String>(value: value, child: Text(value));
-  }).toList();
 
   String _btnSelectedVal = 'Male';
   String _selectedYearValue = '1990';
@@ -150,26 +25,19 @@ class _MaBafdoState extends State<MaBafdo> {
 
   bool phoneVarified = false;
   bool emailVarified = false;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Color(0xffEFF9F9),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
-        child: CustomAppBar(
-          leading: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child:
-                  Image.asset('assets/app_icon/app_bar_icon/arrow_left.png')),
-          title: Text('Edit Profile'),
-          trailing1: Image.asset('assets/app_icon/app_bar_icon/close.png'),
-          trailing2: Container(),
-        ),
+        child: NavPageAppBar(openDrawer: ()=>_scaffoldKey.currentState!.openDrawer()),
       ),
+      drawer: DrawerNavPage(),
       body: Padding(
         padding: EdgeInsets.only(left: 15, right: 15),
         child: SingleChildScrollView(
@@ -286,7 +154,7 @@ class _MaBafdoState extends State<MaBafdo> {
                       elevation: 0,
                       isDense: true,
                       dropdownColor: Colors.white,
-                      items: this._dropDownGenderItem,
+                      items: PublicVariables.dropDownGenderItem,
                       value: _btnSelectedVal,
                       onChanged: (String? newValue) {
                         if (newValue != null) {
@@ -324,7 +192,7 @@ class _MaBafdoState extends State<MaBafdo> {
                             isExpanded: true,
                             elevation: 0,
                             dropdownColor: Colors.white,
-                            items: this._dropDownYearsItem,
+                            items: PublicVariables.dropDownYearsItem,
                             value: _selectedYearValue,
                             style: TextStyle(
                               color: ColorsVariables.textColor,
@@ -356,7 +224,7 @@ class _MaBafdoState extends State<MaBafdo> {
                               isDense: true,
                               isExpanded: true,
                               dropdownColor: Colors.white,
-                              items: this._dropDownDaysItem,
+                              items: PublicVariables.dropDownDaysItem,
                               value: _selectedDayValue,
                               style: TextStyle(
                                 color: ColorsVariables.textColor,
@@ -389,7 +257,7 @@ class _MaBafdoState extends State<MaBafdo> {
                               isDense: true,
                               isExpanded: true,
                               dropdownColor: Colors.white,
-                              items: this._dropDownMonthsItem,
+                              items: PublicVariables.dropDownMonthsItem,
                               value: _selectedMothValue,
                               style: TextStyle(
                                 color: ColorsVariables.textColor,

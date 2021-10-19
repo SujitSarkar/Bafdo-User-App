@@ -31,6 +31,7 @@ class AuthProvider extends ChangeNotifier {
           name: preferences.getString('name'),
           emailOrPhone: preferences.getString('email_or_phone'));
       _prefUserModel = model;
+      _prefUserModel!.emailOrPhone!;
       notifyListeners();
     }
     print('PrefUserId: ${_prefUserModel!.id}');

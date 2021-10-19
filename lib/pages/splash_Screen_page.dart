@@ -15,8 +15,8 @@ class SplashScreenPage extends StatefulWidget {
 }
 
 class _SplashScreenPageState extends State<SplashScreenPage> {
-  SharedPreferences? preferences;
-  String? _emailOrPhone;
+  // SharedPreferences? preferences;
+  // String? _emailOrPhone;
   @override
   void initState() {
     super.initState();
@@ -31,16 +31,13 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     publicProvider.fetchHandPickProducts();
     publicProvider.fetchFlashDealProducts();
     publicProvider.fetchDailyFeaturedProducts();
-    startTimer();
+    startTimer(publicProvider);
   }
 
   Timer? _timer;
   int seconds = 5;
 
-  void startTimer() async{
-    preferences=await SharedPreferences.getInstance();
-    _emailOrPhone=preferences!.getString('email_or_phone');
-
+  void startTimer(PublicProvider publicProvider) async{
     const oneSec = const Duration(seconds: 1);
     _timer = new Timer.periodic(
       oneSec,
@@ -56,7 +53,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
             }
             if (seconds == 0) {
               _timer!.cancel();
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => _emailOrPhone!=null?Home(): LoginWithNumber()), (route) => false);
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => publicProvider.prefUserModel!.emailOrPhone!=null?Home(): LoginWithNumber()), (route) => false);
             }
           }
         },
@@ -67,7 +64,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
+    final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: ColorsVariables.backgrowndColor,
@@ -114,7 +111,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                           ElevatedButton(
                             onPressed: () {
                               _timer!.cancel();
-                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) =>_emailOrPhone!=null?Home(): LoginWithNumber()), (route) => false);
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) =>publicProvider.prefUserModel!.emailOrPhone!=null?Home(): LoginWithNumber()), (route) => false);
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(

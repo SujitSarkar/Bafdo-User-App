@@ -40,3 +40,32 @@ InputDecoration myBafdoFormDecoration(Size size) => InputDecoration(
         fontSize: size.width * .05,
         fontFamily: 'taviraj',
         fontWeight: FontWeight.w500));
+
+InputDecoration searchFormDecoration(Size size) =>InputDecoration(
+    hintText: 'Search product',
+    hintStyle: TextStyle(
+        fontFamily: 'taviraj',
+        fontWeight: FontWeight.w500,
+        color: Colors.grey,
+        fontStyle: FontStyle.normal,
+        fontSize: size.width * .04),
+    suffixIcon: Image.asset(
+      'assets/app_icon/text_field_icon/search_icon.png'),
+    fillColor: Colors.white,
+    filled: true,
+    enabled: false,
+    isDense: true,
+    contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
+    border: OutlineInputBorder(
+        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.all(Radius.circular(15))
+    ),
+    enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.all(Radius.circular(15))
+    ),
+    disabledBorder: OutlineInputBorder(
+        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.all(Radius.circular(15))
+    ),
+    focusedBorder: InputBorder.none);

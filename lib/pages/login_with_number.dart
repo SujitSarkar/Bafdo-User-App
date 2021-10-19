@@ -331,8 +331,10 @@ class _LoginWithNumberState extends State<LoginWithNumber> {
         'email_or_phone': credential.user!.phoneNumber!
       };
     }
+    showLoadingDialog(context);
     await authProvider.socialLoginAndGetUserInfo(userMap).then((value) async{
       if(value){
+        print("called");
           SharedPreferences preferences = await SharedPreferences.getInstance();
           preferences.setString('email_or_phone', authProvider.userInfoModel.user.phone);
           preferences.setString('id', authProvider.userInfoModel.user.id.toString());

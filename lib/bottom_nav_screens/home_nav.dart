@@ -12,6 +12,9 @@ import 'package:bafdo/sub_pages/product_details.dart';
 import 'package:bafdo/sub_pages/product_page.dart';
 import 'package:bafdo/sub_pages/product_search_page.dart';
 import 'package:bafdo/variables/public_variables.dart';
+import 'package:bafdo/widgets/drawer_nav_page.dart';
+import 'package:bafdo/widgets/form_decoration.dart';
+import 'package:bafdo/widgets/nav_page-appbar.dart';
 import 'package:carousel_pro_nullsafety/carousel_pro_nullsafety.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -49,7 +52,7 @@ class _HomeNavState extends State<HomeNav> {
     if(publicProvider.flashDealProducts==null) await publicProvider.fetchFlashDealProducts();
     if(publicProvider.dailyFeaturedProducts==null) await publicProvider.fetchDailyFeaturedProducts();
     if(publicProvider.carts==null)await publicProvider.fetchCartList();
-    await publicProvider.fetchWishList();
+    if(publicProvider.wishlistModel==null) await publicProvider.fetchWishList();
   }
 
   // List<String> _general_gift_categories = [
@@ -90,172 +93,26 @@ class _HomeNavState extends State<HomeNav> {
   //   'assets/app_icon/app_bar_icon/bafdo_with_logo.png',
   // ];
   int currentPos = 0;
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String? endingHours = '00';
   String? endingMinute = '00';
-
   String? endingSecond = '00';
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
+
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    final PublicProvider publicProvider = Provider.of<PublicProvider>(context,listen: false);
+    final Size size = MediaQuery.of(context).size;
+    final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
     if(_counter==0) _fetch(publicProvider);
     return Scaffold(
-      backgroundColor: Color(0xffEFF9F9),
       key: _scaffoldKey,
-      drawer: Drawer(
-        child: Container(
-          margin: EdgeInsets.only(top: 50),
-          color: Colors.white,
-          child: Column(
-            children: [
-              InkWell(
-                onTap: ()async{
-                  SharedPreferences preferences=await SharedPreferences.getInstance();
-                  preferences.clear();
-                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginWithNumber()), (route) => false);
-                },
-                child: Text('Logout',style: PublicVariables.outlineBtnTextStyle(size),),
-              )
-            ],
-          ),
-        ),
+      backgroundColor: Color(0xffEFF9F9),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.0),
+        child: NavPageAppBar(openDrawer: ()=>_scaffoldKey.currentState!.openDrawer()),
       ),
-      appBar: AppBar(
-        leading: Padding(
-          padding: EdgeInsets.fromLTRB(size.width * .025, 0, 0, 0),
-          child: InkWell(
-            onTap: () {
-              _scaffoldKey.currentState!.openDrawer();
-            },
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: size.width * .1,
-              child: Image.asset(
-                'assets/app_icon/app_bar_icon/menu.png',
-              ),
-            ),
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        centerTitle: true,
-        title: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            width: size.width * .2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/app_icon/app_bar_icon/bafdo_with_logo.png',
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: size.width * .002,
-                      width: size.width * .01,
-                      color: Colors.grey,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: size.width * .01,
-                      ),
-                      //size == 14.91
-                      child: Text(
-                        'GO WITH BEST',
-                        style: TextStyle(
-                            fontFamily: 'taviraj',
-                            color: ColorsVariables.textColor,
-                            fontStyle: FontStyle.normal,
-                            fontSize: size.width * .018),
-                      ),
-                    ),
-                    Container(
-                      height: size.width * .002,
-                      width: size.width * .01,
-                      color: Colors.grey,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-        actions: [
-          Container(
-            width: size.width * .4,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, size.width * .045, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => CartPage()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                      ),
-                      child: Image.asset(
-                        'assets/app_icon/body_icon/cart.png',
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: size.width * .025,
-                  ),
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => NotificationPage()));
-                        },
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 22,
-                          child: Image.asset(
-                            'assets/app_icon/app_bar_icon/notification.png',
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 0.0,
-                        right: -5.0,
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: size.width * .04,
-                          height: size.width * .04,
-                          decoration: BoxDecoration(
-                            color: Colors.pink,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Text(
-                            '3',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: size.width * .02),
-                          ),
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
+      drawer: DrawerNavPage(),
       body: _bodyUI(context,publicProvider),
     );
   }
@@ -264,6 +121,7 @@ class _HomeNavState extends State<HomeNav> {
     Size size = MediaQuery.of(context).size;
     return Column(
       children: [
+        ///Search field
         Padding(
           padding: EdgeInsets.fromLTRB(size.width * .045, size.width * .00,
               size.width * .045, size.width * .015),
@@ -272,50 +130,23 @@ class _HomeNavState extends State<HomeNav> {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => ProductSearchPage()));
             },
-            child: Container(
-              width: size.width,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(size.width * .03),
-                  )),
-              child: Padding(
-                  padding: EdgeInsets.fromLTRB(size.width * .03, 0, 0, 0),
-                  child: Container(
-                    width: size.width * .6,
-                    child: TextFormField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                          hintText: 'Search product',
-                          hintStyle: TextStyle(
-                              fontFamily: 'taviraj',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                              fontStyle: FontStyle.normal,
-                              fontSize: size.width * .04),
-                          suffixIcon: Image.asset(
-                            'assets/app_icon/text_field_icon/search_icon.png',
-                          ),
-                          enabled: false,
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none),
-                      cursorColor: Color(0xff131214),
-                    ),
-                  )),
+            child: TextFormField(
+              controller: _searchController,
+              decoration: searchFormDecoration(size),
+              cursorColor: Color(0xff131214),
             ),
           ),
         ),
+
         Expanded(
           child: Container(
               padding: EdgeInsets.all(size.width * .04),
               width: size.width,
               child: SingleChildScrollView(
                   child: Column(children: [
+
                 Container(
                   decoration: BoxDecoration(
-
                       borderRadius: BorderRadius.all(Radius.circular(22))),
                   child: Stack(
                     children: [
@@ -499,14 +330,11 @@ class _HomeNavState extends State<HomeNav> {
                         )),
                   ],
                 ),
-                SizedBox(
-                  height: size.width * .005,
-                ),
+                SizedBox(height: size.width * .06),
 
+                    ///Anniversary
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //  crossAxisAlignment: CrossAxisAlignment.end,
-
                       children: [
                         publicProvider.traditionalCategories!=null?Container(
                             width: size.width * .6,
@@ -567,13 +395,11 @@ class _HomeNavState extends State<HomeNav> {
                         },
                       ),
                     ),
-                SizedBox(
-                  height: size.width * .04,
-                ),
+                SizedBox(height: size.width * .04),
+
+                ///Hand picked
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //  crossAxisAlignment: CrossAxisAlignment.end,
-
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -612,6 +438,7 @@ class _HomeNavState extends State<HomeNav> {
                     ),
                   ],
                 ),
+
                 Container(
                   height: size.width * .5,
                   width: size.width,
@@ -624,10 +451,12 @@ class _HomeNavState extends State<HomeNav> {
                     },
                   ),
                 ),
-                SizedBox(
-                  height: size.width * .04,
-                ),
-                Padding(
+                    publicProvider.flashDealProducts==null
+                        ?SizedBox(height: size.width * .04):Container(),
+
+                    ///Flash Deal
+                    publicProvider.flashDealProducts==null
+                        ?Padding(
                   padding: const EdgeInsets.only(left: 5),
                   child: Container(
                     child: Row(
@@ -635,9 +464,7 @@ class _HomeNavState extends State<HomeNav> {
                       //  crossAxisAlignment: CrossAxisAlignment.end,
 
                       children: [
-                        Image.asset(
-                          'assets/app_icon/body_icon/flash_deal_icon.png',
-                        ),
+                        Image.asset('assets/app_icon/body_icon/flash_deal_icon.png'),
                         Text(
                           'Flash Deal',
                           style: TextStyle(
@@ -751,8 +578,9 @@ class _HomeNavState extends State<HomeNav> {
                       ],
                     ),
                   ),
-                ),
-                Container(
+                ):Container(),
+                    publicProvider.flashDealProducts==null
+                        ?Container(
                   height: size.width * .5,
                   width: size.width,
                   child: ListView.builder(
@@ -763,10 +591,8 @@ class _HomeNavState extends State<HomeNav> {
                       return CategoryProductListTile(productList: publicProvider.flashDealProducts!.data![index],);
                     },
                   ),
-                ),
-                SizedBox(
-                  height: size.width * .04,
-                ),
+                ):Container(),
+                SizedBox(height: size.width * .04),
                 Padding(
                   padding: const EdgeInsets.only(left: 5),
                   child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
