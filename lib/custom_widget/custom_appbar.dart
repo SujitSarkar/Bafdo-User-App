@@ -15,7 +15,7 @@ class CustomAppBar extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 15),
@@ -38,6 +38,7 @@ class CustomAppBar extends StatelessWidget {
                 )
               ],
             ),
+            SizedBox(height: size.width*.02,),
             Divider(color: ColorsVariables.dividerColor)
           ],
         ),
