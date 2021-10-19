@@ -399,7 +399,7 @@ class PublicProvider extends AuthProvider{
     final response =
     await http.get((Uri.parse("https://bafdo.com/api/v2/wishlists-check-product?product_id=$productId&user_id=${prefUserModel.id}")),
         headers: { "Authorization": "Bearer ${prefUserModel.accessToken}"});
-    var jsonData = await jsonDecode(response.body);
+    var jsonData =  jsonDecode(response.body);
     String msg=jsonData["message"];
     _message=msg;
     return _message;

@@ -53,6 +53,7 @@ flutter:
     - assets/app_icon/body_icon/
     - assets/app_icon/bottom_nav_icon/
     - assets/app_icon/text_field_icon/
+    - assets/app_icon/profile_icon/
 
   # example:
   fonts:
