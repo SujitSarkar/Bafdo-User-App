@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:bafdo/bottom_nav_screens/my_bafdu_nav.dart';
 import 'package:bafdo/bottom_nav_screens/festival_nav.dart';
 import 'package:bafdo/bottom_nav_screens/home_nav.dart';
+import 'package:bafdo/bottom_nav_screens/profile.dart';
 import 'package:bafdo/bottom_nav_screens/wish_list_nav.dart';
 import 'package:bafdo/pages/add_priyo_manush_page.dart';
 import 'package:bafdo/widgets/nav_page-appbar.dart';
@@ -20,10 +21,9 @@ class _HomeState extends State<Home> {
     HomeNav(),
     FestivalPage(),
     WishListNav(),
-    MaBafdo(),
-  ];
+    Profile()];
 
-  var _pageController = PageController();
+  PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {

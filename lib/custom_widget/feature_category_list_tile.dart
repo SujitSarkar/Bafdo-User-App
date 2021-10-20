@@ -1,4 +1,5 @@
 import 'package:bafdo/colors.dart';
+import 'package:bafdo/model/categories_model.dart';
 import 'package:bafdo/model/traditional_product_list_model.dart';
 import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/sub_pages/product_details.dart';
@@ -6,7 +7,6 @@ import 'package:bafdo/sub_pages/product_page.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:bafdo/model/featured_categories_model.dart';
 import 'package:provider/provider.dart';
 
 class FeatureCategoryListTile extends StatefulWidget {
@@ -442,7 +442,7 @@ class _OfferListTileState extends State<OfferListTile> {
   }
 }
 
-Widget getFavoriteOfferCard(BuildContext context) {
+Widget getFavoriteOfferCard(BuildContext context,CatDatum childCategories) {
   Size size = MediaQuery.of(context).size;
   return Padding(
     padding: const EdgeInsets.all(8.0),
@@ -467,10 +467,12 @@ Widget getFavoriteOfferCard(BuildContext context) {
                     color: Colors.grey.shade100,
                     borderRadius: BorderRadius.all(Radius.circular(15))),
                 child: Center(
-                  child: Image.asset(
-                    'assets/app_icon/body_icon/traditional_product.png',
-                    fit: BoxFit.fill,
-                  ),
+                  child: childCategories.banner!.isNotEmpty
+                      ?Image.network(
+                    'https://bafdo.com/public/${childCategories.banner}',
+                    fit: BoxFit.fill
+                  )
+                      :Image.asset('assets/app_icon/body_icon/favorite.png', fit: BoxFit.fill),
                 ),
               ),
             ),
@@ -478,7 +480,7 @@ Widget getFavoriteOfferCard(BuildContext context) {
               child: Padding(
                 padding: const EdgeInsets.only(left: 5, right: 5),
                 child: Text(
-                  'Helmet',
+                  childCategories.name!,
                   style: TextStyle(
                       fontFamily: 'taviraj',
                       color: ColorsVariables.textColor,
@@ -495,7 +497,7 @@ Widget getFavoriteOfferCard(BuildContext context) {
   );
 }
 
-Widget getFeatureCard(BuildContext context,Datum featuredCategories) {
+Widget getFeatureCard(BuildContext context,CatDatum featuredCategories) {
   final PublicProvider publicProvider = Provider.of<PublicProvider>(context,listen: false);
   Size size = MediaQuery.of(context).size;
   return Padding(

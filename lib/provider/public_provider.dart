@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:bafdo/model/cart_model.dart';
+import 'package:bafdo/model/flash_deal_product_model.dart';
 import 'package:bafdo/model/product_details_model.dart';
 import 'package:bafdo/model/product_list_model.dart';
 import 'package:bafdo/model/related_product_model.dart';
@@ -12,16 +13,16 @@ import 'package:bafdo/model/brands_top_model.dart';
 import 'package:bafdo/model/brands_model.dart';
 import 'package:bafdo/model/sliders_model.dart';
 import 'package:bafdo/model/traditional_categories_model.dart';
-import 'package:bafdo/model/featured_categories_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 
 class PublicProvider extends AuthProvider{
   String? _message;
   Categories? _categories;
+  Categories? _subCategories;
+  Categories? _childSubCategories;
   TopBrands? _topBrands;
   Brands? _brands;
-  FeaturedCategories? _featuredCategories;
+  Categories? _featuredCategories;
   TraditionalCategories? _traditionalCategories;
   TraditionalProductList? _traditionalCategoriesProducts;
   ProductDetails? _productDetails;
@@ -38,22 +39,24 @@ class PublicProvider extends AuthProvider{
   Reviews? get reviews => _reviews;
   List<CartModel>? get carts => _carts;
   String? get message=> _message;
-   get wishlistModel => _wishlistModel;
+  get wishlistModel => _wishlistModel;
 
   ProductList? _handPickedProducts;
   ProductList? get handPickedProducts => _handPickedProducts;
-  ProductList? _flashDealProducts;
-  ProductList? get flashDealProducts => _flashDealProducts;
+  FlashDealProductModel? _flashDealProducts;
+  FlashDealProductModel? get flashDealProducts => _flashDealProducts;
   ProductList? _dailyFeaturedProducts;
   ProductList? get dailyFeaturedProducts => _dailyFeaturedProducts;
 
   List<String> _sliderlist=[];
   List<String> get  sliderList=>_sliderlist;
   TraditionalCategories? get traditionalCategories => _traditionalCategories;
-  FeaturedCategories? get featuredCategories => _featuredCategories;
+  Categories? get featuredCategories => _featuredCategories;
   Brands? get brands => _brands;
   TopBrands? get topBrands => _topBrands;
   Categories? get categories => _categories;
+  Categories? get subCategories => _subCategories;
+  Categories? get childSubCategories => _childSubCategories;
 
   Future<RelatedProducts?> getRelatedProducts(int productId)async{
     try{
@@ -73,12 +76,9 @@ class PublicProvider extends AuthProvider{
   Future<ProductDetails?> getProductDetails(int productId)async{
     try{
       String url = "https://bafdo.com/api/v2/products/$productId";
-
       var response = await http.get(Uri.parse(url));
-
       ProductDetails productDetails = productDetailsFromJson(response.body);
       return productDetails;
-
     }catch(error){
       print(error.toString());
       return null;
@@ -99,13 +99,10 @@ class PublicProvider extends AuthProvider{
 
   Future<Categories?> getCategories()async{
     try{
-      String url = "https://bafdo.com/api/v2/categories";
-
+      String url = "https://bafdo.com/api/v2/categories/featured";
       var response = await http.get(Uri.parse(url));
-
       Categories categories = categoriesFromJson(response.body);
       return categories;
-
     }catch(error){
       print(error.toString());
       return null;
@@ -115,6 +112,27 @@ class PublicProvider extends AuthProvider{
     var result = await getCategories();
     _categories=result;
     notifyListeners();
+  }
+
+  Future<void> getSubCategories(String url)async{
+    try{
+      _subCategories=null;
+      var response = await http.get(Uri.parse(url));
+      _subCategories = categoriesFromJson(response.body);
+      notifyListeners();
+    }catch(error){
+      print(error.toString());
+    }
+  }
+  Future<void> getChildSubCategories(String url)async{
+    try{
+      _childSubCategories=null;
+      var response = await http.get(Uri.parse(url));
+      _childSubCategories = categoriesFromJson(response.body);
+      notifyListeners();
+    }catch(error){
+      print(error.toString());
+    }
   }
 
   Future<TopBrands?> getTopBrands()async{
@@ -158,13 +176,13 @@ class PublicProvider extends AuthProvider{
   }
 
 
-  Future<FeaturedCategories?> getFeaturedCategories()async{
+  Future<Categories?> getFeaturedCategories()async{
     try{
-      String url = "https://bafdo.com/api/v1/categories/featured";
+      String url = "https://bafdo.com/api/v2/categories/home";
 
       var response = await http.get(Uri.parse(url));
 
-      FeaturedCategories featuredCategories = featuredCategoriesFromJson(response.body);
+      Categories featuredCategories = categoriesFromJson(response.body);
       return featuredCategories;
 
     }catch(error){
@@ -209,9 +227,7 @@ class PublicProvider extends AuthProvider{
   Future<TraditionalProductList?> getTraditionalProductList(String link)async{
     try{
       String url = "$link";
-
       var response = await http.get(Uri.parse(url));
-
       TraditionalProductList traditionalProductList = traditionalProductListFromJson(response.body);
       return traditionalProductList;
 
@@ -270,15 +286,12 @@ class PublicProvider extends AuthProvider{
     notifyListeners();
   }
 
-  Future<ProductList?> getFlashDealProducts()async{
+  Future<FlashDealProductModel?> getFlashDealProducts()async{
     try{
-      String url = "https://bafdo.com/api/v2/products/flash-deal";
-
+      String url = "https://bafdo.com/api/v1/products/flash-deal";
       var response = await http.get(Uri.parse(url));
-
-      ProductList productList1 = productListFromJson(response.body);
+      FlashDealProductModel productList1 = flashDealProductModelFromJson(response.body);
       return productList1;
-
     }catch(error){
       print(error.toString());
       return null;
@@ -287,6 +300,7 @@ class PublicProvider extends AuthProvider{
   Future<void> fetchFlashDealProducts()async {
     var result = await getFlashDealProducts();
     _flashDealProducts=result;
+    print('FlashDeal: ${_flashDealProducts!.data!.products!.data!.length}');
     notifyListeners();
   }
 

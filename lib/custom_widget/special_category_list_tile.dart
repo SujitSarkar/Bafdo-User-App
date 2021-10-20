@@ -1,5 +1,7 @@
 import 'package:bafdo/colors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 Widget specialCategoryListTile(BuildContext context,
     String giftCategories, String iconList) {
@@ -18,11 +20,12 @@ Widget specialCategoryListTile(BuildContext context,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(15)),
             border: Border.all(width: 1, color: Colors.pink),
-            color: ColorsVariables.pinkColor,
+            color: ColorsVariables.backgrowndColor,
           ),
-          child: Image.network(
-            '$iconList',
-            fit: BoxFit.fill,
+          child: CachedNetworkImage(
+            imageUrl: '$iconList',
+            placeholder: (context, url) => CupertinoActivityIndicator(),
+            errorWidget: (context, url, error) => Icon(Icons.error),
           ),
         ),
         SizedBox(

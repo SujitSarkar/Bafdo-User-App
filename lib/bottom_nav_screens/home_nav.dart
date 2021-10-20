@@ -1,7 +1,10 @@
 import 'package:bafdo/colors.dart';
 import 'package:bafdo/custom_widget/category_products_list_tile.dart';
+import 'package:bafdo/custom_widget/flash_deal_count_down_widget.dart';
+import 'package:bafdo/custom_widget/flash_deal_product_list_tile.dart';
 import 'package:bafdo/custom_widget/special_category_list_tile.dart';
 import 'package:bafdo/custom_widget/feature_category_list_tile.dart';
+import 'package:bafdo/model/flash_deal_product_model.dart';
 import 'package:bafdo/pages/category_page.dart';
 import 'package:bafdo/pages/login_with_number.dart';
 import 'package:bafdo/provider/public_provider.dart';
@@ -54,55 +57,10 @@ class _HomeNavState extends State<HomeNav> {
     if(publicProvider.carts==null)await publicProvider.fetchCartList();
     if(publicProvider.wishlistModel==null) await publicProvider.fetchWishList();
   }
-
-  // List<String> _general_gift_categories = [
-  //   'Jewelry & Accessories',
-  //   'Beauty & care',
-  //   'Arts & Carts',
-  //   'Home & Appliances',
-  //   'Computers & Accessories',
-  //   'Outdoor Sports',
-  //   'Toys & Entertainment',
-  //   'Personalised'
-  // ];
-  //
-  // List<String> _special_gift_categories = [
-  //   'Anniversary',
-  //   'Birth day',
-  //   'Him',
-  //   'Her',
-  //   'Kids',
-  //   'Wedding',
-  //   'House warming',
-  //   'Personalised'
-  // ];
-  //
-  // List<String> _feature_icons_list = [
-  //   'assets/app_icon/body_icon/wedding.png',
-  //   'assets/app_icon/body_icon/birthday.png',
-  //   'assets/app_icon/body_icon/him.png',
-  //   'assets/app_icon/body_icon/her.png',
-  //   'assets/app_icon/body_icon/kids.png',
-  //   'assets/app_icon/body_icon/anniversary.png',
-  //   'assets/app_icon/body_icon/house_warming.png',
-  //   'assets/app_icon/body_icon/personalized.png',
-  // ];
-  // final List<String> imgList = [
-  //   'assets/app_icon/app_bar_icon/bafdo_with_logo.png',
-  //   'assets/app_icon/app_bar_icon/bafdo_with_logo.png',
-  //   'assets/app_icon/app_bar_icon/bafdo_with_logo.png',
-  // ];
-  int currentPos = 0;
-
-  String? endingHours = '00';
-  String? endingMinute = '00';
-  String? endingSecond = '00';
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
-
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
     if(_counter==0) _fetch(publicProvider);
     return Scaffold(
@@ -118,7 +76,7 @@ class _HomeNavState extends State<HomeNav> {
   }
 
   Widget _bodyUI(BuildContext context,PublicProvider publicProvider) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
     return Column(
       children: [
         ///Search field
@@ -145,6 +103,7 @@ class _HomeNavState extends State<HomeNav> {
               child: SingleChildScrollView(
                   child: Column(children: [
 
+                    ///Slider
                 Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(22))),
@@ -224,6 +183,8 @@ class _HomeNavState extends State<HomeNav> {
                   ),
                 ),
                 SizedBox(height: size.width * .1),
+
+                ///Category
                 Stack(
                   overflow: Overflow.visible,
                   children: [
@@ -243,7 +204,7 @@ class _HomeNavState extends State<HomeNav> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (_) => CategoryPage()));
+                                      builder: (_) => CategoryPage(url: publicProvider.categories!.data![index].links!.subCategories)));
                             },
                             child: specialCategoryListTile(
                                 context,
@@ -438,7 +399,6 @@ class _HomeNavState extends State<HomeNav> {
                     ),
                   ],
                 ),
-
                 Container(
                   height: size.width * .5,
                   width: size.width,
@@ -451,144 +411,33 @@ class _HomeNavState extends State<HomeNav> {
                     },
                   ),
                 ),
-                    publicProvider.flashDealProducts==null
+                    publicProvider.flashDealProducts!=null
                         ?SizedBox(height: size.width * .04):Container(),
 
                     ///Flash Deal
-                    publicProvider.flashDealProducts==null
+                    publicProvider.flashDealProducts!=null
                         ?Padding(
                   padding: const EdgeInsets.only(left: 5),
-                  child: Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //  crossAxisAlignment: CrossAxisAlignment.end,
-
-                      children: [
-                        Image.asset('assets/app_icon/body_icon/flash_deal_icon.png'),
-                        Text(
-                          'Flash Deal',
-                          style: TextStyle(
-                              fontFamily: 'taviraj',
-                              fontWeight: FontWeight.w500,
-                              color: ColorsVariables.textColor,
-                              fontStyle: FontStyle.normal,
-                              fontSize: size.width * .045),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5, right: 5),
-                          child: Text(
-                            'Ending in',
-                            style: TextStyle(
-                                fontFamily: 'taviraj',
-                                fontWeight: FontWeight.w500,
-                                color: ColorsVariables.textColor,
-                                fontStyle: FontStyle.normal,
-                                fontSize: size.width * .04),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                              height: size.width * .07,
-                              width: size.width * .07,
-                              alignment: Alignment.center,
-                              decoration: new BoxDecoration(
-                                  color: Colors.pink.shade300,
-                                  border: new Border.all(
-                                      width: 2.0,
-                                      color: Color.fromRGBO(0, 0, 0, 0.1)),
-                                  borderRadius:
-                                      new BorderRadius.circular(6.97)),
-                              child: Text(
-                                endingHours.toString(),
-                                style: TextStyle(
-                                    fontFamily: 'poppins',
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                    fontStyle: FontStyle.normal,
-                                    fontSize: size.width * .04),
-                              )),
-                        ),
-                        Text(' : '),
-                        Expanded(
-                          child: Container(
-                              height: size.width * .07,
-                              width: size.width * .07,
-                              alignment: Alignment.center,
-                              decoration: new BoxDecoration(
-                                  color: Colors.pink.shade300,
-                                  border: new Border.all(
-                                      width: 2.0,
-                                      color: Color.fromRGBO(0, 0, 0, 0.1)),
-                                  borderRadius:
-                                      new BorderRadius.circular(6.97)),
-                              child: Text(
-                                endingSecond.toString(),
-                                style: TextStyle(
-                                    fontFamily: 'poppins',
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                    fontStyle: FontStyle.normal,
-                                    fontSize: size.width * .04),
-                              )),
-                        ),
-                        Text(' : '),
-                        Expanded(
-                          child: Container(
-                            height: size.width * .07,
-                            width: size.width * .07,
-                            alignment: Alignment.center,
-                            decoration: new BoxDecoration(
-                                color: Colors.pink.shade300,
-                                border: new Border.all(
-                                    width: 2.0,
-                                    color: Color.fromRGBO(0, 0, 0, 0.1)),
-                                borderRadius: new BorderRadius.circular(6.97)),
-                            child: Center(
-                                child: Text(
-                              endingMinute.toString(),
-                              style: TextStyle(
-                                  fontFamily: 'poppins',
-                                  // fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: size.width * .04),
-                            )),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ProductPage(
-                                          navigateFrom: 'Flash Deal',
-                                        )));
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: size.width * .02),
-                            child: Text('See More',
-                                style: TextStyle(
-                                    fontFamily: 'taviraj',
-                                    color: Colors.grey,
-                                    fontStyle: FontStyle.normal,
-                                    fontSize: size.width * .04)),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  child: FlashDealCountDownWidget(endingDate: publicProvider.flashDealProducts!.data!.endDate!),
+                  //child: FlashDealCountDownWidget(endingDate: publicProvider.flashDealProducts!.data!.endDate!),
                 ):Container(),
-                    publicProvider.flashDealProducts==null
+                    publicProvider.flashDealProducts!=null
+                        ?SizedBox(height: size.width * .03):Container(),
+
+                    publicProvider.flashDealProducts!=null
                         ?Container(
-                  height: size.width * .5,
+                  height: size.width * .52,
                   width: size.width,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: publicProvider.flashDealProducts==null?0:publicProvider.flashDealProducts!.data!.length<3?
-                    publicProvider.flashDealProducts!.data!.length:3,
+                    itemCount: publicProvider.flashDealProducts==null
+                        ?0
+                        :publicProvider.flashDealProducts!.data!.products!.data!.length<3
+                        ?publicProvider.flashDealProducts!.data!.products!.data!.length:3,
                     itemBuilder: (context, index) {
-                      return CategoryProductListTile(productList: publicProvider.flashDealProducts!.data![index],);
+                      return Container(
+                        margin: EdgeInsets.only(right: size.width*.04),
+                          child: FlashDealProductListTile(productList: publicProvider.flashDealProducts!.data!.products!.data![index],));
                     },
                   ),
                 ):Container(),

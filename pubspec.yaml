@@ -37,6 +37,8 @@ dependencies:
   twitter_login:
   flutter_html:
   skeletons:
+  cached_network_image:
+  intl:
 
 dev_dependencies:
   flutter_test:

@@ -15,12 +15,12 @@ class Categories {
     this.status,
   });
 
-  List<Datum>? data;
+  List<CatDatum>? data;
   bool? success;
   int? status;
 
   factory Categories.fromJson(Map<String, dynamic> json) => Categories(
-    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+    data: List<CatDatum>.from(json["data"].map((x) => CatDatum.fromJson(x))),
     success: json["success"],
     status: json["status"],
   );
@@ -32,8 +32,8 @@ class Categories {
   };
 }
 
-class Datum {
-  Datum({
+class CatDatum {
+  CatDatum({
     this.id,
     this.name,
     this.banner,
@@ -49,7 +49,7 @@ class Datum {
   int? numberOfChildren;
   Links? links;
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory CatDatum.fromJson(Map<String, dynamic> json) => CatDatum(
     id: json["id"],
     name: json["name"],
     banner: json["banner"],

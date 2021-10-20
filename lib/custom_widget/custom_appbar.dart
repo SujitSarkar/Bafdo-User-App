@@ -19,7 +19,7 @@ class CustomAppBar extends StatelessWidget {
     return SafeArea(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 15),
-        margin: EdgeInsets.only(top: 10.0),
+        margin: EdgeInsets.only(top: 8.0),
         child: Column(
           children: [
             Row(
@@ -38,7 +38,7 @@ class CustomAppBar extends StatelessWidget {
                 )
               ],
             ),
-            SizedBox(height: size.width*.02,),
+            SizedBox(height: 2.0),
             Divider(color: ColorsVariables.dividerColor)
           ],
         ),

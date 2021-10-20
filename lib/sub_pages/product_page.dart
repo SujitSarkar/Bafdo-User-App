@@ -3,6 +3,8 @@ import 'package:bafdo/colors.dart';
 import 'package:bafdo/custom_widget/category_products_list_tile.dart';
 import 'package:bafdo/custom_widget/custom_appbar.dart';
 import 'package:bafdo/custom_widget/feature_category_list_tile.dart';
+import 'package:bafdo/custom_widget/flash_deal_count_down_widget.dart';
+import 'package:bafdo/custom_widget/flash_deal_product_list_tile.dart';
 import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/sub_pages/product_search_filtered_dialog.dart';
 import 'package:flutter/material.dart';
@@ -24,71 +26,80 @@ class _ProductPageState extends State<ProductPage> {
   Timer? _timer;
   int seconds = 0;
 
-  String? endingHours = '00';
-  String? endingMinute = '00';
+  // @override
+  // void initState() {
+  //   startTimer();
+  //   super.initState();
+  // }
+  //
+  // void startTimer() {
+  //   const oneSec = const Duration(seconds: 1);
+  //   _timer = new Timer.periodic(
+  //     oneSec,
+  //     (Timer timer) => setState(
+  //       () {
+  //         if (seconds > 2) {
+  //           timer.cancel();
+  //         } else {
+  //           if (seconds < 2) {
+  //             setState(() {
+  //               seconds = seconds + 1;
+  //             });
+  //           }
+  //         }
+  //       },
+  //     ),
+  //   );
+  // }
 
-  String? endingSecond = '00';
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    startTimer();
-    super.initState();
-  }
-
-  void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
-      oneSec,
-      (Timer timer) => setState(
-        () {
-          if (seconds > 3) {
-            timer.cancel();
-          } else {
-            if (seconds < 4) {
-              setState(() {
-                seconds = seconds + 1;
-              });
-            }
-
-            // if (seconds == 0) {
-            //   Navigator.push(context,
-            //       MaterialPageRoute(builder: (context) => LoginWithNumber()));
-            // }
-          }
-        },
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    _timer!.cancel();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _timer!.cancel();
+  // }
+  Widget _timeContainer(String time,Size size)=>Container(
+    alignment: Alignment.center,
+    padding: EdgeInsets.symmetric(horizontal: 3,vertical: 1),
+    decoration: new BoxDecoration(
+        color: Colors.pink.shade300,
+        borderRadius: new BorderRadius.circular(5.0)),
+    child: Text(
+      time.toString(),
+      textAlign: TextAlign.center,
+      style: TextStyle(
+          fontFamily: 'poppins',
+          color: Colors.white,
+          fontSize: size.width * .035),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
+    final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
     return Scaffold(
       backgroundColor: Color(0xffEFF9F9),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
         child: CustomAppBar(
           leading: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child:
-                  Image.asset('assets/app_icon/app_bar_icon/arrow_left.png')),
+              onTap: ()=> Navigator.pop(context),
+              child: Image.asset('assets/app_icon/app_bar_icon/arrow_left.png')),
           title: widget.navigateFrom == 'Flash Deal'
-              ? Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: Row(
+              ? StreamBuilder(
+                stream: Stream.periodic(Duration(seconds: 1), (i) => i),
+                builder: (BuildContext context, AsyncSnapshot<int> snapshot){
+                  int remainingSec,day,hours,minute,second;
+                  remainingSec = DateTime.fromMillisecondsSinceEpoch(publicProvider.flashDealProducts!.data!.endDate!*1000).difference(DateTime.now()).inSeconds;
+                  day = remainingSec~/(24*3600);
+                  remainingSec = remainingSec%(24*3600);
+                  hours= remainingSec~/3600;
+                  remainingSec%=3600;
+                  minute=remainingSec~/60;
+                  remainingSec%=60;
+                  second = remainingSec;
+                  return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //  crossAxisAlignment: CrossAxisAlignment.end,
-
                     children: [
                       Image.asset(
                         'assets/app_icon/body_icon/flash_deal_icon.png',
@@ -102,74 +113,17 @@ class _ProductPageState extends State<ProductPage> {
                             fontStyle: FontStyle.normal,
                             fontSize: size.width * .045),
                       ),
-                      Container(
-                        height: size.width * .07,
-                        width: size.width * .07,
-                        alignment: Alignment.center,
-                        decoration: new BoxDecoration(
-                            color: Colors.pink.shade300,
-                            border: new Border.all(
-                                width: 2.0,
-                                color: Color.fromRGBO(0, 0, 0, 0.1)),
-                            borderRadius: new BorderRadius.circular(6.97)),
-                        child: Center(
-                            child: Text(
-                          endingSecond!,
-                          style: TextStyle(
-                              fontFamily: 'poppins',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                              fontStyle: FontStyle.normal,
-                              fontSize: size.width * .04),
-                        )),
-                      ),
-                      Text(' : '),
-                      Container(
-                        height: size.width * .07,
-                        width: size.width * .07,
-                        alignment: Alignment.center,
-                        decoration: new BoxDecoration(
-                            color: Colors.pink.shade300,
-                            border: new Border.all(
-                                width: 2.0,
-                                color: Color.fromRGBO(0, 0, 0, 0.1)),
-                            borderRadius: new BorderRadius.circular(6.97)),
-                        child: Center(
-                            child: Text(
-                          endingSecond!,
-                          style: TextStyle(
-                              fontFamily: 'poppins',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                              fontStyle: FontStyle.normal,
-                              fontSize: size.width * .04),
-                        )),
-                      ),
-                      Text(' : '),
-                      Container(
-                        height: size.width * .07,
-                        width: size.width * .07,
-                        alignment: Alignment.center,
-                        decoration: new BoxDecoration(
-                            color: Colors.pink.shade300,
-                            border: new Border.all(
-                                width: 2.0,
-                                color: Color.fromRGBO(0, 0, 0, 0.1)),
-                            borderRadius: new BorderRadius.circular(6.97)),
-                        child: Center(
-                            child: Text(
-                          endingSecond!,
-                          style: TextStyle(
-                              fontFamily: 'poppins',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                              fontStyle: FontStyle.normal,
-                              fontSize: size.width * .04),
-                        )),
-                      ),
+                      _timeContainer(day.toString(), size),
+                      Text(':'),
+                      _timeContainer(hours.toString(), size),
+                      Text(':'),
+                      _timeContainer(minute.toString(), size),
+                      Text(':'),
+                      _timeContainer(second.toString(), size),
                     ],
-                  ),
-                )
+                  );
+                }
+              )
               : Text(widget.navigateFrom.toString(),
                   style: TextStyle(
                       fontFamily: 'taviraj',
@@ -287,27 +241,27 @@ class _ProductPageState extends State<ProductPage> {
               padding: const EdgeInsets.all(5),
               child: Divider(
                 height: 4,
-                color: Colors.grey,
-              ),
+                color: Colors.grey),
             ),
-            seconds < 3
-                ? Container(
-                    height: 500,
-                    width: size.width,
-                    child: new StaggeredGridView.countBuilder(
-                      crossAxisCount: 4,
-                      itemCount: 8,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Image.asset(
-                            'assets/app_icon/body_icon/loading_icon.png');
-                      },
-                      staggeredTileBuilder: (int index) =>
-                          new StaggeredTile.count(2, index.isEven ? 2 : 1),
-                      mainAxisSpacing: 4.0,
-                      crossAxisSpacing: 4.0,
-                    ),
-                  )
-                : _pages(context)
+            // seconds < 2
+            //     ? Container(
+            //         height: 500,
+            //         width: size.width,
+            //         child: new StaggeredGridView.countBuilder(
+            //           crossAxisCount: 4,
+            //           itemCount: 8,
+            //           itemBuilder: (BuildContext context, int index) {
+            //             return Image.asset(
+            //                 'assets/app_icon/body_icon/loading_icon.png');
+            //           },
+            //           staggeredTileBuilder: (int index) =>
+            //               new StaggeredTile.count(2, index.isEven ? 2 : 1),
+            //           mainAxisSpacing: 4.0,
+            //           crossAxisSpacing: 4.0,
+            //         ),
+            //       )
+            //     :
+            _pages(context)
           ],
         ),
       ),
@@ -318,6 +272,7 @@ class _ProductPageState extends State<ProductPage> {
     final PublicProvider publicProvider = Provider.of<PublicProvider>(context,listen: false);
     Size size = MediaQuery.of(context).size;
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: size.width*.02),
       height: size.height * .8,
       width: size.width,
       child:widget.navigateFrom == 'Hand Picked'? new StaggeredGridView.countBuilder(
@@ -327,21 +282,20 @@ class _ProductPageState extends State<ProductPage> {
           return CategoryProductListTile(productList: publicProvider.handPickedProducts!.data![index]);
         },
         staggeredTileBuilder: (int index) =>
-            new StaggeredTile.count(2, index.isEven ? 2 : 3),
-        mainAxisSpacing: 4.0,
-        crossAxisSpacing: 4.0,
+            new StaggeredTile.count(2, index.isEven ? 2.2 : 2.5),
+        mainAxisSpacing: size.width*.03,
+        crossAxisSpacing: size.width*.03,
       ):widget.navigateFrom == 'Flash Deal'? StaggeredGridView.countBuilder(
         crossAxisCount: 4,
-        itemCount: publicProvider.flashDealProducts!.data!.length,
+        itemCount: publicProvider.flashDealProducts!.data!.products!.data!.length,
         itemBuilder: (BuildContext context, int index) {
           return
-            CategoryProductListTile(productList: publicProvider.flashDealProducts!.data![index]);
-
+            FlashDealProductListTile(productList: publicProvider.flashDealProducts!.data!.products!.data![index]);
         },
         staggeredTileBuilder: (int index) =>
-        new StaggeredTile.count(2, index.isEven ? 2 : 3),
-        mainAxisSpacing: 4.0,
-        crossAxisSpacing: 4.0,
+        new StaggeredTile.count(2, index.isEven ? 2.2 : 2.5),
+        mainAxisSpacing: size.width*.03,
+        crossAxisSpacing: size.width*.03,
       ):widget.navigateFrom == 'Daily Featured'?
       StaggeredGridView.countBuilder(
         crossAxisCount: 4,
@@ -351,22 +305,20 @@ class _ProductPageState extends State<ProductPage> {
 
         },
         staggeredTileBuilder: (int index) =>
-        new StaggeredTile.count(2, index.isEven ? 2 : 3),
-        mainAxisSpacing: 4.0,
-        crossAxisSpacing: 4.0,
-      ):widget.navigateFrom == 'Feature  Categories'?
+        new StaggeredTile.count(2, index.isEven ? 2.2 : 2.5),
+        mainAxisSpacing: size.width*.03,
+        crossAxisSpacing: size.width*.03,
+      ):widget.navigateFrom == 'Feature Categories'?
       StaggeredGridView.countBuilder(
         crossAxisCount: 4,
         itemCount: publicProvider.featuredCategoriesProducts==null?0:publicProvider.featuredCategoriesProducts!.data!.length,
         itemBuilder: (BuildContext context, int index) {
-          return
-            FeatureCategoryListTile(productList: publicProvider.featuredCategoriesProducts!.data![index],);
-
+          return FeatureCategoryListTile(productList: publicProvider.featuredCategoriesProducts!.data![index],);
         },
         staggeredTileBuilder: (int index) =>
-        new StaggeredTile.count(2, index.isEven ? 2 : 3),
-        mainAxisSpacing: 4.0,
-        crossAxisSpacing: 4.0,
+        new StaggeredTile.count(2, index.isEven ? 2.2 : 2.5),
+        mainAxisSpacing: size.width*.03,
+        crossAxisSpacing: size.width*.03,
       ):StaggeredGridView.countBuilder(
         crossAxisCount: 4,
         itemCount: publicProvider.traditionalCategoriesProducts!.data!.length,
@@ -374,9 +326,9 @@ class _ProductPageState extends State<ProductPage> {
           return  FeatureCategoryListTile(productList: publicProvider.traditionalCategoriesProducts!.data![index],);
         },
         staggeredTileBuilder: (int index) =>
-        new StaggeredTile.count(2, index.isEven ? 2 : 3),
-        mainAxisSpacing: 4.0,
-        crossAxisSpacing: 4.0,
+        new StaggeredTile.count(2, index.isEven ? 2.2 : 2.5),
+        mainAxisSpacing: size.width*.03,
+        crossAxisSpacing: size.width*.03,
       ),
     );
   }

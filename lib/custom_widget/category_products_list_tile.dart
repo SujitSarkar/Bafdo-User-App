@@ -1,16 +1,15 @@
 import 'package:bafdo/colors.dart';
 import 'package:bafdo/model/product_list_model.dart';
-import 'package:bafdo/model/traditional_product_list_model.dart';
 import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/sub_pages/product_details.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:bafdo/model/featured_categories_model.dart';
 import 'package:provider/provider.dart';
 
 class CategoryProductListTile extends StatefulWidget {
-  ProductListDatum? productList;
+  final ProductListDatum? productList;
 
   CategoryProductListTile({this.productList});
 
@@ -25,229 +24,214 @@ class _CategoryProductListTileState extends State<CategoryProductListTile> {
 
   @override
   Widget build(BuildContext context) {
-    final PublicProvider publicProvider = Provider.of<PublicProvider>(context,listen: false);
+    final PublicProvider publicProvider =
+    Provider.of<PublicProvider>(context, listen: false);
     Size size = MediaQuery.of(context).size;
-    if(_counter==0){
+    if (_counter == 0) {
       setState(() {
         _counter++;
       });
-      publicProvider.isProductWished(widget.productList!.id!).then((value){
-        if(publicProvider.message=='Product present in wishlist'){
+      publicProvider.isProductWished(widget.productList!.id!).then((value) {
+        if (publicProvider.message == 'Product present in wishlist') {
           setState(() {
-            favorite=true;
+            favorite = true;
           });
         }
       });
     }
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      elevation: 5,
-      child: InkWell(
-        onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ProductDetail(productId: widget.productList!.id!)));
-        },
-        child: Container(
-          width: size.width * .43,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(15))),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(size.width * .01),
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    ProductDetail(productId: widget.productList!.id!)));
+      },
+      child: Container(
+        width: size.width * .38,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(size.width * .04))),
+        child: Stack(
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ///Image Container
+                Expanded(
                   child: Container(
-                    // width: size.width * .4,
+                    width: size.width,
+                    margin: EdgeInsets.all(size.width * .01),
                     decoration: BoxDecoration(
                         color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    child: Stack(children: [
-                      Center(
-                        child: Image.network(
-                          'https://bafdo.com/public/${widget.productList!.thumbnailImage ?? ''}',
-                          fit: BoxFit.fill,
-                        ),
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(size.width * .04))),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      child: CachedNetworkImage(
+                        imageUrl:
+                        'https://bafdo.com/public/${widget.productList!.thumbnailImage ?? ''}',
+                        placeholder: (context, url) =>
+                            CupertinoActivityIndicator(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        fit: BoxFit.cover,
                       ),
-                      Positioned(
-                        right: 10,
-                        top: 10,
-                        child: InkWell(
-                          onTap: () {
-                            if(publicProvider.prefUserModel.id!=null){
-                              setState(() {
-                                favorite = !favorite;
-                              });
-                              if(favorite == true){
-                                publicProvider.addWishList(widget.productList!.id!).then((value)async{
-                                  await publicProvider.fetchWishList();
-                                  showToast("Added to wishlist");
-                                });
-                              }else{
-                                publicProvider.deleteWishList(widget.productList!.id!).then((value)async{
-                                  await publicProvider.fetchWishList();
-                                  showToast("Removed from wishlist");
-                                });
-                              }
-                            }else{
-                              showToast("Please log in first");
-                            }
-                          },
-                          child: Image.asset(
-                            'assets/app_icon/body_icon/favorite.png',
-                            color:
-                                favorite == false ? Colors.grey : Colors.pink,
-                          ),
-                        ),
-                      )
-                    ]),
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      'assets/app_icon/body_icon/faster_icon.png',
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 13,
-                      ),
-                      child: Text(
-                        widget.productList!.name!,
+
+                ///Faster Image
+                Image.asset('assets/app_icon/body_icon/faster_icon.png'),
+
+                ///Product Name
+                Padding(
+                  padding: EdgeInsets.only(left: size.width * .02),
+                  child: Text(
+                    widget.productList!.name!,
+                    style: TextStyle(
+                        fontFamily: 'taviraj',
+                        color: ColorsVariables.textColor,
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w600,
+                        fontSize: size.width * .032),
+                  ),
+                ),
+
+                Padding(
+                  padding: EdgeInsets.only(left: size.width * .02),
+                  child: Row(
+                    children: [
+                      Text(
+                        '${widget.productList!.mainPrice!.toString()}',
                         style: TextStyle(
                             fontFamily: 'taviraj',
                             color: ColorsVariables.textColor,
-                            fontStyle: FontStyle.normal,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.bold,
+                            fontSize: size.width * .035),
+                      ),
+                      SizedBox(width: size.width * .01),
+                      Text(
+                        widget.productList!.strokedPrice!.toString(),
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.lineThrough,
                             fontSize: size.width * .03),
                       ),
-                    ),
-                    Stack(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 7),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      // Align(
-                                      //   alignment: Alignment.topLeft,
-                                      //   child: Image.asset(
-                                      //     'assets/app_icon/body_icon/tk.png',
-                                      //   ),
-                                      // ),
-                                      Text(
-                                        widget.productList!.strokedPrice!,
-                                        style: TextStyle(
-                                            fontFamily: 'taviraj',
-                                            color: ColorsVariables.textColor,
-                                            fontStyle: FontStyle.normal,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: size.width * .035),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: size.width * .01,
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // Image.asset(
-                                      //   'assets/app_icon/body_icon/tk_grey.png',
-                                      // ),
-                                      Text(
-                                        widget.productList!.mainPrice!,
-                                        style: TextStyle(
-                                            fontFamily: 'taviraj',
-                                            color: Colors.grey,
-                                            fontStyle: FontStyle.normal,
-                                            fontWeight: FontWeight.bold,
-                                            decoration:
-                                                TextDecoration.lineThrough,
-                                            fontSize: size.width * .03),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 5, bottom: 5),
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      'assets/app_icon/body_icon/star.png',
-                                      scale: .7,
-                                    ),
-                                    Image.asset(
-                                        'assets/app_icon/body_icon/star.png',
-                                        scale: .7),
-                                    Image.asset(
-                                        'assets/app_icon/body_icon/star.png',
-                                        scale: .7),
-                                    Image.asset(
-                                        'assets/app_icon/body_icon/star.png',
-                                        scale: .7),
-                                    Image.asset(
-                                        'assets/app_icon/body_icon/star.png',
-                                        scale: .7),
-                                    // Text(
-                                    //   '  (101)',
-                                    //   style: TextStyle(
-                                    //       fontFamily: 'taviraj',
-                                    //       color: Colors.grey,
-                                    //       fontStyle: FontStyle.normal,
-                                    //       fontWeight: FontWeight.bold,
-                                    //       fontSize: size.width * .03),
-                                    // ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Positioned(
-                            right: 5,
-                            bottom: 5,
-                            child: InkWell(
-                              onTap: (){
-                                showLoadingDialog(context);
-                                publicProvider.addCart(widget.productList!.id!, 1).then((value)async{
-                                  await publicProvider.fetchCartList();
-                                  closeLoadingDialog(context);
-                                  showToast('Product added to cart');
-                                });
-                              },
-                              child: Icon(
-                                Icons.add_circle_outline,
-                                size: size.width * .08,
-                              ),
-                            ))
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: size.width * .02),
+                  child: _starBuilder(widget.productList!.rating!, size),
+                ),
+                SizedBox(height: size.width * .03)
+              ],
+            ),
+
+            ///Add Cart
+            Positioned(
+                right: size.width*.025,
+                bottom: size.width*.025,
+                child: InkWell(
+                  onTap: () {
+                    showLoadingDialog(context);
+                    publicProvider
+                        .addCart(widget.productList!.id!, 1)
+                        .then((value) async {
+                      await publicProvider.fetchCartList();
+                      closeLoadingDialog(context);
+                      showToast('Product added to cart');
+                    });
+                  },
+                  child: Icon(
+                    Icons.add_circle_outline,
+                    size: size.width * .08,
+                  ),
+                )),
+
+            ///Wishlist
+            Positioned(
+              right: size.width*.03,
+              top: size.width*.03,
+              child: InkWell(
+                onTap: () {
+                  if (publicProvider.prefUserModel.id != null) {
+                    setState(() {
+                      favorite = !favorite;
+                    });
+                    if (favorite == true) {
+                      publicProvider
+                          .addWishList(widget.productList!.id!)
+                          .then((value) async {
+                        await publicProvider.fetchWishList();
+                        showToast("Added to wishlist");
+                      });
+                    } else {
+                      publicProvider
+                          .deleteWishList(widget.productList!.id!)
+                          .then((value) async {
+                        await publicProvider.fetchWishList();
+                        showToast("Removed from wishlist");
+                      });
+                    }
+                  } else {
+                    showToast("Please log in first");
+                  }
+                },
+                child: Image.asset(
+                  'assets/app_icon/body_icon/favorite.png',
+                  color: favorite == false ? Colors.grey : Colors.pink,
                 ),
               ),
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
+  }
+
+  Widget _starBuilder(int? rating, Size size) {
+    if (rating == 1)
+      return Icon(Icons.star, color: Colors.pink, size: size.width * .04);
+    if (rating == 2)
+      return Row(
+        children: [
+          Icon(Icons.star, color: Colors.pink, size: size.width * .04),
+          Icon(Icons.star, color: Colors.pink, size: size.width * .04)
+        ],
+      );
+    if (rating == 3)
+      return Row(
+        children: [
+          Icon(Icons.star, color: Colors.pink, size: size.width * .04),
+          Icon(Icons.star, color: Colors.pink, size: size.width * .04),
+          Icon(Icons.star, color: Colors.pink, size: size.width * .04)
+        ],
+      );
+    if (rating == 4)
+      return Row(
+        children: [
+          Icon(Icons.star, color: Colors.pink, size: size.width * .04),
+          Icon(Icons.star, color: Colors.pink, size: size.width * .04),
+          Icon(Icons.star, color: Colors.pink, size: size.width * .04),
+          Icon(Icons.star, color: Colors.pink, size: size.width * .04)
+        ],
+      );
+    if (rating == 5)
+      return Row(
+        children: [
+          Icon(Icons.star, color: Colors.pink, size: size.width * .04),
+          Icon(Icons.star, color: Colors.pink, size: size.width * .04),
+          Icon(Icons.star, color: Colors.pink, size: size.width * .04),
+          Icon(Icons.star, color: Colors.pink, size: size.width * .04),
+          Icon(Icons.star, color: Colors.pink, size: size.width * .04)
+        ],
+      );
+    else
+      return Container();
   }
 }
 
