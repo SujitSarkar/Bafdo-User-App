@@ -69,3 +69,6 @@ flutter:
         - asset: assets/font/Taviraj-Regular.ttf
         - asset: assets/font/Taviraj-SemiBold.ttf
         - asset: assets/font/Taviraj-Bold.ttf
+    - family: nobile
+      fonts:
+        - asset: assets/font/Nobile-Regular.ttf
