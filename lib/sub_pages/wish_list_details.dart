@@ -1,7 +1,6 @@
 import 'package:bafdo/colors.dart';
 import 'package:bafdo/custom_widget/custom_appbar.dart';
 import 'package:bafdo/custom_widget/feature_category_list_tile.dart';
-
 import 'package:flutter/material.dart';
 
 class WishListDetails extends StatefulWidget {
