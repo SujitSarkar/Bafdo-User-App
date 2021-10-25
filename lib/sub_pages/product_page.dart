@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/color_variable.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/custom_widget/category_products_list_tile.dart';
 import 'package:bafdo/custom_widget/custom_appbar.dart';
 import 'package:bafdo/custom_widget/feature_category_list_tile.dart';
@@ -13,7 +14,8 @@ import 'package:provider/provider.dart';
 
 class ProductPage extends StatefulWidget {
   final String? navigateFrom;
-  ProductPage({required this.navigateFrom});
+  final String? featuredCatImageLink;
+  ProductPage({required this.navigateFrom,this.featuredCatImageLink});
 
   @override
   _ProductPageState createState() => _ProductPageState();
@@ -23,45 +25,21 @@ class _ProductPageState extends State<ProductPage> {
   TextEditingController controller1 = new TextEditingController();
   TextEditingController controller2 = new TextEditingController();
   TextEditingController controller3 = new TextEditingController();
-  Timer? _timer;
-  int seconds = 0;
+  bool _isLoading=false;
+  int _counter=0;
 
-  // @override
-  // void initState() {
-  //   startTimer();
-  //   super.initState();
-  // }
-  //
-  // void startTimer() {
-  //   const oneSec = const Duration(seconds: 1);
-  //   _timer = new Timer.periodic(
-  //     oneSec,
-  //     (Timer timer) => setState(
-  //       () {
-  //         if (seconds > 2) {
-  //           timer.cancel();
-  //         } else {
-  //           if (seconds < 2) {
-  //             setState(() {
-  //               seconds = seconds + 1;
-  //             });
-  //           }
-  //         }
-  //       },
-  //     ),
-  //   );
-  // }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   _timer!.cancel();
-  // }
   Widget _timeContainer(String time,Size size)=>Container(
     alignment: Alignment.center,
     padding: EdgeInsets.symmetric(horizontal: 3,vertical: 1),
     decoration: new BoxDecoration(
-        color: Colors.pink.shade300,
+        gradient: LinearGradient(
+            colors: [
+              BColors.primaryPink,
+              BColors.primaryLitePink
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter
+        ),
         borderRadius: new BorderRadius.circular(5.0)),
     child: Text(
       time.toString(),
@@ -73,10 +51,22 @@ class _ProductPageState extends State<ProductPage> {
     ),
   );
 
+  _customInit(PublicProvider publicProvider)async{
+    setState(()=> _counter++);
+    if(widget.featuredCatImageLink!=null){
+      setState(()=> _isLoading=true);
+      await publicProvider.fetchFeaturedCategoriesProducts(widget.featuredCatImageLink!).then((value){
+        setState(()=>_isLoading=false);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
+    if(_counter==0) _customInit(publicProvider);
+
     return Scaffold(
       backgroundColor: Color(0xffEFF9F9),
       appBar: PreferredSize(
@@ -102,10 +92,10 @@ class _ProductPageState extends State<ProductPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Image.asset(
-                        'assets/app_icon/body_icon/flash_deal_icon.png',
+                        'assets/app_icon/body_icon/flash_deal_icon.png'
                       ),
                       Text(
-                        'Flash Deal ',
+                        ' Flash Deal ',
                         style: TextStyle(
                             fontFamily: 'taviraj',
                             fontWeight: FontWeight.w500,
@@ -145,122 +135,122 @@ class _ProductPageState extends State<ProductPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          border: Border.all(color: Colors.grey)),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 5, right: 5, top: 2, bottom: 2),
-                        child: Text(
-                          'Boi mela',
-                          style: TextStyle(
-                              fontFamily: 'taviraj',
-                              color: ColorsVariables.textColor,
-                              fontStyle: FontStyle.normal,
-                              fontSize: size.width * .035),
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          border: Border.all(color: Colors.grey)),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 5, right: 5, top: 2, bottom: 2),
-                        child: Text(
-                          'Controller',
-                          style: TextStyle(
-                              fontFamily: 'taviraj',
-                              color: ColorsVariables.textColor,
-                              fontStyle: FontStyle.normal,
-                              fontSize: size.width * .035),
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          border: Border.all(color: Colors.grey)),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 5, right: 5, top: 2, bottom: 2),
-                        child: Text(
-                          'Bijoy Mela',
-                          style: TextStyle(
-                              fontFamily: 'taviraj',
-                              color: ColorsVariables.textColor,
-                              fontStyle: FontStyle.normal,
-                              fontSize: size.width * .035),
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          border: Border.all(color: Colors.grey)),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 5, right: 5, top: 2, bottom: 2),
-                        child: Text(
-                          'Gaming Controller',
-                          style: TextStyle(
-                              fontFamily: 'taviraj',
-                              color: ColorsVariables.textColor,
-                              fontStyle: FontStyle.normal,
-                              fontSize: size.width * .035),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(5),
-              child: Divider(
-                height: 4,
-                color: Colors.grey),
-            ),
-            // seconds < 2
-            //     ? Container(
-            //         height: 500,
-            //         width: size.width,
-            //         child: new StaggeredGridView.countBuilder(
-            //           crossAxisCount: 4,
-            //           itemCount: 8,
-            //           itemBuilder: (BuildContext context, int index) {
-            //             return Image.asset(
-            //                 'assets/app_icon/body_icon/loading_icon.png');
-            //           },
-            //           staggeredTileBuilder: (int index) =>
-            //               new StaggeredTile.count(2, index.isEven ? 2 : 1),
-            //           mainAxisSpacing: 4.0,
-            //           crossAxisSpacing: 4.0,
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       InkWell(
+            //         onTap: () {},
+            //         child: Container(
+            //           decoration: BoxDecoration(
+            //               color: Colors.transparent,
+            //               borderRadius: BorderRadius.all(Radius.circular(5)),
+            //               border: Border.all(color: Colors.grey)),
+            //           child: Padding(
+            //             padding: const EdgeInsets.only(
+            //                 left: 5, right: 5, top: 2, bottom: 2),
+            //             child: Text(
+            //               'Boi mela',
+            //               style: TextStyle(
+            //                   fontFamily: 'taviraj',
+            //                   color: ColorsVariables.textColor,
+            //                   fontStyle: FontStyle.normal,
+            //                   fontSize: size.width * .035),
+            //             ),
+            //           ),
             //         ),
-            //       )
-            //     :
+            //       ),
+            //       InkWell(
+            //         onTap: () {},
+            //         child: Container(
+            //           decoration: BoxDecoration(
+            //               color: Colors.transparent,
+            //               borderRadius: BorderRadius.all(Radius.circular(5)),
+            //               border: Border.all(color: Colors.grey)),
+            //           child: Padding(
+            //             padding: const EdgeInsets.only(
+            //                 left: 5, right: 5, top: 2, bottom: 2),
+            //             child: Text(
+            //               'Controller',
+            //               style: TextStyle(
+            //                   fontFamily: 'taviraj',
+            //                   color: ColorsVariables.textColor,
+            //                   fontStyle: FontStyle.normal,
+            //                   fontSize: size.width * .035),
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //       InkWell(
+            //         onTap: () {},
+            //         child: Container(
+            //           decoration: BoxDecoration(
+            //               color: Colors.transparent,
+            //               borderRadius: BorderRadius.all(Radius.circular(5)),
+            //               border: Border.all(color: Colors.grey)),
+            //           child: Padding(
+            //             padding: const EdgeInsets.only(
+            //                 left: 5, right: 5, top: 2, bottom: 2),
+            //             child: Text(
+            //               'Bijoy Mela',
+            //               style: TextStyle(
+            //                   fontFamily: 'taviraj',
+            //                   color: ColorsVariables.textColor,
+            //                   fontStyle: FontStyle.normal,
+            //                   fontSize: size.width * .035),
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //       InkWell(
+            //         onTap: () {},
+            //         child: Container(
+            //           decoration: BoxDecoration(
+            //               color: Colors.transparent,
+            //               borderRadius: BorderRadius.all(Radius.circular(5)),
+            //               border: Border.all(color: Colors.grey)),
+            //           child: Padding(
+            //             padding: const EdgeInsets.only(
+            //                 left: 5, right: 5, top: 2, bottom: 2),
+            //             child: Text(
+            //               'Gaming Controller',
+            //               style: TextStyle(
+            //                   fontFamily: 'taviraj',
+            //                   color: ColorsVariables.textColor,
+            //                   fontStyle: FontStyle.normal,
+            //                   fontSize: size.width * .035),
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.all(5),
+            //   child: Divider(
+            //     height: 4,
+            //     color: Colors.grey),
+            // ),
+            _isLoading
+                ? Container(
+                    height: 500,
+                    width: size.width,
+                    child: new StaggeredGridView.countBuilder(
+                      crossAxisCount: 4,
+                      itemCount: 8,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Image.asset(
+                            'assets/app_icon/body_icon/loading_icon.png');
+                      },
+                      staggeredTileBuilder: (int index) =>
+                          new StaggeredTile.count(2, index.isEven ? 2 : 1),
+                      mainAxisSpacing: 4.0,
+                      crossAxisSpacing: 4.0,
+                    ),
+                  )
+                :
             _pages(context)
           ],
         ),

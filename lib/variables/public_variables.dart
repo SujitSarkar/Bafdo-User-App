@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../colors.dart';
+import 'colors.dart';
 import 'color_variable.dart';
 
 class PublicVariables{

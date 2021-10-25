@@ -1,4 +1,4 @@
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/pages/login_page.dart';
 import 'package:bafdo/provider/auth_provider.dart';
 import 'package:bafdo/seller_collection/seller_home.dart';
@@ -348,6 +348,7 @@ class _RegisterPageState extends State<RegisterPage> {
           preferences.setString('id', authProvider.userInfoModel.user.id.toString());
           preferences.setString('name', authProvider.userInfoModel.user.name);
           preferences.setString('access_token', authProvider.userInfoModel.accessToken);
+          await authProvider.getPrefUser();
           closeLoadingDialog(context);
           showToast(authProvider.userInfoModel.message);
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);

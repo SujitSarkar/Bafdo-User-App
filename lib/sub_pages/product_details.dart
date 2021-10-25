@@ -1,5 +1,5 @@
 import 'package:bafdo/bottom_nav_screens/wish_list_nav.dart';
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/custom_widget/related_product_list_tile.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -18,8 +18,9 @@ import 'package:provider/provider.dart';
 
 class ProductDetail extends StatefulWidget {
   final int? productId;
+  final String? featuredCatImageLink;
 
-  ProductDetail({this.productId});
+  ProductDetail({this.productId,this.featuredCatImageLink});
 
   @override
   _ProductDetailState createState() => _ProductDetailState();
@@ -35,10 +36,10 @@ class _ProductDetailState extends State<ProductDetail> {
   bool _isLoading = false;
 
   Future<void> fetch(PublicProvider publicProvider)async {
-    setState(()=> _isLoading=true);
-    await publicProvider.fetchProductDetails(widget.productId!).then((value){
-      setState(()=>_isLoading=false);
-    });
+      setState(()=> _isLoading=true);
+      await publicProvider.fetchProductDetails(widget.productId!).then((value){
+        setState(()=>_isLoading=false);
+      });
   }
 
   @override
@@ -1012,7 +1013,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       height: size.width * .6,
                       child: ListView.separated(
                         separatorBuilder: (context, index) {
-                          return SizedBox(width: size.width * .02);
+                          return SizedBox(width: size.width * .04);
                         },
                         scrollDirection: Axis.horizontal,
                         itemCount: publicProvider.relatedProducts!=null?publicProvider.relatedProducts!.data!.length:0,

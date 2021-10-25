@@ -1,4 +1,4 @@
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/seller_collection/seller_home_nav.dart';
 import 'package:bafdo/sub_pages/product_search_page.dart';
 import 'package:flutter/material.dart';

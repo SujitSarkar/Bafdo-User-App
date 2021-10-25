@@ -4,12 +4,12 @@
 
 import 'dart:convert';
 
-TraditionalProductList traditionalProductListFromJson(String str) => TraditionalProductList.fromJson(json.decode(str));
+AnniversaryProductList anniversaryProductListFromJson(String str) => AnniversaryProductList.fromJson(json.decode(str));
 
-String traditionalProductListToJson(TraditionalProductList data) => json.encode(data.toJson());
+String anniversaryProductListListToJson(AnniversaryProductList data) => json.encode(data.toJson());
 
-class TraditionalProductList {
-  TraditionalProductList({
+class AnniversaryProductList {
+  AnniversaryProductList({
     this.data,
     this.links,
     this.meta,
@@ -17,15 +17,15 @@ class TraditionalProductList {
     this.status,
   });
 
-  List<TraditinalProductListDatum>? data;
-  TraditionalProductListLinks? links;
+  List<AnniversaryProductListDatum>? data;
+  AnniversaryProductListLinks? links;
   Meta? meta;
   bool? success;
   int? status;
 
-  factory TraditionalProductList.fromJson(Map<String, dynamic> json) => TraditionalProductList(
-    data: List<TraditinalProductListDatum>.from(json["data"].map((x) => TraditinalProductListDatum.fromJson(x))),
-    links: TraditionalProductListLinks.fromJson(json["links"]),
+  factory AnniversaryProductList.fromJson(Map<String, dynamic> json) => AnniversaryProductList(
+    data: List<AnniversaryProductListDatum>.from(json["data"].map((x) => AnniversaryProductListDatum.fromJson(x))),
+    links: AnniversaryProductListLinks.fromJson(json["links"]),
     meta: Meta.fromJson(json["meta"]),
     success: json["success"],
     status: json["status"],
@@ -40,8 +40,8 @@ class TraditionalProductList {
   };
 }
 
-class TraditinalProductListDatum {
-  TraditinalProductListDatum({
+class AnniversaryProductListDatum {
+  AnniversaryProductListDatum({
     this.id,
     this.name,
     this.thumbnailImage,
@@ -63,7 +63,7 @@ class TraditinalProductListDatum {
   int? sales;
   DatumLinks? links;
 
-  factory TraditinalProductListDatum.fromJson(Map<String, dynamic> json) => TraditinalProductListDatum(
+  factory AnniversaryProductListDatum.fromJson(Map<String, dynamic> json) => AnniversaryProductListDatum(
     id: json["id"],
     name: json["name"],
     thumbnailImage: json["thumbnail_image"],
@@ -104,8 +104,8 @@ class DatumLinks {
   };
 }
 
-class TraditionalProductListLinks {
-  TraditionalProductListLinks({
+class AnniversaryProductListLinks {
+  AnniversaryProductListLinks({
     this.first,
     this.last,
     this.prev,
@@ -117,7 +117,7 @@ class TraditionalProductListLinks {
   dynamic prev;
   dynamic next;
 
-  factory TraditionalProductListLinks.fromJson(Map<String, dynamic> json) => TraditionalProductListLinks(
+  factory AnniversaryProductListLinks.fromJson(Map<String, dynamic> json) => AnniversaryProductListLinks(
     first: json["first"],
     last: json["last"],
     prev: json["prev"],

@@ -1,4 +1,4 @@
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/model/flash_deal_product_model.dart';
 import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/sub_pages/product_details.dart';
@@ -48,9 +48,18 @@ class _FlashDealProductListTileState extends State<FlashDealProductListTile> {
       },
       child: Container(
         width: size.width * .38,
+        margin: EdgeInsets.symmetric(vertical: 1.0),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(size.width * .04))),
+            borderRadius: BorderRadius.all(Radius.circular(size.width * .04)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade300,
+              blurRadius: 2.0,
+              offset: Offset(0,0.5)
+            )
+          ]
+        ),
         child: Stack(
           children: [
             Column(
@@ -70,7 +79,7 @@ class _FlashDealProductListTileState extends State<FlashDealProductListTile> {
                       borderRadius: BorderRadius.all(Radius.circular(15)),
                       child: CachedNetworkImage(
                         imageUrl:
-                            'https://bafdo.com/public/${widget.productList!.thumbnailImage ?? ''}',
+                            'https://bafdo.com/public/${widget.productList!.thumbnailImage}',
                         placeholder: (context, url) =>
                             CupertinoActivityIndicator(),
                         errorWidget: (context, url, error) => Icon(Icons.error),
@@ -102,7 +111,7 @@ class _FlashDealProductListTileState extends State<FlashDealProductListTile> {
                   child: Row(
                     children: [
                       Text(
-                        '৳ ${widget.productList!.baseDiscountedPrice!.toString()}',
+                        '৳ ${widget.productList!.baseDiscountedPrice!.toString().replaceAll('.00','')}',
                         style: TextStyle(
                             fontFamily: 'taviraj',
                             color: ColorsVariables.textColor,
@@ -111,7 +120,7 @@ class _FlashDealProductListTileState extends State<FlashDealProductListTile> {
                       ),
                       SizedBox(width: size.width * .01),
                       Text(
-                        widget.productList!.basePrice!.toString(),
+                        widget.productList!.basePrice!.toString().replaceAll('.00', ''),
                         style: TextStyle(
                             fontFamily: 'taviraj',
                             color: Colors.grey,
@@ -157,6 +166,7 @@ class _FlashDealProductListTileState extends State<FlashDealProductListTile> {
               top: size.width*.03,
               child: InkWell(
                 onTap: () {
+                  print(publicProvider.prefUserModel.id);
                   if (publicProvider.prefUserModel.id != null) {
                     setState(() {
                       favorite = !favorite;

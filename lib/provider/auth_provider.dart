@@ -23,18 +23,17 @@ class AuthProvider extends ChangeNotifier {
   get prefUserModel =>_prefUserModel;
 
   Future<void> getPrefUser()async{
-    if(_prefUserModel==null){
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      PrefUserModel model = PrefUserModel(
-          id: preferences.getString('id'),
-          accessToken: preferences.getString('access_token'),
-          name: preferences.getString('name'),
-          emailOrPhone: preferences.getString('email_or_phone'));
-      _prefUserModel = model;
-      _prefUserModel!.emailOrPhone!;
-      notifyListeners();
-    }
+    _prefUserModel=null;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    PrefUserModel model = PrefUserModel(
+        id: preferences.getString('id'),
+        accessToken: preferences.getString('access_token'),
+        name: preferences.getString('name'),
+        emailOrPhone: preferences.getString('email_or_phone'));
+    _prefUserModel = model;
+    notifyListeners();
     print('PrefUserId: ${_prefUserModel!.id}');
+    print('Token: ${_prefUserModel!.accessToken}');
   }
 
   Future<bool> userSignup(Map<String, String> map) async {

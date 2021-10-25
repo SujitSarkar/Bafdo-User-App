@@ -1,4 +1,4 @@
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/pages/login_page.dart';
 import 'package:bafdo/pages/mobile_otp_page.dart';
 import 'package:bafdo/pages/register_page.dart';
@@ -340,6 +340,7 @@ class _LoginWithNumberState extends State<LoginWithNumber> {
           preferences.setString('id', authProvider.userInfoModel.user.id.toString());
           preferences.setString('name', authProvider.userInfoModel.user.name);
           preferences.setString('access_token', authProvider.userInfoModel.accessToken);
+          authProvider.getPrefUser();
         closeLoadingDialog(context);
         showToast(authProvider.userInfoModel.message);
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);

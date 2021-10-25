@@ -5,7 +5,7 @@ import 'package:bafdo/model/product_details_model.dart';
 import 'package:bafdo/model/product_list_model.dart';
 import 'package:bafdo/model/related_product_model.dart';
 import 'package:bafdo/model/reviews_model.dart';
-import 'package:bafdo/model/traditional_product_list_model.dart';
+import 'package:bafdo/model/anniversary_product_list_model.dart';
 import 'package:bafdo/model/wish_list_model.dart';
 import 'package:bafdo/provider/auth_provider.dart';
 import 'package:bafdo/model/categories_model.dart';
@@ -24,16 +24,16 @@ class PublicProvider extends AuthProvider{
   Brands? _brands;
   Categories? _featuredCategories;
   TraditionalCategories? _traditionalCategories;
-  TraditionalProductList? _traditionalCategoriesProducts;
+  AnniversaryProductList? _traditionalCategoriesProducts;
   ProductDetails? _productDetails;
   RelatedProducts? _relatedProducts;
   Reviews? _reviews;
   List<CartModel>? _carts;
   WishlistModel? _wishlistModel;
 
-  TraditionalProductList? get traditionalCategoriesProducts => _traditionalCategoriesProducts;
-  TraditionalProductList? _featuredCategoriesProducts;
-  TraditionalProductList? get featuredCategoriesProducts => _featuredCategoriesProducts;
+  AnniversaryProductList? get traditionalCategoriesProducts => _traditionalCategoriesProducts;
+  AnniversaryProductList? _featuredCategoriesProducts;
+  AnniversaryProductList? get featuredCategoriesProducts => _featuredCategoriesProducts;
   ProductDetails? get productDetails => _productDetails;
   RelatedProducts? get relatedProducts => _relatedProducts;
   Reviews? get reviews => _reviews;
@@ -48,8 +48,8 @@ class PublicProvider extends AuthProvider{
   ProductList? _dailyFeaturedProducts;
   ProductList? get dailyFeaturedProducts => _dailyFeaturedProducts;
 
-  List<String> _sliderlist=[];
-  List<String> get  sliderList=>_sliderlist;
+  List<String> _sliderList=[];
+  List<String> get  sliderList=>_sliderList;
   TraditionalCategories? get traditionalCategories => _traditionalCategories;
   Categories? get featuredCategories => _featuredCategories;
   Brands? get brands => _brands;
@@ -224,11 +224,11 @@ class PublicProvider extends AuthProvider{
     notifyListeners();
   }
 
-  Future<TraditionalProductList?> getTraditionalProductList(String link)async{
+  Future<AnniversaryProductList?> getTraditionalProductList(String link)async{
     try{
       String url = "$link";
       var response = await http.get(Uri.parse(url));
-      TraditionalProductList traditionalProductList = traditionalProductListFromJson(response.body);
+      AnniversaryProductList traditionalProductList = anniversaryProductListFromJson(response.body);
       return traditionalProductList;
 
     }catch(error){
@@ -245,9 +245,7 @@ class PublicProvider extends AuthProvider{
   Future<Sliders?> getSliders()async{
     try{
       String url = "https://bafdo.com/api/v1/sliders";
-
       var response = await http.get(Uri.parse(url));
-
       Sliders sliders = slidersFromJson(response.body);
       return sliders;
 
@@ -259,9 +257,9 @@ class PublicProvider extends AuthProvider{
   Future<void> fetchSliders()async {
     var result = await getSliders();
     for(int i=0;i<result!.data!.length;i++){
-      _sliderlist.add('https://bafdo.com/public/${result.data![0].photo!}');
+      _sliderList.add('https://bafdo.com/public/${result.data![0].photo!}');
     }
-    print(_sliderlist.length);
+    print(_sliderList.length);
     notifyListeners();
   }
 
@@ -269,9 +267,7 @@ class PublicProvider extends AuthProvider{
   Future<ProductList?> getHandPickedProducts()async{
     try{
       String url = "https://bafdo.com/api/v2/products/todays-deal";
-
       var response = await http.get(Uri.parse(url));
-
       ProductList productList1 = productListFromJson(response.body);
       return productList1;
 
@@ -300,16 +296,14 @@ class PublicProvider extends AuthProvider{
   Future<void> fetchFlashDealProducts()async {
     var result = await getFlashDealProducts();
     _flashDealProducts=result;
-    print('FlashDeal: ${_flashDealProducts!.data!.products!.data!.length}');
+    //print('FlashDeal: ${_flashDealProducts!.data!.products!.data!.length}');
     notifyListeners();
   }
 
   Future<ProductList?> getDailyFeaturedProducts()async{
     try{
       String url = "https://bafdo.com/api/v2/products/featured";
-
       var response = await http.get(Uri.parse(url));
-
       ProductList productList1 = productListFromJson(response.body);
       return productList1;
 
@@ -327,9 +321,7 @@ class PublicProvider extends AuthProvider{
   Future<Reviews?> getReviews(int productId)async{
     try{
       String url = "https://bafdo.com/api/v2/reviews/product/$productId";
-
       var response = await http.get(Uri.parse(url));
-
       Reviews reviews = reviewsFromJson(response.body);
       return reviews;
 
@@ -372,25 +364,23 @@ class PublicProvider extends AuthProvider{
     return carts;
   }
   Future<void> fetchCartList()async {
+    if(prefUserModel==null) await getPrefUser();
     var result = await getCartList();
     _carts=result;
-    //print('Cart:${carts![0].cartItems!.length}');
     notifyListeners();
   }
 
   Future<void> updateCart(int cartId,int quantity) async {
-
-    var post_body = jsonEncode({"id": "$cartId","quantity": "$quantity"});
-
+    if(prefUserModel==null) await getPrefUser();
+    var postBody = jsonEncode({"id": "$cartId","quantity": "$quantity"});
     final response = await http.post(Uri.parse("https://bafdo.com/api/v2/carts/change-quantity"),
-        headers: { "Content-Type":"application/json", "Authorization": "Bearer ${prefUserModel.accessToken}"},body: post_body );
+        headers: { "Content-Type":"application/json", "Authorization": "Bearer ${prefUserModel.accessToken}"},body: postBody );
 
     print(response.body.toString());
-    print('ksks');
   }
 
   Future<void> deleteCart(int cartId) async {
-
+    if(prefUserModel==null) await getPrefUser();
     final response = await http.delete(Uri.parse("https://bafdo.com/api/v2/carts/$cartId"),
       headers: {"Content-Type": "application/json", "Authorization": "Bearer ${prefUserModel.accessToken}"}, );
 
@@ -398,18 +388,21 @@ class PublicProvider extends AuthProvider{
   }
 
   Future<void> addWishList(int productId) async {
+    if(prefUserModel==null) await getPrefUser();
     final response =
     await http.get((Uri.parse("https://bafdo.com/api/v2/wishlists-add-product?product_id=$productId&user_id=${prefUserModel.id}")),
       headers: { "Authorization": "Bearer ${prefUserModel.accessToken}"});
     print(response.body);
   }
   Future<void> deleteWishList(int productId) async {
+    if(prefUserModel==null) await getPrefUser();
     final response =
     await http.get((Uri.parse("https://bafdo.com/api/v2/wishlists-remove-product?product_id=$productId&user_id=${prefUserModel.id}")),
         headers: { "Authorization": "Bearer ${prefUserModel.accessToken}"});
     print(response.body);
   }
   Future<String?> isProductWished(int productId) async {
+     await getPrefUser();
     final response =
     await http.get((Uri.parse("https://bafdo.com/api/v2/wishlists-check-product?product_id=$productId&user_id=${prefUserModel.id}")),
         headers: { "Authorization": "Bearer ${prefUserModel.accessToken}"});
@@ -419,7 +412,6 @@ class PublicProvider extends AuthProvider{
     return _message;
   }
   Future<WishlistModel?> getWishList() async {
-
     final response =await http.get(Uri.parse("https://bafdo.com/api/v2/wishlists/${prefUserModel.id}"),
       headers: {"Content-Type": "application/json", "Authorization": "Bearer ${prefUserModel.accessToken}"}, );
 
@@ -427,8 +419,8 @@ class PublicProvider extends AuthProvider{
     return wishlistModel;
   }
   Future<void> fetchWishList()async {
+    if(prefUserModel==null) await getPrefUser();
     _wishlistModel = await getWishList();
-    print('j${_wishlistModel!.data!.length}');
     notifyListeners();
   }
 

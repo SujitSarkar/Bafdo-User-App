@@ -1,4 +1,4 @@
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/widgets/gradient_button.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';

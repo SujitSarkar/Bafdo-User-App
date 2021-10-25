@@ -11,4 +11,6 @@ class BColors{
   static final Color processingColor = Color(0xff00C3E2);
   static final Color shippedColor = Color(0xffE6E1FF);
   static final Color deliveredColor = Color(0xff00D97C);
+  static final Color primaryPink = Color(0xffC31A65);
+  static final Color primaryLitePink = Color(0xffFA4494);
 }

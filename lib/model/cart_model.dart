@@ -53,7 +53,7 @@ class CartItem {
   String? productName;
   String? productThumbnailImage;
   dynamic variation;
-  int? price;
+  dynamic price;
   String? currencySymbol;
   int? tax;
   int? shippingCost;

@@ -1,4 +1,4 @@
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/custom_widget/special_category_list_tile.dart';
 import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/re-seller/reseller_catelog_view_page.dart';

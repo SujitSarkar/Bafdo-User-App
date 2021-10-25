@@ -26,6 +26,7 @@ dependencies:
   fluttertoast:
   font_awesome_flutter:
   syncfusion_flutter_charts:
+  flutter_custom_clippers:
   ##backend plugin
   provider:
   shared_preferences:

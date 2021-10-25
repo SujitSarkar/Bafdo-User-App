@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:bafdo/bottom_nav_screens/home_nav.dart';
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/home.dart';
 import 'package:bafdo/pages/login_with_number.dart';
 import 'package:bafdo/pages/register_page.dart';
@@ -347,6 +347,7 @@ class _LogInPageState extends State<LogInPage> {
                   preferences.setString('id', authProvider.userInfoModel.user.id.toString());
                   preferences.setString('name', authProvider.userInfoModel.user.name);
                   preferences.setString('access_token', authProvider.userInfoModel.accessToken);
+                  await authProvider.getPrefUser();
                 }
                 closeLoadingDialog(context);
                 showToast(authProvider.userInfoModel.message);
@@ -380,6 +381,7 @@ class _LogInPageState extends State<LogInPage> {
           preferences.setString('id', authProvider.userInfoModel.user.id.toString());
           preferences.setString('name', authProvider.userInfoModel.user.name);
           preferences.setString('access_token', authProvider.userInfoModel.accessToken);
+          await authProvider.getPrefUser();
         }
         closeLoadingDialog(context);
         showToast(authProvider.userInfoModel.message);

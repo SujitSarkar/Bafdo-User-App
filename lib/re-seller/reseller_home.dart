@@ -1,4 +1,4 @@
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/re-seller/reseler_catelog_nav.dart';
 import 'package:bafdo/re-seller/reseler_home_nav.dart';
 import 'package:bafdo/re-seller/reseler_my_order_nav.dart';

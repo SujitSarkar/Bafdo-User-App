@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/home.dart';
 import 'package:bafdo/pages/register_page.dart';
 import 'package:bafdo/provider/auth_provider.dart';
@@ -97,6 +97,7 @@ class _OTPPageState extends State<OTPPage> {
                     'name', authProvider!.userInfoModel.user.name);
                 preferences.setString(
                     'access_token', authProvider!.userInfoModel.accessToken);
+                await authProvider!.getPrefUser();
                 setState(() => _isLoading = false);
                 _timer!.cancel();
                 Navigator.pushAndRemoveUntil(
@@ -283,6 +284,7 @@ class _OTPPageState extends State<OTPPage> {
                 'name', authProvider!.userInfoModel.user.name);
             preferences.setString(
                 'access_token', authProvider!.userInfoModel.accessToken);
+            await authProvider!.getPrefUser();
             setState(() => _isLoading = false);
             _timer!.cancel();
             Navigator.pushAndRemoveUntil(

@@ -1,4 +1,4 @@
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/custom_widget/custom_appbar.dart';
 import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/sub_pages/checkout_page.dart';
@@ -72,7 +72,7 @@ class _CartPageState extends State<CartPage> {
           await publicProvider.fetchCartList();
         },
         backgroundColor: Colors.white,
-        child: publicProvider.carts!.isNotEmpty
+        child: publicProvider.carts!=null
             ? Stack(children: [
           ListView(
             children: [

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class ColorsVariables {
   static final splashTime = Color(0xffE3860A);
-
   static final splashSkip = Color(0xffE5E1FF);
   static final dividerColor = Color(0xff85848A); //also grey Text Color
   static final textColor = Color(0xff131214);

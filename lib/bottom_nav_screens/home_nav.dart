@@ -1,4 +1,4 @@
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/custom_widget/category_products_list_tile.dart';
 import 'package:bafdo/custom_widget/flash_deal_count_down_widget.dart';
 import 'package:bafdo/custom_widget/flash_deal_product_list_tile.dart';
@@ -44,6 +44,7 @@ class _HomeNavState extends State<HomeNav> {
   Future<void> _fetch(PublicProvider publicProvider)async{
     setState(()=> _counter++);
     if(publicProvider.prefUserModel==null) await publicProvider.getPrefUser();
+    if(publicProvider.prefUserModel==null) await publicProvider.getPrefUser();
     if(publicProvider.sliderList.isEmpty) await publicProvider.fetchSliders();
     if(publicProvider.categories==null) await publicProvider.fetchCategories();
     if(publicProvider.topBrands==null)await publicProvider.fetchTopBrands();
@@ -56,6 +57,7 @@ class _HomeNavState extends State<HomeNav> {
     if(publicProvider.dailyFeaturedProducts==null) await publicProvider.fetchDailyFeaturedProducts();
     if(publicProvider.carts==null)await publicProvider.fetchCartList();
     if(publicProvider.wishlistModel==null) await publicProvider.fetchWishList();
+
   }
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -77,7 +79,8 @@ class _HomeNavState extends State<HomeNav> {
 
   Widget _bodyUI(BuildContext context,PublicProvider publicProvider) {
     final Size size = MediaQuery.of(context).size;
-    return Column(
+
+    return ListView(
       children: [
         ///Search field
         Padding(
@@ -96,283 +99,315 @@ class _HomeNavState extends State<HomeNav> {
           ),
         ),
 
-        Expanded(
+        ///Slider
+        Container(
+          margin:EdgeInsets.symmetric(horizontal: size.width*.02,vertical: size.width*.02),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(22))),
           child: Container(
-              padding: EdgeInsets.all(size.width * .04),
-              width: size.width,
-              child: SingleChildScrollView(
-                  child: Column(children: [
-
-                    ///Slider
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(22))),
-                  child: Stack(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: size.width * .5,
-                          width: size.width,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.all(Radius.circular(6.97))),
-                          child: Carousel(
-                            boxFit: BoxFit.cover,
-                            autoplay: true,
-                            animationCurve: Curves.fastOutSlowIn,
-                            animationDuration: Duration(milliseconds: 1000),
-                            dotSize: 6.0,
-                            dotIncreasedColor: Color(0xFFFF335C),
-                            dotBgColor: Colors.transparent,
-                            dotColor: Colors.white60,
-                            dotPosition: DotPosition.bottomRight,
-                            dotVerticalPadding: 10.0,
-                            showIndicator: true,
-                            indicatorBgPadding: 7.0,
-                            images: publicProvider.sliderList.map((item) {
-                              return Builder(
-                                builder: (BuildContext context) {
-                                  return Container(
-                                    height: 250,
-                                    margin: EdgeInsets.symmetric(vertical: 0),
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          item,
-                                        ),
-                                          fit: BoxFit.fill
-                                      ),
-                                      color: Colors.pink,
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                  );
-                                },
-                              );
-                            }).toList(),
-
-
-                          ),
+            height: size.width * .4,
+            width: size.width,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(6.97))),
+            child: Carousel(
+              boxFit: BoxFit.cover,
+              autoplay: true,
+              animationCurve: Curves.fastOutSlowIn,
+              animationDuration: Duration(milliseconds: 1000),
+              dotSize: 6.0,
+              dotIncreasedColor: Color(0xFFFF335C),
+              dotBgColor: Colors.transparent,
+              dotColor: Colors.white60,
+              dotPosition: DotPosition.bottomCenter,
+              dotVerticalPadding: 10.0,
+              showIndicator: true,
+              indicatorBgPadding: 7.0,
+              images: publicProvider.sliderList.map((item) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Container(
+                      height: 250,
+                      margin: EdgeInsets.symmetric(vertical: 0),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: NetworkImage(
+                              item,
+                            ),
+                            fit: BoxFit.fill
                         ),
+                        color: Colors.pink,
+                        borderRadius: BorderRadius.circular(16),
                       ),
+                    );
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        SizedBox(height: size.width * .12),
 
-                      Positioned(
-                        bottom: size.width * .05,
-                        left: size.width * .1,
-                        child: Container(
-                            height: size.width * .12,
-                            width: size.width * .3,
-                            decoration: BoxDecoration(
-                                color: Colors.pink.shade300,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(30)),
-                                border:
-                                    Border.all(color: Colors.white, width: .8)),
-                            child: Center(
-                              child: Text(
-                                'Get Now',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'taviraj',
-                                    fontStyle: FontStyle.normal,
-                                    fontSize: size.width * .045),
-                              ),
-                            )),
-                      )
-                    ],
-                  ),
+        ///Category
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            GridView.builder(
+                itemCount: publicProvider.categories==null
+                    ?0:publicProvider.categories!.data==null
+                    ?0:publicProvider.categories!.data!.length,
+                gridDelegate:
+                SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  childAspectRatio: 8.4/9,
+                  //mainAxisSpacing: size.width * 0,
                 ),
-                SizedBox(height: size.width * .1),
+                physics: ClampingScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => CategoryPage(url: publicProvider.categories!.data![index].links!.subCategories)));
+                    },
+                    child: specialCategoryListTile(
+                        context,
+                        publicProvider.categories!.data![index].name??'',
+                        'https://bafdo.com/public/${publicProvider.categories!.data![index].banner??''}'),
 
-                ///Category
-                Stack(
-                  overflow: Overflow.visible,
-                  children: [
-                    GridView.builder(
-                        itemCount: publicProvider.categories==null?0:publicProvider.categories!.data==null?0:publicProvider.categories!.data!.length,
-                        gridDelegate:
-                            SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          childAspectRatio: 8.4/9,
-                          mainAxisSpacing: size.width * 0,
-                        ),
-                        physics: ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => CategoryPage(url: publicProvider.categories!.data![index].links!.subCategories)));
-                            },
-                            child: specialCategoryListTile(
-                                context,
-                                publicProvider.categories!.data![index].name??'',
-                                'https://bafdo.com/public/${publicProvider.categories!.data![index].banner??''}'),
+                  );
+                }),
+            Positioned(
+                left: 0,
+                top: -size.width * .085,
+                child: Container(
+                    width: size.width,
+                    child: Image.asset(
+                      'assets/app_icon/body_icon/special_curve_empty.png',
+                      fit: BoxFit.fill,
+                    )
+                )),
+            Positioned(
+                left: size.width * .07,
+                top: -size.width * .08,
+                child: Container(
+                  width: size.width * .3,
+                  decoration: BoxDecoration(
+                    //color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10),
+                        topLeft: Radius.circular(10),
+                      )),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: size.width * .078,
+                      vertical: size.width * .015,
+                    ),
+                    child: Text(
+                      'Special',
+                      style: TextStyle(
+                          fontFamily: 'taviraj',
+                          fontWeight: FontWeight.w500,
+                          color: ColorsVariables.pinkColor,
+                          fontStyle: FontStyle.normal,
+                          fontSize: size.width * .04),
+                    ),
+                  ),
+                )),
+          ],
+        ),
+        publicProvider.traditionalCategoriesProducts!=null
+            ?publicProvider.traditionalCategoriesProducts!.data!.isNotEmpty
+            ?SizedBox(height: size.width * .02):Container():Container(),
 
-                          );
-                        }),
-                    Positioned(
-                        left: 0,
-                        top: -size.width * .085,
-                        child: Container(
-                            width: size.width,
-                            child: Image.asset(
-                              'assets/app_icon/body_icon/special_curve_empty.png',
-                              fit: BoxFit.fill,
-                            )
-                            // Container(
-                            //   margin: const EdgeInsetsDirectional.only(
-                            //       start: 1, end: 1, top: 1),
-                            //   decoration: BoxDecoration(
-                            //     color: Colors.white,
-                            //     borderRadius: BorderRadius.only(
-                            //       topLeft: const Radius.circular(13.0),
-                            //       topRight: const Radius.circular(13.0),
-                            //     ),
-                            //   ), // Bor
-                            //   child: Padding(
-                            //     padding:
-                            //         const EdgeInsets.symmetric(horizontal: 30),
-                            //     child: Text(
-                            //       'Special',
-                            //       style: TextStyle(
-                            //           fontFamily: 'taviraj',
-                            //           fontWeight: FontWeight.w500,
-                            //           color: ColorsVariables.textColor,
-                            //           fontStyle: FontStyle.normal,
-                            //           fontSize: size.width * .045),
-                            //     ),
-                            //   ),
-                            // ),
-                            )),
-                    Positioned(
-                        left: size.width * .07,
-                        top: -size.width * .08,
-                        child: Container(
-                          width: size.width * .3,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(10),
-                                topLeft: Radius.circular(10),
-                              )),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: size.width * .078,
-                              vertical: size.width * .015,
+        ///Product Column
+        Padding(
+          padding: EdgeInsets.only(left: size.width*.02),
+          child: Column(
+            children: [
+
+              ///Anniversary
+              publicProvider.traditionalCategoriesProducts!=null
+                  ?publicProvider.traditionalCategoriesProducts!.data!.isNotEmpty
+                  ?Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  publicProvider.traditionalCategories!=null?Container(
+                      width: size.width * .6,
+                      padding: EdgeInsets.fromLTRB(size.width * .01, 0, 0, 0),
+                      child: Row(
+                        children: [
+                          publicProvider.traditionalCategories!.data![0].banner!.isNotEmpty
+                              ?Container(
+                            height: 15,width: 13,
+                            child: Image.network(
+                              'https://bafdo.com/public/${publicProvider.traditionalCategories!.data![0].banner}',
                             ),
-                            child: Text(
-                              'Special',
-                              style: TextStyle(
-                                  fontFamily: 'taviraj',
-                                  fontWeight: FontWeight.w500,
-                                  color: ColorsVariables.pinkColor,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: size.width * .04),
-                            ),
-                          ),
-                        )),
-                    Positioned(
-                        left: size.width * .5,
-                        top: -26,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          child: Text(
-                            'Up Coming',
+                          ):Container(),
+                          Text(
+                            ' ${publicProvider.traditionalCategories!.data![0].name!}',
                             style: TextStyle(
                                 fontFamily: 'taviraj',
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.bold,
                                 color: ColorsVariables.textColor,
-                                fontStyle: FontStyle.normal,
-                                fontSize: size.width * .04),
+                                fontSize: size.width * .045),
                           ),
-                        )),
-                  ],
-                ),
-                SizedBox(height: size.width * .06),
-
-                    ///Anniversary
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        publicProvider.traditionalCategories!=null?Container(
-                            width: size.width * .6,
-                            padding: EdgeInsets.fromLTRB(size.width * .01, 0, 0, 0),
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 15,width: 13,
-                                  child: Image.network(
-                                    'https://bafdo.com/public/${publicProvider.traditionalCategories!.data![0].banner??''}',
-                                  ),
-                                ),
-                                Text(
-                                  publicProvider.traditionalCategories!.data![0].name!,
-                                  style: TextStyle(
-                                      fontFamily: 'taviraj',
-                                      fontWeight: FontWeight.w500,
-                                      color: ColorsVariables.textColor,
-                                      fontStyle: FontStyle.normal,
-                                      fontSize: size.width * .045),
-                                ),
-                              ],
-                            )):Container(),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ProductPage(
-                                      navigateFrom: publicProvider.traditionalCategories!.data![0].name!,
-                                    )));
-                          },
-                          child: Padding(
-                            padding:
-                            EdgeInsets.symmetric(horizontal: size.width * .04),
-                            child: Text(
-                              'See More',
-                              style: TextStyle(
-                                  fontFamily: 'taviraj',
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: size.width * .04),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      height: size.width * .5,
-                      width: size.width,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: publicProvider.traditionalCategoriesProducts==null?0:publicProvider.traditionalCategoriesProducts!.data!.length<3?
-                        publicProvider.traditionalCategoriesProducts!.data!.length:3,
-                        itemBuilder: (context, index) {
-                          return FeatureCategoryListTile(productList: publicProvider.traditionalCategoriesProducts!.data![index],);
-                        },
-                      ),
-                    ),
-                SizedBox(height: size.width * .04),
-
-                ///Hand picked
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
+                        ],
+                      )):Container(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProductPage(
+                                navigateFrom: publicProvider.traditionalCategories!.data![0].name!,
+                              )));
+                    },
+                    child: Padding(
+                      padding:
+                      EdgeInsets.symmetric(horizontal: size.width * .04),
                       child: Text(
-                        'Hand Picked',
+                        'See More',
                         style: TextStyle(
                             fontFamily: 'taviraj',
                             fontWeight: FontWeight.w500,
-                            color: ColorsVariables.textColor,
+                            color: Colors.grey,
                             fontStyle: FontStyle.normal,
-                            fontSize: size.width * .045),
+                            fontSize: size.width * .04),
                       ),
+                    ),
+                  ),
+                ],
+              ):Container():Container(),
+              publicProvider.traditionalCategoriesProducts!=null
+                  ?publicProvider.traditionalCategoriesProducts!.data!.isNotEmpty?
+              Container(
+                height: size.width * .5,
+                width: size.width,
+                margin: EdgeInsets.only(top: size.width*.03),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: publicProvider.traditionalCategoriesProducts==null?0:publicProvider.traditionalCategoriesProducts!.data!.length<10?
+                  publicProvider.traditionalCategoriesProducts!.data!.length:10,
+                  itemBuilder: (context, index) {
+                    return Container(
+                        margin: EdgeInsets.only(right: size.width*.04),
+                        child: FeatureCategoryListTile(productList: publicProvider.traditionalCategoriesProducts!.data![index],));
+                  },
+                ),
+              ):Container():Container(),
+
+              publicProvider.handPickedProducts!=null
+                  ?publicProvider.handPickedProducts!.data!.isNotEmpty
+                  ?SizedBox(height: size.width * .04):Container():Container(),
+
+              ///Hand picked
+              publicProvider.handPickedProducts!=null
+                  ?publicProvider.handPickedProducts!.data!.isNotEmpty
+                  ?Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Text(
+                      'Hand Picked',
+                      style: TextStyle(
+                          fontFamily: 'taviraj',
+                          fontWeight: FontWeight.bold,
+                          color: ColorsVariables.textColor,
+                          fontSize: size.width * .045),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProductPage(
+                                navigateFrom: 'Hand Picked',
+                              )));
+                    },
+                    child: Padding(
+                      padding:
+                      EdgeInsets.symmetric(horizontal: size.width * .04),
+                      child: Text(
+                        'See More',
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .04),
+                      ),
+                    ),
+                  ),
+                ],
+              ):Container():Container(),
+              publicProvider.handPickedProducts!=null
+                  ?publicProvider.handPickedProducts!.data!.isNotEmpty
+                  ?Container(
+                height: size.width * .5,
+                width: size.width,
+                margin: EdgeInsets.only(top: size.width*.02),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: publicProvider.handPickedProducts==null
+                      ?0:publicProvider.handPickedProducts!.data!.length<10?
+                  publicProvider.handPickedProducts!.data!.length:10,
+                  itemBuilder: (context, index) {
+                    return Container(
+                        margin: EdgeInsets.only(right: size.width*.04),
+                        child: CategoryProductListTile(productList: publicProvider.handPickedProducts!.data![index]));
+                  },
+                ),
+              ):Container():Container(),
+              publicProvider.flashDealProducts!=null
+                  ?SizedBox(height: size.width * .04):Container(),
+
+              ///Flash Deal
+              publicProvider.flashDealProducts!=null
+                  ?FlashDealCountDownWidget(endingDate: publicProvider.flashDealProducts!.data!.endDate!):Container(),
+
+              publicProvider.flashDealProducts!=null
+                  ?Container(
+                height: size.width * .52,
+                width: size.width,
+                margin: EdgeInsets.only(top: size.width*.04),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: publicProvider.flashDealProducts==null
+                      ?0
+                      :publicProvider.flashDealProducts!.data!.products!.data!.length<10
+                      ?publicProvider.flashDealProducts!.data!.products!.data!.length:10,
+                  itemBuilder: (context, index) {
+                    return Container(
+                        margin: EdgeInsets.only(right: size.width*.04),
+                        child: FlashDealProductListTile(productList: publicProvider.flashDealProducts!.data!.products!.data![index]));
+                  },
+                ),
+              ):Container(),
+              publicProvider.dailyFeaturedProducts!=null
+                  ?publicProvider.dailyFeaturedProducts!.data!.isNotEmpty
+                  ?SizedBox(height: size.width * .04):Container():Container(),
+
+              ///Daily Featured
+              publicProvider.dailyFeaturedProducts!=null
+                  ?publicProvider.dailyFeaturedProducts!.data!.isNotEmpty
+                  ?Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Image.asset(
+                            'assets/app_icon/body_icon/feature_icon.png'),
+                        Text(' Daily Featured',
+                            style: TextStyle(
+                                fontFamily: 'taviraj',
+                                color: ColorsVariables.textColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: size.width * .045)),
+                      ],
                     ),
                     InkWell(
                       onTap: () {
@@ -380,152 +415,72 @@ class _HomeNavState extends State<HomeNav> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ProductPage(
-                                      navigateFrom: 'Hand Picked',
-                                    )));
+                                  navigateFrom: 'Daily Featured',
+                                )));
                       },
                       child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: size.width * .04),
-                        child: Text(
-                          'See More',
-                          style: TextStyle(
-                              fontFamily: 'taviraj',
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                              fontStyle: FontStyle.normal,
-                              fontSize: size.width * .04),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  height: size.width * .5,
-                  width: size.width,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: publicProvider.handPickedProducts==null?0:publicProvider.handPickedProducts!.data!.length<3?
-                               publicProvider.handPickedProducts!.data!.length:3,
-                    itemBuilder: (context, index) {
-                      return CategoryProductListTile(productList: publicProvider.handPickedProducts!.data![index]);
-                    },
-                  ),
-                ),
-                    publicProvider.flashDealProducts!=null
-                        ?SizedBox(height: size.width * .04):Container(),
-
-                    ///Flash Deal
-                    publicProvider.flashDealProducts!=null
-                        ?Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: FlashDealCountDownWidget(endingDate: publicProvider.flashDealProducts!.data!.endDate!),
-                  //child: FlashDealCountDownWidget(endingDate: publicProvider.flashDealProducts!.data!.endDate!),
-                ):Container(),
-                    publicProvider.flashDealProducts!=null
-                        ?SizedBox(height: size.width * .03):Container(),
-
-                    publicProvider.flashDealProducts!=null
-                        ?Container(
-                  height: size.width * .52,
-                  width: size.width,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: publicProvider.flashDealProducts==null
-                        ?0
-                        :publicProvider.flashDealProducts!.data!.products!.data!.length<3
-                        ?publicProvider.flashDealProducts!.data!.products!.data!.length:3,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: EdgeInsets.only(right: size.width*.04),
-                          child: FlashDealProductListTile(productList: publicProvider.flashDealProducts!.data!.products!.data![index],));
-                    },
-                  ),
-                ):Container(),
-                SizedBox(height: size.width * .04),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //  crossAxisAlignment: CrossAxisAlignment.end,
-
-                      children: [
-                        Row(
-                          children: [
-                            Image.asset(
-                              'assets/app_icon/body_icon/feature_icon.png',
-                            ),
-                            Text('Daily Featured',
-                                style: TextStyle(
-                                    fontFamily: 'taviraj',
-                                    color: ColorsVariables.textColor,
-                                    fontStyle: FontStyle.normal,
-                                    fontSize: size.width * .045)),
-                          ],
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ProductPage(
-                                          navigateFrom: 'Daily Featured',
-                                        )));
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: size.width * .04),
-                            child: Text('See More',
-                                style: TextStyle(
-                                    fontFamily: 'taviraj',
-                                    color: Colors.grey,
-                                    fontStyle: FontStyle.normal,
-                                    fontSize: size.width * .04)),
-                          ),
-                        ),
-                      ]),
-                ),
-                Container(
-                  height: size.width * .5,
-                  width: size.width,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: publicProvider.dailyFeaturedProducts==null?0:publicProvider.dailyFeaturedProducts!.data!.length<3?
-                                 publicProvider.dailyFeaturedProducts!.data!.length:3,
-                    itemBuilder: (context, index) {
-                      return CategoryProductListTile(productList: publicProvider.dailyFeaturedProducts!.data![index],);
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: size.width * .04,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //  crossAxisAlignment: CrossAxisAlignment.end,
-
-                      children: [
-                        Text('Feature  Categories',
+                        padding: EdgeInsets.symmetric(
+                            horizontal: size.width * .04),
+                        child: Text('See More',
                             style: TextStyle(
                                 fontFamily: 'taviraj',
-                                fontWeight: FontWeight.w500,
-                                color: ColorsVariables.textColor,
+                                color: Colors.grey,
                                 fontStyle: FontStyle.normal,
-                                fontSize: size.width * .045)),
-                      ]),
+                                fontSize: size.width * .04)),
+                      ),
+                    ),
+                  ]):Container():Container(),
+              publicProvider.dailyFeaturedProducts!=null
+                  ?publicProvider.dailyFeaturedProducts!.data!.isNotEmpty
+                  ?Container(
+                height: size.width * .5,
+                width: size.width,
+                margin: EdgeInsets.only(top: size.width*.04),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: publicProvider.dailyFeaturedProducts==null?0:publicProvider.dailyFeaturedProducts!.data!.length<3?
+                  publicProvider.dailyFeaturedProducts!.data!.length:3,
+                  itemBuilder: (context, index) {
+                    return Container(
+                        margin: EdgeInsets.only(right: size.width*.04),
+                        child: CategoryProductListTile(productList: publicProvider.dailyFeaturedProducts!.data![index],));
+                  },
                 ),
-                Container(
-                  height: size.width * .55,
-                  width: size.width,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: publicProvider.featuredCategories==null?0:publicProvider.featuredCategories!.data==null?0:publicProvider.featuredCategories!.data!.length,
-                    itemBuilder: (context, index) {
-                      return getFeatureCard(context,publicProvider.featuredCategories!.data![index]);
-                    },
-                  ),
+              ):Container():Container(),
+              SizedBox(height: size.width * .04),
+
+              ///Featured Categories
+              publicProvider.featuredCategories!=null
+                  ?publicProvider.featuredCategories!.data!.isNotEmpty
+                  ?Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Feature  Categories',
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            fontWeight: FontWeight.bold,
+                            color: ColorsVariables.textColor,
+                            fontStyle: FontStyle.normal,
+                            fontSize: size.width * .045)),
+                  ]):Container():Container(),
+
+              publicProvider.featuredCategories!=null
+                  ?publicProvider.featuredCategories!.data!.isNotEmpty
+                  ?Container(
+                height: size.width * .3,
+                width: size.width,
+                margin: EdgeInsets.only(top: size.width*.04),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: publicProvider.featuredCategories==null?0:publicProvider.featuredCategories!.data==null?0:publicProvider.featuredCategories!.data!.length,
+                  itemBuilder: (context, index) {
+                    return getFeatureCard(context,publicProvider.featuredCategories!.data![index]);
+                  },
                 ),
-              ]))),
-        ),
+              ):Container():Container(),
+            ],
+          ),
+        ),SizedBox(height: size.width*.25)
+
       ],
     );
   }

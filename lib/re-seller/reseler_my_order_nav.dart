@@ -1,4 +1,4 @@
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/custom_widget/red_folder_list_tile.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';

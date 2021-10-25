@@ -1,4 +1,4 @@
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,12 +8,10 @@ Widget specialCategoryListTile(BuildContext context,
   Size size = MediaQuery.of(context).size;
 
   return Container(
-    color: Colors.white,
+    //color: Colors.white,
     child: Column(
       children: [
-        SizedBox(
-          height: 10,
-        ),
+        SizedBox(height: 10),
         Container(
           height: size.width * .13,
           width: size.width * .13,

@@ -1,4 +1,4 @@
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:flutter/material.dart';
 
 class ReselerChatPage extends StatefulWidget {

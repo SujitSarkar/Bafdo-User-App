@@ -1,8 +1,9 @@
 import 'package:bafdo/sub_pages/product_page.dart';
+import 'package:bafdo/variables/color_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../colors.dart';
+import '../variables/colors.dart';
 
 class FlashDealCountDownWidget extends StatefulWidget {
   final int? endingDate;
@@ -36,13 +37,18 @@ class _FlashDealCountDownWidgetState extends State<FlashDealCountDownWidget> {
         children: [
           Image.asset('assets/app_icon/body_icon/flash_deal_icon.png'),
           Text(
-            'Flash Deal Ending in ',
+            ' Flash Deal',
             style: TextStyle(
                 fontFamily: 'taviraj',
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.bold,
                 color: ColorsVariables.textColor,
-                fontStyle: FontStyle.normal,
                 fontSize: size.width * .045),
+          ),Text(
+            '  Ending in ',
+            style: TextStyle(
+                fontFamily: 'taviraj',
+                color: ColorsVariables.textColor,
+                fontSize: size.width * .035),
           ),
 
           _timeContainer(day.toString(), size),
@@ -82,7 +88,14 @@ class _FlashDealCountDownWidgetState extends State<FlashDealCountDownWidget> {
     child: Container(
       alignment: Alignment.center,
       decoration: new BoxDecoration(
-          color: Colors.pink.shade300,
+          gradient: LinearGradient(
+            colors: [
+              BColors.primaryPink,
+              BColors.primaryLitePink
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter
+          ),
           borderRadius: new BorderRadius.circular(5.0)),
       child: Text(
         time.toString(),

@@ -1,4 +1,4 @@
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/widgets/gradient_button.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +29,6 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog>
 
     controller!.forward();
   }
-
   int? boxColor;
   int? sizeColor;
   int? checkBoxColor;

@@ -1,4 +1,4 @@
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/custom_widget/red_folder_list_tile.dart';
 import 'package:bafdo/re-seller/collection_detaills.dart';
 import '../sub_pages/new_collection_dialog.dart';

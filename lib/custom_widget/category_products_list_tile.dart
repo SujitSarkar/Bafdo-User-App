@@ -1,4 +1,4 @@
-import 'package:bafdo/colors.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/model/product_list_model.dart';
 import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/sub_pages/product_details.dart';
@@ -24,18 +24,13 @@ class _CategoryProductListTileState extends State<CategoryProductListTile> {
 
   @override
   Widget build(BuildContext context) {
-    final PublicProvider publicProvider =
-    Provider.of<PublicProvider>(context, listen: false);
-    Size size = MediaQuery.of(context).size;
+    final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
+    final Size size = MediaQuery.of(context).size;
     if (_counter == 0) {
-      setState(() {
-        _counter++;
-      });
+      setState(()=>_counter++);
       publicProvider.isProductWished(widget.productList!.id!).then((value) {
         if (publicProvider.message == 'Product present in wishlist') {
-          setState(() {
-            favorite = true;
-          });
+          setState(()=> favorite = true);
         }
       });
     }
@@ -44,14 +39,22 @@ class _CategoryProductListTileState extends State<CategoryProductListTile> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    ProductDetail(productId: widget.productList!.id!)));
+                builder: (context) => ProductDetail(productId: widget.productList!.id!)));
       },
       child: Container(
         width: size.width * .38,
+        margin: EdgeInsets.symmetric(vertical: 1.0),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(size.width * .04))),
+            borderRadius: BorderRadius.all(Radius.circular(size.width * .04)),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey.shade300,
+                  blurRadius: 2.0,
+                  offset: Offset(0,0.5)
+              )
+            ]
+        ),
         child: Stack(
           children: [
             Column(
@@ -103,7 +106,7 @@ class _CategoryProductListTileState extends State<CategoryProductListTile> {
                   child: Row(
                     children: [
                       Text(
-                        '${widget.productList!.mainPrice!.toString()}',
+                        widget.productList!.mainPrice!.toString().replaceAll('.00', ''),
                         style: TextStyle(
                             fontFamily: 'taviraj',
                             color: ColorsVariables.textColor,
@@ -112,7 +115,7 @@ class _CategoryProductListTileState extends State<CategoryProductListTile> {
                       ),
                       SizedBox(width: size.width * .01),
                       Text(
-                        widget.productList!.strokedPrice!.toString(),
+                        widget.productList!.strokedPrice!.toString().replaceAll('৳', '').replaceAll('.00', ''),
                         style: TextStyle(
                             fontFamily: 'taviraj',
                             color: Colors.grey,
