@@ -27,6 +27,8 @@ dependencies:
   font_awesome_flutter:
   syncfusion_flutter_charts:
   flutter_custom_clippers:
+  fl_chart:
+  image_picker:
   ##backend plugin
   provider:
   shared_preferences:

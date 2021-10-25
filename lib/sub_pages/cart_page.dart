@@ -73,6 +73,7 @@ class _CartPageState extends State<CartPage> {
         },
         backgroundColor: Colors.white,
         child: publicProvider.carts!=null
+            ?publicProvider.carts!.isNotEmpty
             ? Stack(children: [
           ListView(
             children: [
@@ -119,11 +120,7 @@ class _CartPageState extends State<CartPage> {
                 // scrollDirection: Axis.vertical,
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: publicProvider.carts == null
-                    ? 0
-                    : publicProvider.carts!.isEmpty
-                        ? 0
-                        : publicProvider.carts![0].cartItems!.length,
+                itemCount: publicProvider.carts![0].cartItems!.length,
                 itemBuilder: (context, index) {
                   return Slidable(
                     actionPane: SlidableStrechActionPane(),
@@ -457,7 +454,15 @@ class _CartPageState extends State<CartPage> {
               fontStyle: FontStyle.normal,
               fontWeight: FontWeight.w500,
               fontSize: size.width * .045),),
-        ),
+        ):Center(
+        child: Text('Empty Cart !',
+        style:TextStyle(
+            fontFamily: 'taviraj',
+            color: ColorsVariables.textColor,
+            fontStyle: FontStyle.normal,
+            fontWeight: FontWeight.w500,
+            fontSize: size.width * .045),),
+    ),
       ),
     );
   }

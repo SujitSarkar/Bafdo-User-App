@@ -139,9 +139,9 @@ class _CategoryProductListTileState extends State<CategoryProductListTile> {
                 right: size.width*.025,
                 bottom: size.width*.025,
                 child: InkWell(
-                  onTap: () {
+                  onTap: ()async {
                     showLoadingDialog(context);
-                    publicProvider
+                    await publicProvider
                         .addCart(widget.productList!.id!, 1)
                         .then((value) async {
                       await publicProvider.fetchCartList();
