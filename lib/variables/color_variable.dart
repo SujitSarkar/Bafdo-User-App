@@ -13,5 +13,6 @@ class BColors{
   static final Color deliveredColor = Color(0xff00D97C);
   static final Color primaryPink = Color(0xffC31A65);
   static final Color primaryLitePink = Color(0xffFA4494);
+  static final Color pageBgColor = Color(0xffEFF9F9);
 
 }

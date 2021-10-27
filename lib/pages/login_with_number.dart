@@ -42,7 +42,7 @@ class _LoginWithNumberState extends State<LoginWithNumber> {
               SizedBox(height: 150),
 
               Text(
-                'Great to see you again',
+                'Great To See You Again',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontFamily: 'taviraj',

@@ -1,8 +1,10 @@
+import 'package:bafdo/provider/user_provider.dart';
 import 'package:bafdo/sub_pages/account_page.dart';
 import 'package:bafdo/sub_pages/edit_account.dart';
 import 'package:bafdo/widgets/drawer_nav_page.dart';
 import 'package:bafdo/widgets/nav_page-appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final UserProvider userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Color(0xffEFF9F9),
@@ -24,11 +27,11 @@ class _ProfileState extends State<Profile> {
         child: NavPageAppBar(
             openDrawer: () => _scaffoldKey.currentState!.openDrawer()),
       ),
-      body: _bodyUI(size),
+      body: _bodyUI(size, userProvider),
     );
   }
 
-  Widget _bodyUI(Size size) {
+  Widget _bodyUI(Size size,UserProvider userProvider) {
     return Column(
       children: [
         SizedBox(
@@ -90,10 +93,10 @@ class _ProfileState extends State<Profile> {
                     color: Colors.white),
                 padding: EdgeInsets.symmetric(
                     vertical: size.width * .04, horizontal: size.width * .04),
-                child: _textView('My Profile'),
+                child: _textView('My Profile',userProvider),
               ),
-              _textView('Account'),
-              _textView('Settings'),
+              _textView('Account',userProvider),
+              _textView('Settings',userProvider),
             ],
           ),
         ),
@@ -126,16 +129,16 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget _textView(String title) {
+  Widget _textView(String title, UserProvider userProvider) {
     return InkWell(
-      onTap: () {
+      onTap: ()async {
         title == 'Account'
             ? Navigator.push(
                 context, MaterialPageRoute(builder: (context) => AccountPage()))
             : title == 'Settings'
                 ? Navigator.push(context,
                     MaterialPageRoute(builder: (context) => EditAccount()))
-                : null;
+                : await userProvider.getUserByToken();
       },
       child: Text(
         title,

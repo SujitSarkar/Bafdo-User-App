@@ -18,8 +18,6 @@ class SplashScreenPage extends StatefulWidget {
 }
 
 class _SplashScreenPageState extends State<SplashScreenPage> {
-  // SharedPreferences? preferences;
-  // String? _emailOrPhone;
   @override
   void initState() {
     super.initState();
@@ -57,7 +55,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
             }
             if (seconds == 0) {
               _timer!.cancel();
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => publicProvider.prefUserModel!.emailOrPhone!=null?Home(): LoginWithNumber()), (route) => false);
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Home()), (route) => false);
             }
           }
         },
@@ -68,7 +66,6 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: ColorsVariables.backgrowndColor,
@@ -134,7 +131,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                                   ),
                                   onPressed: (){
                                     _timer!.cancel();
-                                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) =>publicProvider.prefUserModel!.emailOrPhone!=null?Home(): LoginWithNumber()), (route) => false);
+                                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) =>Home()), (route) => false);
                                   },
                                   borderRadius: size.width*.02,
                                   height: size.width*.08,

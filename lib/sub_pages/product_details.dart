@@ -45,15 +45,18 @@ class _ProductDetailState extends State<ProductDetail> {
   @override
   Widget build(BuildContext context) {
     final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
     if(_counter==0){
       setState(()=> _counter++);
-     fetch(publicProvider);
-      publicProvider.isProductWished(widget.productId!).then((value){
-        if(publicProvider.message=='Product present in wishlist'){
-          setState(()=>wishListSelect=true);
-        }
-      });
+      fetch(publicProvider);
+      if(publicProvider.prefUserModel!=null){
+        publicProvider.isProductWished(widget.productId!).then((value){
+          if(publicProvider.message=='Product present in wishlist'){
+            setState(()=>wishListSelect=true);
+          }
+        });
+      }
+
     }
     return Scaffold(
       appBar: PreferredSize(
@@ -215,7 +218,6 @@ class _ProductDetailState extends State<ProductDetail> {
           ),
         ),
       ),
-
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: _isLoading?Column(
@@ -302,18 +304,21 @@ class _ProductDetailState extends State<ProductDetail> {
                               right: 0,
                               child: InkWell(
                                 onTap: (){
-                                  setState(()=>wishListSelect = !wishListSelect);
-                                  if(wishListSelect == true){
-                                    publicProvider.addWishList(widget.productId!).then((value)async{
-                                      await publicProvider.fetchWishList();
-                                      showToast("Added to wishlist");
-                                    });
-                                  }else{
-                                    publicProvider.deleteWishList(widget.productId!).then((value)async{
-                                      await publicProvider.fetchWishList();
-                                      showToast("Removed from wishlist");
-                                    });
-                                  }
+                                  if(publicProvider.prefUserModel!=null){
+                                    setState(()=>wishListSelect = !wishListSelect);
+                                    if(wishListSelect == true){
+                                      publicProvider.addWishList(widget.productId!).then((value)async{
+                                        await publicProvider.fetchWishList();
+                                        showToast("Added to wishlist");
+                                      });
+                                    }else{
+                                      publicProvider.deleteWishList(widget.productId!).then((value)async{
+                                        await publicProvider.fetchWishList();
+                                        showToast("Removed from wishlist");
+                                      });
+                                    }
+                                  }else showToast('Please Login First');
+
                                 },
                                 child:CircleAvatar(
                                   backgroundColor: Colors.white,
@@ -1083,17 +1088,20 @@ class _ProductDetailState extends State<ProductDetail> {
                       children: [
                         InkWell(
                           onTap: () {
-                            showLoadingDialog(context);
-                            publicProvider.addCart(widget.productId!, 1).then((value)async{
-                              if(value){
-                                await publicProvider.fetchCartList();
-                                closeLoadingDialog(context);
-                                showToast('Product added to cart');
-                              }else{
-                                closeLoadingDialog(context);
-                                showToast('Stock out');
-                              }
-                            });
+                            if(publicProvider.prefUserModel!=null){
+                              showLoadingDialog(context);
+                              publicProvider.addCart(widget.productId!, 1).then((value)async{
+                                if(value){
+                                  await publicProvider.fetchCartList();
+                                  closeLoadingDialog(context);
+                                  showToast('Product added to cart');
+                                }else{
+                                  closeLoadingDialog(context);
+                                  showToast('Stock out');
+                                }
+                              });
+                            }else showToast('Please Login First');
+
                           },
                           child: Container(
                             width: size.width * .36,

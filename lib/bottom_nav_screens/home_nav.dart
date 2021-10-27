@@ -1,3 +1,4 @@
+import 'package:bafdo/variables/color_variable.dart';
 import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/custom_widget/category_products_list_tile.dart';
 import 'package:bafdo/custom_widget/flash_deal_count_down_widget.dart';
@@ -37,13 +38,9 @@ class HomeNav extends StatefulWidget {
 class _HomeNavState extends State<HomeNav> {
   int _counter=0;
   TextEditingController _searchController = TextEditingController();
-  TextEditingController controller1 = new TextEditingController();
-  TextEditingController controller2 = new TextEditingController();
-  TextEditingController controller3 = new TextEditingController();
 
   Future<void> _fetch(PublicProvider publicProvider)async{
     setState(()=> _counter++);
-    if(publicProvider.prefUserModel==null) await publicProvider.getPrefUser();
     if(publicProvider.prefUserModel==null) await publicProvider.getPrefUser();
     if(publicProvider.sliderList.isEmpty) await publicProvider.fetchSliders();
     if(publicProvider.categories==null) await publicProvider.fetchCategories();
@@ -55,8 +52,11 @@ class _HomeNavState extends State<HomeNav> {
     if(publicProvider.handPickedProducts==null) await publicProvider.fetchHandPickProducts();
     if(publicProvider.flashDealProducts==null) await publicProvider.fetchFlashDealProducts();
     if(publicProvider.dailyFeaturedProducts==null) await publicProvider.fetchDailyFeaturedProducts();
-    if(publicProvider.carts==null)await publicProvider.fetchCartList();
-    if(publicProvider.wishlistModel==null) await publicProvider.fetchWishList();
+
+    if(publicProvider.prefUserModel!=null){
+      if(publicProvider.carts==null)await publicProvider.fetchCartList();
+      if(publicProvider.wishlistModel==null) await publicProvider.fetchWishList();
+    }
 
   }
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -67,7 +67,7 @@ class _HomeNavState extends State<HomeNav> {
     if(_counter==0) _fetch(publicProvider);
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Color(0xffEFF9F9),
+      backgroundColor: BColors.pageBgColor,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
         child: NavPageAppBar(openDrawer: ()=>_scaffoldKey.currentState!.openDrawer()),

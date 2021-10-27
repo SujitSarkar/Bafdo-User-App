@@ -1,11 +1,9 @@
 import 'dart:ui';
-import 'package:bafdo/bottom_nav_screens/my_bafdu_nav.dart';
 import 'package:bafdo/bottom_nav_screens/festival_nav.dart';
 import 'package:bafdo/bottom_nav_screens/home_nav.dart';
 import 'package:bafdo/bottom_nav_screens/profile.dart';
 import 'package:bafdo/bottom_nav_screens/wish_list_nav.dart';
 import 'package:bafdo/pages/add_priyo_manush_page.dart';
-import 'package:bafdo/widgets/nav_page-appbar.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -21,13 +19,14 @@ class _HomeState extends State<Home> {
     HomeNav(),
     FestivalPage(),
     WishListNav(),
-    Profile()];
+    Profile()
+  ];
 
   PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
           backgroundColor: Color(0xffEFF9F9),

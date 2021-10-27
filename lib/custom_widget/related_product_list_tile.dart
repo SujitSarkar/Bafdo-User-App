@@ -25,28 +25,24 @@ class _RelatedProductListTileState extends State<RelatedProductListTile> {
 
   @override
   Widget build(BuildContext context) {
-    final PublicProvider publicProvider =
-    Provider.of<PublicProvider>(context);
-    Size size = MediaQuery.of(context).size;
+    final PublicProvider publicProvider=Provider.of<PublicProvider>(context);
+    final Size size = MediaQuery.of(context).size;
     if (_counter == 0) {
-      setState(() {
-        _counter++;
-      });
-      publicProvider.isProductWished(widget.productList!.id!).then((value) {
-        if (publicProvider.message == 'Product present in wishlist') {
-          setState(() {
-            favorite = true;
-          });
-        }
-      });
+      setState(()=>_counter++);
+      if(publicProvider.prefUserModel!=null){
+        publicProvider.isProductWished(widget.productList!.id!).then((value) {
+          if (publicProvider.message == 'Product present in wishlist') {
+            setState(()=>favorite = true);
+          }
+        });
+      }
     }
     return InkWell(
       onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    ProductDetail(productId: widget.productList!.id!)));
+                builder: (context) => ProductDetail(productId: widget.productList!.id!)));
       },
       child: Container(
         width: size.width * .38,
@@ -147,14 +143,16 @@ class _RelatedProductListTileState extends State<RelatedProductListTile> {
                 bottom: size.width*.025,
                 child: InkWell(
                   onTap: () {
-                    showLoadingDialog(context);
-                    publicProvider
-                        .addCart(widget.productList!.id!, 1)
-                        .then((value) async {
-                      await publicProvider.fetchCartList();
-                      closeLoadingDialog(context);
-                      showToast('Product added to cart');
-                    });
+                    if(publicProvider.prefUserModel!=null){
+                      showLoadingDialog(context);
+                      publicProvider
+                          .addCart(widget.productList!.id!, 1)
+                          .then((value) async {
+                        await publicProvider.fetchCartList();
+                        closeLoadingDialog(context);
+                        showToast('Product added to cart');
+                      });
+                    }else showToast('Please Login First');
                   },
                   child: Icon(
                     Icons.add_circle_outline,
@@ -168,7 +166,7 @@ class _RelatedProductListTileState extends State<RelatedProductListTile> {
               top: size.width*.03,
               child: InkWell(
                 onTap: () {
-                  if (publicProvider.prefUserModel.id != null) {
+                  if (publicProvider.prefUserModel != null) {
                     setState(() {
                       favorite = !favorite;
                     });
@@ -188,7 +186,7 @@ class _RelatedProductListTileState extends State<RelatedProductListTile> {
                       });
                     }
                   } else {
-                    showToast("Please log in first");
+                    showToast("Please Login First");
                   }
                 },
                 child: Image.asset(

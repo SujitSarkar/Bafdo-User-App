@@ -27,16 +27,16 @@ class _FlashDealProductListTileState extends State<FlashDealProductListTile> {
         Provider.of<PublicProvider>(context, listen: false);
     Size size = MediaQuery.of(context).size;
     if (_counter == 0) {
-      setState(() {
-        _counter++;
-      });
-      publicProvider.isProductWished(widget.productList!.id!).then((value) {
-        if (publicProvider.message == 'Product present in wishlist') {
-          setState(() {
-            favorite = true;
-          });
-        }
-      });
+      setState(()=>_counter++);
+      if(publicProvider.prefUserModel!=null){
+        publicProvider.isProductWished(widget.productList!.id!).then((value) {
+          if (publicProvider.message == 'Product present in wishlist') {
+            setState(() {
+              favorite = true;
+            });
+          }
+        });
+      }
     }
     return InkWell(
       onTap: () {
@@ -47,7 +47,7 @@ class _FlashDealProductListTileState extends State<FlashDealProductListTile> {
                     ProductDetail(productId: widget.productList!.id!)));
       },
       child: Container(
-        width: size.width * .38,
+        width: size.width * .4,
         margin: EdgeInsets.symmetric(vertical: 1.0),
         decoration: BoxDecoration(
             color: Colors.white,
@@ -149,9 +149,14 @@ class _FlashDealProductListTileState extends State<FlashDealProductListTile> {
                     await publicProvider
                         .addCart(widget.productList!.id!, 1)
                         .then((value) async {
-                      await publicProvider.fetchCartList();
-                      closeLoadingDialog(context);
-                      showToast('Product added to cart');
+                      if(value){
+                        await publicProvider.fetchCartList();
+                        closeLoadingDialog(context);
+                        showToast('Product added to cart');
+                      }else {
+                        closeLoadingDialog(context);
+                        showToast('Stock Out');
+                      }
                     });
                   },
                   child: Icon(
@@ -166,11 +171,8 @@ class _FlashDealProductListTileState extends State<FlashDealProductListTile> {
               top: size.width*.03,
               child: InkWell(
                 onTap: () {
-                  print(publicProvider.prefUserModel.id);
-                  if (publicProvider.prefUserModel.id != null) {
-                    setState(() {
-                      favorite = !favorite;
-                    });
+                  if (publicProvider.prefUserModel != null) {
+                    setState(()=>favorite = !favorite);
                     if (favorite == true) {
                       publicProvider
                           .addWishList(widget.productList!.id!)

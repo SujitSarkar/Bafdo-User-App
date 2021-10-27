@@ -26,7 +26,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
       backgroundColor: Color(0xffEFF9F9),
       appBar: PreferredSize(
         // backgroundColor: Color(0xffF7F5F5),
-        preferredSize: Size.fromHeight(size.width * .2),
+        preferredSize: Size.fromHeight(80.0),
         child: CustomAppBar(
           leading: InkWell(
               onTap: () {

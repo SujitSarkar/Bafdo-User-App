@@ -19,7 +19,10 @@ class _WishListNavState extends State<WishListNav>{
   int _counter=0;
   Future<void> _fetch(PublicProvider publicProvider)async{
     setState(() => _counter++);
-    if(publicProvider.wishlistModel==null) await publicProvider.fetchWishList();
+    if(publicProvider.prefUserModel!=null){
+      if(publicProvider.wishlistModel==null) await publicProvider.fetchWishList();
+    }else showToast('Please Login First');
+
   }
 
   @override

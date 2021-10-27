@@ -67,10 +67,10 @@ class _CategoryPageState extends State<CategoryPage> {
           ),
           trailing1: InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => RecentlyViews()));
+                Navigator.pop(context);
+                //Navigator.push(context, MaterialPageRoute(builder: (_) => RecentlyViews()));
               },
-              child: Image.asset('assets/app_icon/body_icon/favorite.png')),
+              child: Image.asset('assets/app_icon/app_bar_icon/close.png')),
           trailing2: Container(),
         ),
       ),

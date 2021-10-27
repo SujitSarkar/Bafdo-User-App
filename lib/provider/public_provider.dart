@@ -179,12 +179,9 @@ class PublicProvider extends AuthProvider{
   Future<Categories?> getFeaturedCategories()async{
     try{
       String url = "https://bafdo.com/api/v2/categories/home";
-
       var response = await http.get(Uri.parse(url));
-
       Categories featuredCategories = categoriesFromJson(response.body);
       return featuredCategories;
-
     }catch(error){
       print(error.toString());
       return null;
@@ -206,12 +203,9 @@ class PublicProvider extends AuthProvider{
   Future<TraditionalCategories?> getTraditionalCategories()async{
     try{
       String url = "https://bafdo.com/api/v1/categories/home";
-
       var response = await http.get(Uri.parse(url));
-
       TraditionalCategories traditionalCategories = traditionalCategoriesFromJson(response.body);
       return traditionalCategories;
-
     }catch(error){
       print(error.toString());
       return null;
@@ -270,7 +264,6 @@ class PublicProvider extends AuthProvider{
       var response = await http.get(Uri.parse(url));
       ProductList productList1 = productListFromJson(response.body);
       return productList1;
-
     }catch(error){
       print(error.toString());
       return null;
@@ -306,7 +299,6 @@ class PublicProvider extends AuthProvider{
       var response = await http.get(Uri.parse(url));
       ProductList productList1 = productListFromJson(response.body);
       return productList1;
-
     }catch(error){
       print(error.toString());
       return null;
@@ -338,11 +330,10 @@ class PublicProvider extends AuthProvider{
 
   Future<bool> addCart(int productId,int quantity) async {
     try{
+      if(prefUserModel==null) await getPrefUser();
       var postBody = jsonEncode({"id": "$productId","user_id": prefUserModel.id,"quantity": "$quantity"});
-
       final response = await http.post(Uri.parse("https://bafdo.com/api/v2/carts/add"),
           headers: { "Content-Type":"application/json", "Authorization": "Bearer ${prefUserModel.accessToken}"},body: postBody );
-
       var jsonData = jsonDecode(response.body);
       if(jsonData['result']==true) return true;
       else return false;
@@ -402,14 +393,16 @@ class PublicProvider extends AuthProvider{
     print(response.body);
   }
   Future<String?> isProductWished(int productId) async {
-     await getPrefUser();
+    if(prefUserModel==null) await getPrefUser();
     final response =
     await http.get((Uri.parse("https://bafdo.com/api/v2/wishlists-check-product?product_id=$productId&user_id=${prefUserModel.id}")),
         headers: { "Authorization": "Bearer ${prefUserModel.accessToken}"});
-    var jsonData =  jsonDecode(response.body);
-    String msg=jsonData["message"];
-    _message=msg;
-    return _message;
+    if(response.statusCode==200){
+      var jsonData =  jsonDecode(response.body);
+      String msg=jsonData["message"];
+      _message=msg;
+      return _message;
+    }
   }
   Future<WishlistModel?> getWishList() async {
     final response =await http.get(Uri.parse("https://bafdo.com/api/v2/wishlists/${prefUserModel.id}"),

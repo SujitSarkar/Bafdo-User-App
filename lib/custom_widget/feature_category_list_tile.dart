@@ -29,19 +29,19 @@ class _FeatureCategoryListTileState extends State<FeatureCategoryListTile> {
   @override
   Widget build(BuildContext context) {
     final PublicProvider publicProvider =
-    Provider.of<PublicProvider>(context, listen: false);
-    Size size = MediaQuery.of(context).size;
+    Provider.of<PublicProvider>(context);
+    final Size size = MediaQuery.of(context).size;
     if (_counter == 0) {
-      setState(() {
-        _counter++;
-      });
-      publicProvider.isProductWished(widget.productList!.id!).then((value) {
-        if (publicProvider.message == 'Product present in wishlist') {
-          setState(() {
-            favorite = true;
-          });
-        }
-      });
+      setState(()=>_counter++);
+      if(publicProvider.prefUserModel!=null){
+        publicProvider.isProductWished(widget.productList!.id!).then((value) {
+          if (publicProvider.message == 'Product present in wishlist') {
+            setState(() {
+              favorite = true;
+            });
+          }
+        });
+      }
     }
     return InkWell(
       onTap: () {
@@ -52,7 +52,7 @@ class _FeatureCategoryListTileState extends State<FeatureCategoryListTile> {
                     ProductDetail(productId: widget.productList!.id!)));
       },
       child: Container(
-        width: size.width * .38,
+        width: size.width * .4,
         margin: EdgeInsets.symmetric(vertical: 1.0),
         decoration: BoxDecoration(
             color: Colors.white,
@@ -150,14 +150,21 @@ class _FeatureCategoryListTileState extends State<FeatureCategoryListTile> {
                 bottom: size.width*.025,
                 child: InkWell(
                   onTap: () {
-                    showLoadingDialog(context);
-                    publicProvider
-                        .addCart(widget.productList!.id!, 1)
-                        .then((value) async {
-                      await publicProvider.fetchCartList();
-                      closeLoadingDialog(context);
-                      showToast('Product added to cart');
-                    });
+                    if(publicProvider.prefUserModel!=null){
+                      showLoadingDialog(context);
+                      publicProvider
+                          .addCart(widget.productList!.id!, 1)
+                          .then((value) async {
+                        if(value){
+                          await publicProvider.fetchCartList();
+                          closeLoadingDialog(context);
+                          showToast('Product added to cart');
+                        }else {
+                          closeLoadingDialog(context);
+                          showToast('Stock Out');
+                        }
+                      });
+                    }else showToast('Please Login First');
                   },
                   child: Icon(
                     Icons.add_circle_outline,
@@ -171,10 +178,8 @@ class _FeatureCategoryListTileState extends State<FeatureCategoryListTile> {
               top: size.width*.03,
               child: InkWell(
                 onTap: () {
-                  if (publicProvider.prefUserModel.id != null) {
-                    setState(() {
-                      favorite = !favorite;
-                    });
+                  if (publicProvider.prefUserModel!=null) {
+                    setState(()=>favorite = !favorite);
                     if (favorite == true) {
                       publicProvider
                           .addWishList(widget.productList!.id!)
@@ -506,7 +511,7 @@ Widget getFavoriteOfferCard(BuildContext context,CatDatum childCategories) {
 }
 
 Widget getFeatureCard(BuildContext context,CatDatum featuredCategories) {
-  final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
+  // final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
   final Size size = MediaQuery.of(context).size;
   return InkWell(
     onTap: ()async{
@@ -521,23 +526,21 @@ Widget getFeatureCard(BuildContext context,CatDatum featuredCategories) {
     child: Stack(
       alignment: Alignment.center,
         children: [
-      Expanded(
-        child: Container(
-          width: size.width * .6,
-          height: size.width * .4,
-          decoration: BoxDecoration(
-              color: BColors.primaryLitePink,
-              borderRadius: BorderRadius.all(Radius.circular(15))),
-          child:featuredCategories.banner!.isNotEmpty
-              ? CachedNetworkImage(
-            imageUrl:
-            'https://bafdo.com/public/${featuredCategories.banner}',
-            placeholder: (context, url) =>
-                CupertinoActivityIndicator(),
-            errorWidget: (context, url, error) => Icon(Icons.error),
-            fit: BoxFit.cover,
-          ):Icon(Icons.wallet_giftcard_outlined),
-        ),
+      Container(
+        width: size.width * .6,
+        height: size.width * .4,
+        decoration: BoxDecoration(
+            color: BColors.primaryLitePink,
+            borderRadius: BorderRadius.all(Radius.circular(15))),
+        child:featuredCategories.banner!.isNotEmpty
+            ? CachedNetworkImage(
+          imageUrl:
+          'https://bafdo.com/public/${featuredCategories.banner}',
+          placeholder: (context, url) =>
+              CupertinoActivityIndicator(),
+          errorWidget: (context, url, error) => Icon(Icons.error),
+          fit: BoxFit.cover,
+        ):Icon(Icons.wallet_giftcard_outlined),
       ),
       Container(
         width: size.width * .6,
