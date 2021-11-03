@@ -1,11 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:bafdo/model/pref_user_model.dart';
 import 'package:bafdo/model/signup_model.dart';
 import 'package:bafdo/model/userinfo_model.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
@@ -17,15 +16,17 @@ class AuthProvider extends ChangeNotifier {
   SignupModel? _signupModel;
   UserInfoModel? _userInfoModel;
   PrefUserModel? _prefUserModel;
+  bool? _isPrefNull;
 
   get signupModel => _signupModel;
   get userInfoModel => _userInfoModel;
   get prefUserModel =>_prefUserModel;
+  get isPrefNull =>_isPrefNull;
 
   Future<void> getPrefUser()async{
-    _prefUserModel=null;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     if(preferences.getString('id')!=null){
+      _isPrefNull = false;
       PrefUserModel model = PrefUserModel(
           id: preferences.getString('id'),
           accessToken: preferences.getString('access_token'),
@@ -33,12 +34,18 @@ class AuthProvider extends ChangeNotifier {
           emailOrPhone: preferences.getString('email_or_phone'));
       _prefUserModel = model;
       notifyListeners();
+    }else{
+      _isPrefNull = true;
+      showToast('Session Expired! Login Again');
+      notifyListeners();
     }
+    // print('isPrefNull: $_isPrefNull');
     // print('PrefUserId: ${_prefUserModel!.id}');
     // print('Token: ${_prefUserModel!.accessToken}');
   }
   void clearPrefModel(){
     _prefUserModel=null;
+    _isPrefNull = true;
     notifyListeners();
   }
 

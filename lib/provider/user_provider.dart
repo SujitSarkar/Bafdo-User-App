@@ -6,11 +6,12 @@ import 'package:bafdo/widgets/notification_widget.dart';
 import 'package:http/http.dart' as http;
 
 class UserProvider extends AuthProvider{
-  final String baseUrl= 'https://bafdo.com/api/v2/';
+  static const String baseUrl= 'https://bafdo.com/api/v2/';
 
   UserModel? _userModel;
-  get userModel=>_userModel;
-  
+  UserModel? get userModel=>_userModel;
+
+
   Future<bool> getUserByToken()async{
     try{
       if(prefUserModel==null) await getPrefUser();
@@ -31,8 +32,12 @@ class UserProvider extends AuthProvider{
       return false;
     }
     catch(error){
-      print(error.toString());
+      showToast(error.toString());
       return false;
     }
+  }
+  void clearUserModel(){
+    _userModel =null;
+    notifyListeners();
   }
 }

@@ -138,9 +138,7 @@ class PublicProvider extends AuthProvider{
   Future<TopBrands?> getTopBrands()async{
     try{
       String url = "https://bafdo.com/api/v2/brands/top";
-
       var response = await http.get(Uri.parse(url));
-
       TopBrands topBrands = topBrandsFromJson(response.body);
       return topBrands;
 
@@ -158,9 +156,7 @@ class PublicProvider extends AuthProvider{
   Future<Brands?> getBrands()async{
     try{
       String url = "https://bafdo.com/api/v2/brands";
-
       var response = await http.get(Uri.parse(url));
-
       Brands brands = brandsFromJson(response.body);
       return brands;
 

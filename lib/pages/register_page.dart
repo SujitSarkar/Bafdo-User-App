@@ -1,3 +1,4 @@
+import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/pages/login_page.dart';
 import 'package:bafdo/provider/auth_provider.dart';
@@ -5,6 +6,7 @@ import 'package:bafdo/seller_collection/seller_home.dart';
 import 'package:bafdo/widgets/form_decoration.dart';
 import 'package:bafdo/widgets/gradient_button.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorsVariables.backgrowndColor,
@@ -54,11 +57,11 @@ class _RegisterPageState extends State<RegisterPage> {
         ],
       ),
       backgroundColor: ColorsVariables.backgrowndColor,
-      body: _bodyUI(size,authProvider),
+      body: _bodyUI(size,authProvider, publicProvider),
     );
   }
 
-  Widget _bodyUI(Size size,AuthProvider authProvider) => SingleChildScrollView(
+  Widget _bodyUI(Size size,AuthProvider authProvider,PublicProvider publicProvider) => SingleChildScrollView(
         child: Container(
           width: size.width,
           padding: EdgeInsets.symmetric(horizontal: 20),
@@ -192,9 +195,9 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               SizedBox(height: size.width * .08),
 
-              ///Continue Button
+              ///Signup Button
               GradientButton(
-                onPressed: ()=>_validateDataAndSignup(authProvider),
+                onPressed: ()=>_validateDataAndSignup(authProvider, publicProvider),
                 child: Text(
                   'Sign Up',
                   style: TextStyle(
@@ -217,13 +220,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _socialButtonBuilder(
-                      size, 'assets/app_icon/body_icon/facebook.png'),
+                      size, 'assets/app_icon/body_icon/facebook.png',authProvider,publicProvider),
                   SizedBox(width: size.width * .02),
                   _socialButtonBuilder(
-                      size, 'assets/app_icon/body_icon/google.png'),
+                      size, 'assets/app_icon/body_icon/google.png',authProvider,publicProvider),
                   SizedBox(width: size.width * .02),
-                  _socialButtonBuilder(
-                      size, 'assets/app_icon/body_icon/twitter.png'),
+                  // _socialButtonBuilder(
+                  //     size, 'assets/app_icon/body_icon/twitter.png'),
                 ],
               ),
               SizedBox(height: size.width * .08),
@@ -308,15 +311,69 @@ class _RegisterPageState extends State<RegisterPage> {
         ],
       );
 
-  Widget _socialButtonBuilder(Size size, String assetImage) {
+  Widget _socialButtonBuilder(Size size, String assetImage,AuthProvider authProvider,PublicProvider publicProvider) {
     return InkWell(
-      onTap: () {},
+      onTap: () async{
+        if(assetImage=='assets/app_icon/body_icon/google.png'){
+          await authProvider.loginWithGoogle(context).then((cred)async{
+            if(cred!.user!.email!=null){
+              print(cred.user!.email);
+              _socialLogin(cred, authProvider,publicProvider);
+            }else showToast('Access denied !');
+          });
+        }
+        else if(assetImage=='assets/app_icon/body_icon/facebook.png'){
+          await authProvider.signInWithFacebook(context).then((cred)async{
+            if(cred!.user!.email!=null){
+              print(cred.user!.email);
+              print(cred.user!.phoneNumber);
+              _socialLogin(cred, authProvider,publicProvider);
+            }else showToast('Access denied !');
+          });
+        }
+      },
       child: Image.asset(assetImage, height: size.width * .12),
       borderRadius: BorderRadius.all(Radius.circular(5)),
     );
   }
 
-  Future<void> _validateDataAndSignup(AuthProvider authProvider)async{
+  Future<void> _socialLogin(UserCredential? credential, AuthProvider authProvider,PublicProvider publicProvider)async{
+    Map<String,String> userMap;
+    if(credential!.user!.email!=null){
+      userMap={
+        'email_or_phone': credential.user!.email!
+      };
+    }else{
+      userMap={
+        'email_or_phone': credential.user!.phoneNumber!
+      };
+    }
+    await authProvider.socialLoginAndGetUserInfo(userMap).then((value) async{
+      if(value){
+        if(_checked){
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          preferences.setString('email_or_phone', authProvider.userInfoModel.user.phone);
+          preferences.setString('id', authProvider.userInfoModel.user.id.toString());
+          preferences.setString('name', authProvider.userInfoModel.user.name);
+          preferences.setString('access_token', authProvider.userInfoModel.accessToken);
+          await authProvider.getPrefUser();
+        }
+        closeLoadingDialog(context);
+        showToast(authProvider.userInfoModel.message);
+        authProvider.getPrefUser();
+        publicProvider.fetchFeaturedCategories();
+        publicProvider.fetchTraditionalCategories();
+        publicProvider.fetchHandPickProducts();
+        publicProvider.fetchFlashDealProducts();
+        publicProvider.fetchDailyFeaturedProducts();
+
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
+      }else showToast('Something went wrong! try again');
+    });
+  }
+
+
+  Future<void> _validateDataAndSignup(AuthProvider authProvider,PublicProvider publicProvider)async{
     if(_checked){
       if(_name.text.isNotEmpty && _email.text.isNotEmpty && _password.text.isNotEmpty){
         if(_email.text.contains('@') && _email.text.contains('.com')){
@@ -326,14 +383,14 @@ class _RegisterPageState extends State<RegisterPage> {
               'email_or_phone': _email.text,
               'password': _password.text
             };
-            _loginUser(authProvider, userMap);
+            _loginUser(authProvider, publicProvider, userMap);
           }else showToast('Password must 8 character');
         }else showToast('Invalid email');
       }else showToast('Missing user information');
     }else showToast('Select Terms & Condition');
   }
 
-  Future<void> _loginUser(AuthProvider authProvider, Map<String,String> userMap)async{
+  Future<void> _loginUser(AuthProvider authProvider,PublicProvider publicProvider, Map<String,String> userMap)async{
     showLoadingDialog(context);
     await authProvider.userSignup(userMap).then((value)async{
       if(value){
@@ -351,6 +408,14 @@ class _RegisterPageState extends State<RegisterPage> {
           await authProvider.getPrefUser();
           closeLoadingDialog(context);
           showToast(authProvider.userInfoModel.message);
+
+          authProvider.getPrefUser();
+          publicProvider.fetchFeaturedCategories();
+          publicProvider.fetchTraditionalCategories();
+          publicProvider.fetchHandPickProducts();
+          publicProvider.fetchFlashDealProducts();
+          publicProvider.fetchDailyFeaturedProducts();
+
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
         });
       }else{

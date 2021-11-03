@@ -1,8 +1,11 @@
+import 'package:bafdo/pages/login_with_number.dart';
+import 'package:bafdo/provider/auth_provider.dart';
 import 'package:bafdo/provider/user_provider.dart';
 import 'package:bafdo/sub_pages/account_page.dart';
 import 'package:bafdo/sub_pages/edit_account.dart';
 import 'package:bafdo/widgets/drawer_nav_page.dart';
 import 'package:bafdo/widgets/nav_page-appbar.dart';
+import 'package:bafdo/widgets/notification_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,30 +16,50 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  int _counter=0;
+  bool _isLoading=true;
+
+  Future<void> _customInit(UserProvider userProvider,AuthProvider authProvider)async{
+    _counter++;
+    print(authProvider.isPrefNull);
+    if(authProvider.isPrefNull){
+      Future.delayed(Duration(microseconds: 1)).then((value){
+        setState(()=>_isLoading=false);
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginWithNumber()));
+      });
+    }else{
+      if(userProvider.userModel==null) {
+        await userProvider.getUserByToken();
+        setState(()=>_isLoading=false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final UserProvider userProvider = Provider.of<UserProvider>(context);
+    final AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    if(_counter==0) _customInit(userProvider,authProvider);
+
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Color(0xffEFF9F9),
       drawer: DrawerNavPage(),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
-        child: NavPageAppBar(
-            openDrawer: () => _scaffoldKey.currentState!.openDrawer()),
+        child: NavPageAppBar(openDrawer: () => _scaffoldKey.currentState!.openDrawer())
       ),
-      body: _bodyUI(size, userProvider),
+      body: _isLoading
+          ? showLoadingWidget
+          : _bodyUI(size, userProvider),
     );
   }
 
   Widget _bodyUI(Size size,UserProvider userProvider) {
     return Column(
       children: [
-        SizedBox(
-          height: size.width * .04,
-        ),
+        SizedBox(height: size.width * .04),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -47,8 +70,7 @@ class _ProfileState extends State<Profile> {
                 ///profile image preview
                 CircleAvatar(
                   backgroundColor: Colors.transparent,
-                  backgroundImage:
-                      AssetImage('assets/app_icon/body_icon/boys.png'),
+                  backgroundImage: AssetImage('assets/app_icon/body_icon/boys.png'),
                   radius: size.width * .18,
                 ),
                 Positioned(

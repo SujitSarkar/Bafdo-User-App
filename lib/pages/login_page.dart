@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:bafdo/bottom_nav_screens/home_nav.dart';
+import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/home.dart';
 import 'package:bafdo/pages/login_with_number.dart';
@@ -29,13 +29,14 @@ class _LogInPageState extends State<LogInPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
     return Scaffold(
       backgroundColor: Color(0xffEFF9F9),
-      body: _bodyUI(size,authProvider),
+      body: _bodyUI(size,authProvider,publicProvider),
     );
   }
 
-  Widget _bodyUI(Size size, AuthProvider authProvider) => SingleChildScrollView(
+  Widget _bodyUI(Size size, AuthProvider authProvider, PublicProvider publicProvider) => SingleChildScrollView(
         child: Container(
           width: size.width,
           padding: EdgeInsets.symmetric(horizontal: 20),
@@ -198,7 +199,7 @@ class _LogInPageState extends State<LogInPage> {
 
               ///Login Button
               GradientButton(
-                onPressed: ()=>_validateDataAndLogin(authProvider),
+                onPressed: ()=>_validateDataAndLogin(authProvider,publicProvider),
                 child: Text(
                   'Sign In',
                   style: TextStyle(
@@ -254,13 +255,13 @@ class _LogInPageState extends State<LogInPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _socialButtonBuilder(
-                      size, 'assets/app_icon/body_icon/google.png',authProvider),
+                      size, 'assets/app_icon/body_icon/google.png',authProvider,publicProvider),
                   SizedBox(width: size.width * .02),
                   _socialButtonBuilder(
-                      size, 'assets/app_icon/body_icon/facebook.png',authProvider),
+                      size, 'assets/app_icon/body_icon/facebook.png',authProvider,publicProvider),
                   SizedBox(width: size.width * .02),
                   _socialButtonBuilder(
-                      size, 'assets/app_icon/body_icon/twitter.png',authProvider),
+                      size, 'assets/app_icon/body_icon/twitter.png',authProvider,publicProvider),
                 ],
               ),
               SizedBox(height: size.width * .08),
@@ -303,14 +304,14 @@ class _LogInPageState extends State<LogInPage> {
         ),
       );
 
-  Widget _socialButtonBuilder(Size size, String assetImage, AuthProvider authProvider) {
+  Widget _socialButtonBuilder(Size size, String assetImage, AuthProvider authProvider,PublicProvider publicProvider) {
     return InkWell(
       onTap: () async{
         if(assetImage=='assets/app_icon/body_icon/google.png'){
           await authProvider.loginWithGoogle(context).then((cred)async{
             if(cred!.user!.email!=null){
               print(cred.user!.email);
-              _socialLogin(cred, authProvider);
+              _socialLogin(cred, authProvider,publicProvider);
             }else showToast('Access denied !');
           });
         }
@@ -319,7 +320,7 @@ class _LogInPageState extends State<LogInPage> {
             if(cred!.user!.email!=null){
               print(cred.user!.email);
               print(cred.user!.phoneNumber);
-              _socialLogin(cred, authProvider);
+              _socialLogin(cred, authProvider,publicProvider);
             }else showToast('Access denied !');
           });
         }
@@ -330,7 +331,7 @@ class _LogInPageState extends State<LogInPage> {
     );
   }
 
-  Future<void> _validateDataAndLogin(AuthProvider authProvider)async{
+  Future<void> _validateDataAndLogin(AuthProvider authProvider,PublicProvider publicProvider)async{
       if(_email.text.isNotEmpty && _password.text.isNotEmpty){
         if(_email.text.contains('@') && _email.text.contains('.com')){
           if(_password.text.length>=8){
@@ -351,6 +352,14 @@ class _LogInPageState extends State<LogInPage> {
                 }
                 closeLoadingDialog(context);
                 showToast(authProvider.userInfoModel.message);
+
+                authProvider.getPrefUser();
+                publicProvider.fetchFeaturedCategories();
+                publicProvider.fetchTraditionalCategories();
+                publicProvider.fetchHandPickProducts();
+                publicProvider.fetchFlashDealProducts();
+                publicProvider.fetchDailyFeaturedProducts();
+
                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
               }else{
                 closeLoadingDialog(context);
@@ -362,7 +371,7 @@ class _LogInPageState extends State<LogInPage> {
       }else showToast('Missing user information');
   }
 
-  Future<void> _socialLogin(UserCredential? credential, AuthProvider authProvider)async{
+  Future<void> _socialLogin(UserCredential? credential, AuthProvider authProvider,PublicProvider publicProvider)async{
     Map<String,String> userMap;
     if(credential!.user!.email!=null){
       userMap={
@@ -385,6 +394,13 @@ class _LogInPageState extends State<LogInPage> {
         }
         closeLoadingDialog(context);
         showToast(authProvider.userInfoModel.message);
+        authProvider.getPrefUser();
+        publicProvider.fetchFeaturedCategories();
+        publicProvider.fetchTraditionalCategories();
+        publicProvider.fetchHandPickProducts();
+        publicProvider.fetchFlashDealProducts();
+        publicProvider.fetchDailyFeaturedProducts();
+
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
       }else showToast('Something went wrong! try again');
     });

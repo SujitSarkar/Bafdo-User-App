@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/home.dart';
 import 'package:bafdo/pages/register_page.dart';
@@ -35,6 +36,7 @@ class _OTPPageState extends State<OTPPage> {
   FocusNode _f5 = FocusNode();
   FocusNode _f6 = FocusNode();
   AuthProvider? authProvider;
+  PublicProvider? publicProvider;
   bool _isLoading = true;
   String? _verificationId;
   Timer? _timer;
@@ -45,6 +47,7 @@ class _OTPPageState extends State<OTPPage> {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       authProvider = Provider.of<AuthProvider>(context, listen: false);
+      publicProvider = Provider.of<PublicProvider>(context, listen: false);
     });
     _f1.requestFocus();
     _phoneAuth();
@@ -100,6 +103,14 @@ class _OTPPageState extends State<OTPPage> {
                 await authProvider!.getPrefUser();
                 setState(() => _isLoading = false);
                 _timer!.cancel();
+
+                authProvider!.getPrefUser();
+                publicProvider!.fetchFeaturedCategories();
+                publicProvider!.fetchTraditionalCategories();
+                publicProvider!.fetchHandPickProducts();
+                publicProvider!.fetchFlashDealProducts();
+                publicProvider!.fetchDailyFeaturedProducts();
+
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => Home()),
@@ -139,13 +150,14 @@ class _OTPPageState extends State<OTPPage> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
     return Scaffold(
       backgroundColor: Color(0xffEFF9F9),
-      body: _isLoading ? showLoadingWidget : _bodyUI(size),
+      body: _isLoading ? showLoadingWidget : _bodyUI(size,publicProvider),
     );
   }
 
-  Widget _bodyUI(Size size) => SingleChildScrollView(
+  Widget _bodyUI(Size size,PublicProvider publicProvider) => SingleChildScrollView(
         child: Container(
           width: size.width,
           padding: EdgeInsets.symmetric(horizontal: 20),
@@ -202,7 +214,7 @@ class _OTPPageState extends State<OTPPage> {
                 ///Continue Button
                 GradientButton(
                   onPressed: () {
-                    _otpVerificationAndSignIn();
+                    _otpVerificationAndSignIn(publicProvider);
                   },
                   child: Text('Sign in',
                       style: PublicVariables.primaryBtnTextStyle(size)),
@@ -262,7 +274,7 @@ class _OTPPageState extends State<OTPPage> {
         ),
       );
 
-  Future<void> _otpVerificationAndSignIn() async {
+  Future<void> _otpVerificationAndSignIn(PublicProvider publicProvider) async {
     showLoadingDialog(context);
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: _verificationId!,
@@ -287,6 +299,13 @@ class _OTPPageState extends State<OTPPage> {
             await authProvider!.getPrefUser();
             setState(() => _isLoading = false);
             _timer!.cancel();
+            authProvider!.getPrefUser();
+            publicProvider.fetchFeaturedCategories();
+            publicProvider.fetchTraditionalCategories();
+            publicProvider.fetchHandPickProducts();
+            publicProvider.fetchFlashDealProducts();
+            publicProvider.fetchDailyFeaturedProducts();
+
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => Home()),

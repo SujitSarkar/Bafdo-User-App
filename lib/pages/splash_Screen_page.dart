@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bafdo/provider/auth_provider.dart';
 import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/custom_widget/solid_color_button.dart';
 import 'package:bafdo/home.dart';
@@ -21,8 +22,11 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   @override
   void initState() {
     super.initState();
+    startTimer();
     final PublicProvider publicProvider = Provider.of<PublicProvider>(context,listen: false);
-    publicProvider.getPrefUser();
+    final AuthProvider authProvider = Provider.of<AuthProvider>(context,listen: false);
+
+    authProvider.getPrefUser();
     publicProvider.fetchCategories();
     publicProvider.fetchBrands();
     publicProvider.fetchFeaturedCategories();
@@ -32,35 +36,23 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     publicProvider.fetchHandPickProducts();
     publicProvider.fetchFlashDealProducts();
     publicProvider.fetchDailyFeaturedProducts();
-    startTimer(publicProvider);
   }
-
-  Timer? _timer;
   int seconds = 5;
 
-  void startTimer(PublicProvider publicProvider) async{
-    await publicProvider.getPrefUser();
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
-      oneSec,
-      (Timer timer) => setState(
-        () {
-          if (seconds < 1) {
-            timer.cancel();
-          } else {
-            if (seconds >= 0) {
-              setState(() {
-                seconds = seconds - 1;
-              });
-            }
-            if (seconds == 0) {
-              _timer!.cancel();
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Home()), (route) => false);
-            }
-          }
-        },
-      ),
-    );
+  void startTimer() async{
+    if(seconds<1){
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Home()), (route) => false);
+    }else if(seconds==1){
+      Future.delayed(Duration(seconds: 1)).then((value){
+        setState(()=>seconds--);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Home()), (route) => false);
+      });
+    }else{
+      Future.delayed(Duration(seconds: 1)).then((value){
+        setState(()=>seconds--);
+        startTimer();
+      });
+    }
   }
 
   @override
@@ -130,8 +122,8 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                                         fontSize: size.width * .04),
                                   ),
                                   onPressed: (){
-                                    _timer!.cancel();
-                                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) =>Home()), (route) => false);
+                                    setState(()=>seconds=0);
+                                    startTimer();
                                   },
                                   borderRadius: size.width*.02,
                                   height: size.width*.08,
