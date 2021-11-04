@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:bafdo/custom_widget/solid_color_button.dart';
 import 'package:bafdo/pages/login_with_number.dart';
 import 'package:bafdo/provider/auth_provider.dart';
 import 'package:bafdo/provider/user_provider.dart';
@@ -6,7 +9,10 @@ import 'package:bafdo/sub_pages/edit_account.dart';
 import 'package:bafdo/widgets/drawer_nav_page.dart';
 import 'package:bafdo/widgets/nav_page-appbar.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
@@ -16,22 +22,26 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  int _counter=0;
-  bool _isLoading=true;
+  int _counter = 0;
+  bool _isLoading = true;
+  File? _image;
 
-  Future<void> _customInit(UserProvider userProvider,AuthProvider authProvider)async{
+  Future<void> _customInit(
+      UserProvider userProvider, AuthProvider authProvider) async {
     _counter++;
     print(authProvider.isPrefNull);
-    if(authProvider.isPrefNull){
-      Future.delayed(Duration(microseconds: 1)).then((value){
-        setState(()=>_isLoading=false);
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginWithNumber()));
+    if (authProvider.isPrefNull) {
+      Future.delayed(Duration(microseconds: 1)).then((value) {
+        setState(() => _isLoading = false);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => LoginWithNumber()));
       });
-    }else{
-      if(userProvider.userModel==null) {
+    } else {
+      if (userProvider.userModel == null) {
         await userProvider.getUserByToken();
-        setState(()=>_isLoading=false);
-      }
+        setState(() => _isLoading = false);
+      } else
+        setState(() => _isLoading = false);
     }
   }
 
@@ -40,23 +50,31 @@ class _ProfileState extends State<Profile> {
     final Size size = MediaQuery.of(context).size;
     final UserProvider userProvider = Provider.of<UserProvider>(context);
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    if(_counter==0) _customInit(userProvider,authProvider);
+    if (_counter == 0) _customInit(userProvider, authProvider);
 
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Color(0xffEFF9F9),
       drawer: DrawerNavPage(),
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
-        child: NavPageAppBar(openDrawer: () => _scaffoldKey.currentState!.openDrawer())
-      ),
-      body: _isLoading
-          ? showLoadingWidget
-          : _bodyUI(size, userProvider),
+          preferredSize: Size.fromHeight(60.0),
+          child: NavPageAppBar(
+              openDrawer: () => _scaffoldKey.currentState!.openDrawer())),
+      body: _isLoading ? showLoadingWidget
+          : userProvider.userModel!=null
+          ? _bodyUI(size, userProvider)
+          :Center(child: TextButton(
+        onPressed: ()=>Navigator.push(context,
+          MaterialPageRoute(builder: (context) => LoginWithNumber())),
+        child: Text('Login',style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontFamily: 'taviraj',
+            fontSize: size.width * .05)),
+      )),
     );
   }
 
-  Widget _bodyUI(Size size,UserProvider userProvider) {
+  Widget _bodyUI(Size size, UserProvider userProvider) {
     return Column(
       children: [
         SizedBox(height: size.width * .04),
@@ -66,31 +84,40 @@ class _ProfileState extends State<Profile> {
             Stack(
               clipBehavior: Clip.none,
               children: [
-
                 ///profile image preview
-                CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  backgroundImage: AssetImage('assets/app_icon/body_icon/boys.png'),
-                  radius: size.width * .18,
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(100)),
+                  child: userProvider.userModel!.avatarOriginal!.isNotEmpty
+                      ? CachedNetworkImage(
+                      imageUrl: 'https://bafdo.com/public/${userProvider.userModel!.avatarOriginal!}',
+                      placeholder: (context, url) => CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      height: size.width*.3,
+                      width: size.width*.3,
+                      fit: BoxFit.cover
+                  ) : Container(
+                    color: Colors.grey.shade300,
+                      child: Icon(Icons.person,color: Colors.pink,size: size.width*.3)),
                 ),
                 Positioned(
                     bottom: 5,
                     right: 5,
-                    child: Image.asset(
-                        'assets/app_icon/app_bar_icon/edit_profile.png'))
+                    child: InkWell(
+                      onTap: () => _getImage(userProvider),
+                      child: Image.asset(
+                          'assets/app_icon/app_bar_icon/edit_profile.png'),
+                    ))
               ],
             ),
           ],
         ),
-        SizedBox(
-          height: size.width * .04,
-        ),
+        SizedBox(height: size.width * .04),
 
         ///Username preview
         Container(
           width: size.width,
           child: Text(
-            'Saidul Khan',
+            userProvider.userModel!.name ?? '',
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Color(0xffFF4DAB),
@@ -115,10 +142,10 @@ class _ProfileState extends State<Profile> {
                     color: Colors.white),
                 padding: EdgeInsets.symmetric(
                     vertical: size.width * .04, horizontal: size.width * .04),
-                child: _textView('My Profile',userProvider),
+                child: _textView('My Profile', userProvider),
               ),
-              _textView('Account',userProvider),
-              _textView('Settings',userProvider),
+              _textView('Account', userProvider),
+              _textView('Settings', userProvider),
             ],
           ),
         ),
@@ -128,32 +155,32 @@ class _ProfileState extends State<Profile> {
 
         ///Display user info
         _userInfo(size, 'assets/app_icon/profile_icon/person_outlined.png',
-            'Name', 'Saidul Khan'),
+            'Name', userProvider.userModel!.name ?? ''),
         SizedBox(
           height: size.width * .02,
         ),
         _userInfo(size, 'assets/app_icon/profile_icon/message_outlined.png',
-            'Email', 'saidulkhan@gmail.com'),
+            'Email', userProvider.userModel!.email ?? ''),
         SizedBox(
           height: size.width * .02,
         ),
         _userInfo(size, 'assets/app_icon/profile_icon/phone_outlined.png',
-            'Phone', '+880 123 147 895'),
+            'Phone', userProvider.userModel!.phone ?? ''),
         SizedBox(
           height: size.width * .02,
         ),
-        _userInfo(size, 'assets/app_icon/profile_icon/location_outlined.png',
-            'Address', 'Long beach, California'),
-        SizedBox(
-          height: size.width * .02,
-        ),
+        // _userInfo(size, 'assets/app_icon/profile_icon/location_outlined.png',
+        //     'Address', userProvider.userModel!.!??''),
+        // SizedBox(
+        //   height: size.width * .02,
+        // ),
       ],
     );
   }
 
   Widget _textView(String title, UserProvider userProvider) {
     return InkWell(
-      onTap: ()async {
+      onTap: () async {
         title == 'Account'
             ? Navigator.push(
                 context, MaterialPageRoute(builder: (context) => AccountPage()))
@@ -233,5 +260,29 @@ class _ProfileState extends State<Profile> {
         ],
       ),
     );
+  }
+
+  Future<void> _getImage(UserProvider userProvider) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() => _image = File(pickedFile.path));
+
+      String base64Image = base64Encode(_image!.readAsBytesSync());
+      String fileName = _image!.path.split("/").last;
+      showLoadingDialog(context);
+      await userProvider
+          .profileImageUpdate(base64Image, fileName)
+          .then((value) {
+        if (value) {
+          showToast('Success');
+          Navigator.pop(context);
+        } else {
+          showToast('Failed!');
+          Navigator.pop(context);
+        }
+      });
+    } else
+      showToast('Image not selected');
   }
 }

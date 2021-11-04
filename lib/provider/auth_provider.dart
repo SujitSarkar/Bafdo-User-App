@@ -39,9 +39,9 @@ class AuthProvider extends ChangeNotifier {
       showToast('Session Expired! Login Again');
       notifyListeners();
     }
-    // print('isPrefNull: $_isPrefNull');
-    // print('PrefUserId: ${_prefUserModel!.id}');
-    // print('Token: ${_prefUserModel!.accessToken}');
+    print('isPrefNull: $_isPrefNull');
+    print('PrefUserId: ${_prefUserModel!.id}');
+    print('Token: ${_prefUserModel!.accessToken}');
   }
   void clearPrefModel(){
     _prefUserModel=null;
