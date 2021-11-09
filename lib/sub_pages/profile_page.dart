@@ -7,8 +7,10 @@ import 'package:bafdo/sub_pages/edit_account.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../home.dart';
 
 class AccountPage extends StatefulWidget {
 
@@ -135,9 +137,7 @@ class _AccountPageState extends State<AccountPage> {
                         color: Colors.grey.shade300,
                         child: Icon(Icons.person,color: Colors.pink,size: size.width*.3)),
                   ),
-                  SizedBox(
-                    width: size.width * .04,
-                  ),
+                  SizedBox(width: size.width * .04),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,29 +230,47 @@ class _AccountPageState extends State<AccountPage> {
 
   Widget _option(
       Size size, String leadingImage, String title, IconData? iconData) {
-    return Column(
-      children: [
-        ListTile(
-          leading: Image.asset(
-            leadingImage,
-          ),
-          title: Text(
-            title,
-            style: TextStyle(
-                color: Color(0xff1A1C3D),
-                fontSize: size.width * .04,
-                fontWeight: FontWeight.w500),
-          ),
-          trailing: Icon(iconData),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: size.width * .04),
-          child: Divider(
-            thickness: size.width * .002,
-            color: Color(0xffD8D8D8),
-          ),
-        )
-      ],
+    return Consumer<UserProvider>(
+      builder: (context,userProvider,child) {
+        return Consumer<AuthProvider>(
+          builder: (context,authProvider,child) {
+            return Column(
+            children: [
+              ListTile(
+                onTap: ()async{
+                  SharedPreferences preferences= await SharedPreferences.getInstance();
+                  if(title=='Logout'){
+                    preferences.clear();
+                    authProvider.clearPrefModel();
+                    userProvider.clearUserModel();
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Home()));
+                  }
+                },
+                leading: Image.asset(
+                  leadingImage,
+                ),
+                title: Text(
+                  title,
+                  style: TextStyle(
+                      color: Color(0xff1A1C3D),
+                      fontSize: size.width * .04,
+                      fontWeight: FontWeight.w500),
+                ),
+                trailing: Icon(iconData),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: size.width * .04),
+                child: Divider(
+                  thickness: size.width * .002,
+                  color: Color(0xffD8D8D8),
+                ),
+              )
+            ],
+  );
+          }
+        );
+      }
     );
+
   }
 }

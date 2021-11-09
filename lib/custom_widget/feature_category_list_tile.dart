@@ -13,10 +13,7 @@ import 'package:provider/provider.dart';
 
 class FeatureCategoryListTile extends StatefulWidget {
   final AnniversaryProductListDatum? productList;
-
-
   FeatureCategoryListTile({this.productList});
-
   @override
   _FeatureCategoryListTileState createState() =>
       _FeatureCategoryListTileState();
@@ -519,7 +516,7 @@ Widget getFeatureCard(BuildContext context,CatDatum featuredCategories) {
           context,
           MaterialPageRoute(
               builder: (context) => ProductPage(
-                navigateFrom: 'Feature  Categories',
+                navigateFrom: 'Feature Categories',
                 featuredCatImageLink: featuredCategories.links!.products!,
               )));
     },
@@ -532,15 +529,18 @@ Widget getFeatureCard(BuildContext context,CatDatum featuredCategories) {
         decoration: BoxDecoration(
             color: BColors.primaryLitePink,
             borderRadius: BorderRadius.all(Radius.circular(15))),
-        child:featuredCategories.banner!.isNotEmpty
-            ? CachedNetworkImage(
-          imageUrl:
-          'https://bafdo.com/public/${featuredCategories.banner}',
-          placeholder: (context, url) =>
-              CupertinoActivityIndicator(),
-          errorWidget: (context, url, error) => Icon(Icons.error),
-          fit: BoxFit.cover,
-        ):Icon(Icons.wallet_giftcard_outlined),
+        child:ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+          child: featuredCategories.banner!.isNotEmpty
+              ? CachedNetworkImage(
+            imageUrl:
+            'https://bafdo.com/public/${featuredCategories.banner}',
+            placeholder: (context, url) =>
+                CupertinoActivityIndicator(),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+            fit: BoxFit.cover
+          ):Image.asset('assets/feature_bg.png',fit: BoxFit.cover),
+        ),
       ),
       Container(
         width: size.width * .6,
@@ -550,14 +550,28 @@ Widget getFeatureCard(BuildContext context,CatDatum featuredCategories) {
             color:Colors.black38,
             borderRadius: BorderRadius.all(Radius.circular(15))
         ),
-        child: Text(
-          featuredCategories.name??'',
-          style: TextStyle(
-              fontFamily: 'taviraj',
-              color: Colors.white,
-              fontStyle: FontStyle.normal,
-              fontWeight: FontWeight.bold,
-              fontSize: size.width * .045),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              featuredCategories.name??'',
+              style: TextStyle(
+                  fontFamily: 'taviraj',
+                  color: Colors.white,
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.bold,
+                  fontSize: size.width * .045),
+            ),
+            Text(
+              '${featuredCategories.numberOfChildren!} brands',
+              style: TextStyle(
+                  fontFamily: 'taviraj',
+                  color: Colors.white,
+                  fontStyle: FontStyle.normal,
+                  fontSize: size.width * .045),
+            ),
+          ],
         ),
       )
     ]),

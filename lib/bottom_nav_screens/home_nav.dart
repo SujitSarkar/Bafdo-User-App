@@ -1,3 +1,4 @@
+import 'package:bafdo/custom_widget/home_product_tile.dart';
 import 'package:bafdo/variables/color_variable.dart';
 import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/custom_widget/category_products_list_tile.dart';
@@ -5,28 +6,17 @@ import 'package:bafdo/custom_widget/flash_deal_count_down_widget.dart';
 import 'package:bafdo/custom_widget/flash_deal_product_list_tile.dart';
 import 'package:bafdo/custom_widget/special_category_list_tile.dart';
 import 'package:bafdo/custom_widget/feature_category_list_tile.dart';
-import 'package:bafdo/model/flash_deal_product_model.dart';
 import 'package:bafdo/pages/category_page.dart';
-import 'package:bafdo/pages/login_with_number.dart';
 import 'package:bafdo/provider/public_provider.dart';
-import 'package:bafdo/sub_pages/cart_page.dart';
-import 'package:bafdo/sub_pages/coupos_page.dart';
-import 'package:bafdo/sub_pages/notifications_page.dart';
-import 'package:bafdo/sub_pages/product_details.dart';
 import 'package:bafdo/sub_pages/product_page.dart';
 import 'package:bafdo/sub_pages/product_search_page.dart';
-import 'package:bafdo/variables/public_variables.dart';
 import 'package:bafdo/widgets/drawer_nav_page.dart';
 import 'package:bafdo/widgets/form_decoration.dart';
 import 'package:bafdo/widgets/nav_page-appbar.dart';
 import 'package:carousel_pro_nullsafety/carousel_pro_nullsafety.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeNav extends StatefulWidget {
   HomeNav({Key? key}) : super(key: key);
@@ -43,7 +33,7 @@ class _HomeNavState extends State<HomeNav> {
     setState(()=> _counter++);
     if(publicProvider.prefUserModel==null) await publicProvider.getPrefUser();
     if(publicProvider.sliderList.isEmpty) await publicProvider.fetchSliders();
-    if(publicProvider.categories==null) await publicProvider.fetchCategories();
+    if(publicProvider.categories==null) await publicProvider.fetchSpecialCategories();
     if(publicProvider.topBrands==null)await publicProvider.fetchTopBrands();
 
     if(publicProvider.brands==null)await publicProvider.fetchBrands();
@@ -52,6 +42,7 @@ class _HomeNavState extends State<HomeNav> {
     if(publicProvider.handPickedProducts==null) await publicProvider.fetchHandPickProducts();
     if(publicProvider.flashDealProducts==null) await publicProvider.fetchFlashDealProducts();
     if(publicProvider.dailyFeaturedProducts==null) await publicProvider.fetchDailyFeaturedProducts();
+    if(publicProvider.homeProducts==null) await publicProvider.getHomeProducts();
 
     if(publicProvider.prefUserModel!=null){
       if(publicProvider.carts==null)await publicProvider.fetchCartList();
@@ -148,7 +139,7 @@ class _HomeNavState extends State<HomeNav> {
         ),
         SizedBox(height: size.width * .12),
 
-        ///Category
+        ///Special Category
         Stack(
           clipBehavior: Clip.none,
           children: [
@@ -160,7 +151,6 @@ class _HomeNavState extends State<HomeNav> {
                 SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
                   childAspectRatio: 8.4/9,
-                  //mainAxisSpacing: size.width * 0,
                 ),
                 physics: ClampingScrollPhysics(),
                 shrinkWrap: true,
@@ -226,8 +216,8 @@ class _HomeNavState extends State<HomeNav> {
         Padding(
           padding: EdgeInsets.only(left: size.width*.02),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               ///Anniversary
               publicProvider.traditionalCategoriesProducts!=null
                   ?publicProvider.traditionalCategoriesProducts!.data!.isNotEmpty
@@ -473,10 +463,72 @@ class _HomeNavState extends State<HomeNav> {
                   scrollDirection: Axis.horizontal,
                   itemCount: publicProvider.featuredCategories==null?0:publicProvider.featuredCategories!.data==null?0:publicProvider.featuredCategories!.data!.length,
                   itemBuilder: (context, index) {
-                    return getFeatureCard(context,publicProvider.featuredCategories!.data![index]);
+                    return Padding(
+                      padding: EdgeInsets.only(right: size.width*.04),
+                      child: getFeatureCard(context,publicProvider.featuredCategories!.data![index]),
+                    );
                   },
                 ),
               ):Container():Container(),
+
+              publicProvider.homeProducts!=null
+                  ?publicProvider.homeProducts!.data!.isNotEmpty
+                  ?SizedBox(height: size.width * .04):Container():Container(),
+
+              ///May You Like
+              publicProvider.homeProducts!=null
+                  ?publicProvider.homeProducts!.data!.isNotEmpty
+                  ?Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('May You Like',
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: ColorsVariables.textColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: size.width * .045)),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProductPage(
+                                  navigateFrom: 'May You Like',
+                                )));
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: size.width * .04),
+                        child: Text('See More',
+                            style: TextStyle(
+                                fontFamily: 'taviraj',
+                                color: Colors.grey,
+                                fontStyle: FontStyle.normal,
+                                fontSize: size.width * .04)),
+                      ),
+                    ),
+                  ]):Container():Container(),
+
+              publicProvider.homeProducts!=null
+                  ?Container(
+                height: size.width * .52,
+                width: size.width,
+                margin: EdgeInsets.only(top: size.width*.04),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: publicProvider.homeProducts==null
+                      ?0
+                      :publicProvider.homeProducts!.data!.length<10
+                      ?publicProvider.homeProducts!.data!.length:10,
+                  itemBuilder: (context, index) {
+                    return Container(
+                        margin: EdgeInsets.only(right: size.width*.04),
+                        child: HomeProductListTile(productList: publicProvider.homeProducts!.data![index]));
+                  },
+                ),
+              ):Container(),
+              publicProvider.homeProducts!=null
+                  ?publicProvider.homeProducts!.data!.isNotEmpty
+                  ?SizedBox(height: size.width * .04):Container():Container(),
             ],
           ),
         ),SizedBox(height: size.width*.25)

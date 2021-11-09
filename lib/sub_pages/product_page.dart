@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bafdo/custom_widget/home_product_tile.dart';
 import 'package:bafdo/variables/color_variable.dart';
 import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/custom_widget/category_products_list_tile.dart';
@@ -132,129 +133,20 @@ class _ProductPageState extends State<ProductPage> {
           trailing2: Container(),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Padding(
-            //   padding: const EdgeInsets.all(8.0),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       InkWell(
-            //         onTap: () {},
-            //         child: Container(
-            //           decoration: BoxDecoration(
-            //               color: Colors.transparent,
-            //               borderRadius: BorderRadius.all(Radius.circular(5)),
-            //               border: Border.all(color: Colors.grey)),
-            //           child: Padding(
-            //             padding: const EdgeInsets.only(
-            //                 left: 5, right: 5, top: 2, bottom: 2),
-            //             child: Text(
-            //               'Boi mela',
-            //               style: TextStyle(
-            //                   fontFamily: 'taviraj',
-            //                   color: ColorsVariables.textColor,
-            //                   fontStyle: FontStyle.normal,
-            //                   fontSize: size.width * .035),
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //       InkWell(
-            //         onTap: () {},
-            //         child: Container(
-            //           decoration: BoxDecoration(
-            //               color: Colors.transparent,
-            //               borderRadius: BorderRadius.all(Radius.circular(5)),
-            //               border: Border.all(color: Colors.grey)),
-            //           child: Padding(
-            //             padding: const EdgeInsets.only(
-            //                 left: 5, right: 5, top: 2, bottom: 2),
-            //             child: Text(
-            //               'Controller',
-            //               style: TextStyle(
-            //                   fontFamily: 'taviraj',
-            //                   color: ColorsVariables.textColor,
-            //                   fontStyle: FontStyle.normal,
-            //                   fontSize: size.width * .035),
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //       InkWell(
-            //         onTap: () {},
-            //         child: Container(
-            //           decoration: BoxDecoration(
-            //               color: Colors.transparent,
-            //               borderRadius: BorderRadius.all(Radius.circular(5)),
-            //               border: Border.all(color: Colors.grey)),
-            //           child: Padding(
-            //             padding: const EdgeInsets.only(
-            //                 left: 5, right: 5, top: 2, bottom: 2),
-            //             child: Text(
-            //               'Bijoy Mela',
-            //               style: TextStyle(
-            //                   fontFamily: 'taviraj',
-            //                   color: ColorsVariables.textColor,
-            //                   fontStyle: FontStyle.normal,
-            //                   fontSize: size.width * .035),
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //       InkWell(
-            //         onTap: () {},
-            //         child: Container(
-            //           decoration: BoxDecoration(
-            //               color: Colors.transparent,
-            //               borderRadius: BorderRadius.all(Radius.circular(5)),
-            //               border: Border.all(color: Colors.grey)),
-            //           child: Padding(
-            //             padding: const EdgeInsets.only(
-            //                 left: 5, right: 5, top: 2, bottom: 2),
-            //             child: Text(
-            //               'Gaming Controller',
-            //               style: TextStyle(
-            //                   fontFamily: 'taviraj',
-            //                   color: ColorsVariables.textColor,
-            //                   fontStyle: FontStyle.normal,
-            //                   fontSize: size.width * .035),
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // Padding(
-            //   padding: const EdgeInsets.all(5),
-            //   child: Divider(
-            //     height: 4,
-            //     color: Colors.grey),
-            // ),
-            _isLoading
-                ? Container(
-                    height: 500,
-                    width: size.width,
-                    child: new StaggeredGridView.countBuilder(
-                      crossAxisCount: 4,
-                      itemCount: 8,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Image.asset(
-                            'assets/app_icon/body_icon/loading_icon.png');
-                      },
-                      staggeredTileBuilder: (int index) =>
-                          new StaggeredTile.count(2, index.isEven ? 2 : 1),
-                      mainAxisSpacing: 4.0,
-                      crossAxisSpacing: 4.0,
-                    ),
-                  )
-                :
-            _pages(context)
-          ],
-        ),
-      ),
+      body: _isLoading
+          ? new StaggeredGridView.countBuilder(
+            crossAxisCount: 4,
+            itemCount: 8,
+            itemBuilder: (BuildContext context, int index) {
+              return Image.asset(
+                  'assets/app_icon/body_icon/loading_icon.png');
+            },
+            staggeredTileBuilder: (int index) =>
+                new StaggeredTile.count(2, index.isEven ? 2 : 1),
+            mainAxisSpacing: 4.0,
+            crossAxisSpacing: 4.0,
+          ) :
+      _pages(context),
     );
   }
 
@@ -263,8 +155,6 @@ class _ProductPageState extends State<ProductPage> {
     Size size = MediaQuery.of(context).size;
     return Container(
       margin: EdgeInsets.symmetric(horizontal: size.width*.02),
-      height: size.height * .8,
-      width: size.width,
       child:widget.navigateFrom == 'Hand Picked'? new StaggeredGridView.countBuilder(
         crossAxisCount: 4,
         itemCount: publicProvider.handPickedProducts!.data!.length,
@@ -309,7 +199,18 @@ class _ProductPageState extends State<ProductPage> {
         new StaggeredTile.count(2, index.isEven ? 2.2 : 2.5),
         mainAxisSpacing: size.width*.03,
         crossAxisSpacing: size.width*.03,
-      ):StaggeredGridView.countBuilder(
+      ):widget.navigateFrom == 'May You Like'?
+      StaggeredGridView.countBuilder(
+        crossAxisCount: 4,
+        itemCount: publicProvider.homeProducts==null?0:publicProvider.homeProducts!.data!.length,
+        itemBuilder: (BuildContext context, int index) {
+          return HomeProductListTile(productList: publicProvider.homeProducts!.data![index],);
+        },
+        staggeredTileBuilder: (int index) =>
+        new StaggeredTile.count(2, index.isEven ? 2.2 : 2.5),
+        mainAxisSpacing: size.width*.03,
+        crossAxisSpacing: size.width*.03,
+      ) :StaggeredGridView.countBuilder(
         crossAxisCount: 4,
         itemCount: publicProvider.traditionalCategoriesProducts!.data!.length,
         itemBuilder: (BuildContext context, int index) {

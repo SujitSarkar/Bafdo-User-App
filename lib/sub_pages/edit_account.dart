@@ -184,7 +184,17 @@ class _EditAccountState extends State<EditAccount> {
             height: size.width * .12,
             child: ElevatedButton(
                 onPressed: () async{
-                  await userProvider.profileUpdate(_name.text, _email.text);
+                  showLoadingDialog(context);
+                  await userProvider.profileUpdate(_name.text, _email.text).then((value){
+                    if(value){
+                      closeLoadingDialog(context);
+                      showToast('Success');
+                    }else{
+                      closeLoadingDialog(context);
+                      showToast('Failed');
+                    }
+                  });
+
                 },
                 style: ButtonStyle(
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(

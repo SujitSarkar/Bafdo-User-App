@@ -4,6 +4,7 @@ import 'package:bafdo/custom_widget/feature_category_list_tile.dart';
 import 'package:bafdo/sub_pages/product_search_filtered_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductSearchPage extends StatefulWidget {
   const ProductSearchPage({Key? key}) : super(key: key);
@@ -13,15 +14,37 @@ class ProductSearchPage extends StatefulWidget {
 }
 
 class _ProductSearchPageState extends State<ProductSearchPage> {
-  TextEditingController _searchController = TextEditingController();
+  TextEditingController _searchController = TextEditingController(text: '');
+  SharedPreferences? _preferences;
+  List<String> _recentSearch=[];
 
-  String searchValue = '';
+
   String navigateDetailsWidget = '';
-
   int? boxColor;
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+  Future<void> _initialize()async{
+    _preferences = await SharedPreferences.getInstance();
+    setState(() {
+      _recentSearch = _preferences!.getStringList('recentSearch')??[];
+    });
+  }
+
+  void _saveRecentSearch()async{
+    _preferences!.setStringList('recentSearch', _recentSearch);
+    setState((){
+      _recentSearch = _preferences!.getStringList('recentSearch')??[];
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Color(0xffEFF9F9),
       appBar: PreferredSize(
@@ -70,14 +93,14 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                           fontStyle: FontStyle.normal,
                           fontSize: size.width * .04),
                       suffixIcon: InkWell(
-                        onTap: () {
-                          setState(() {
+                        onTap: (){
+                          setState((){
                             navigateDetailsWidget = 'navigateToSearchResult';
                           });
                         },
                         child: Image.asset(
                           'assets/app_icon/text_field_icon/search_icon.png',
-                          color: searchValue.isNotEmpty
+                          color: _searchController.text.isNotEmpty
                               ? Colors.pink
                               : Colors.grey,
                         ),
@@ -86,13 +109,6 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                       enabledBorder: InputBorder.none,
                       disabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none),
-                  onChanged: (content) {
-                    setState(() {
-                      searchValue = content;
-                    });
-
-                    print(searchValue);
-                  },
                   cursorColor: Color(0xff131214),
                 )),
           ),
@@ -107,7 +123,6 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
 
   Widget afterSearch(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return ListView(
       physics: NeverScrollableScrollPhysics(),
       children: [
@@ -254,12 +269,12 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
   }
 
   Widget _bodyUI(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
     return ListView(
       physics: BouncingScrollPhysics(),
         scrollDirection: Axis.vertical,
         children: [
-          searchValue.isEmpty
+          _searchController.text.isEmpty
           ? Container()
           : Padding(
               padding: EdgeInsets.only(top: 0, bottom: 10),

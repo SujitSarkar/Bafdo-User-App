@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:bafdo/model/cart_model.dart';
 import 'package:bafdo/model/flash_deal_product_model.dart';
+import 'package:bafdo/model/home_product_model.dart';
 import 'package:bafdo/model/product_details_model.dart';
 import 'package:bafdo/model/product_list_model.dart';
 import 'package:bafdo/model/related_product_model.dart';
@@ -47,6 +48,9 @@ class PublicProvider extends AuthProvider{
   FlashDealProductModel? get flashDealProducts => _flashDealProducts;
   ProductList? _dailyFeaturedProducts;
   ProductList? get dailyFeaturedProducts => _dailyFeaturedProducts;
+
+  HomeProductModel? _homeProducts;
+  HomeProductModel? get homeProducts => _homeProducts;
 
   List<String> _sliderList=[];
   List<String> get  sliderList=>_sliderList;
@@ -97,7 +101,7 @@ class PublicProvider extends AuthProvider{
     notifyListeners();
   }
 
-  Future<Categories?> getCategories()async{
+  Future<Categories?> getSpecialCategories()async{
     try{
       String url = "https://bafdo.com/api/v2/categories/featured";
       var response = await http.get(Uri.parse(url));
@@ -108,8 +112,8 @@ class PublicProvider extends AuthProvider{
       return null;
     }
   }
-  Future<void> fetchCategories()async {
-    var result = await getCategories();
+  Future<void> fetchSpecialCategories()async {
+    var result = await getSpecialCategories();
     _categories=result;
     notifyListeners();
   }
@@ -174,7 +178,7 @@ class PublicProvider extends AuthProvider{
 
   Future<Categories?> getFeaturedCategories()async{
     try{
-      String url = "https://bafdo.com/api/v2/categories/home";
+      String url = "https://bafdo.com/api/v2/categories";
       var response = await http.get(Uri.parse(url));
       Categories featuredCategories = categoriesFromJson(response.body);
       return featuredCategories;
@@ -285,8 +289,20 @@ class PublicProvider extends AuthProvider{
   Future<void> fetchFlashDealProducts()async {
     var result = await getFlashDealProducts();
     _flashDealProducts=result;
-    //print('FlashDeal: ${_flashDealProducts!.data!.products!.data!.length}');
     notifyListeners();
+  }
+
+  Future<void> getHomeProducts()async{
+    try{
+      String url = "https://bafdo.com/api/v2/products/home";
+      var response = await http.get(Uri.parse(url));
+      if(response.statusCode==200){
+        _homeProducts = homeProductModelFromJson(response.body);
+      }
+      notifyListeners();
+    }catch(error){
+      print(error.toString());
+    }
   }
 
   Future<ProductList?> getDailyFeaturedProducts()async{
@@ -411,6 +427,15 @@ class PublicProvider extends AuthProvider{
     if(prefUserModel==null) await getPrefUser();
     _wishlistModel = await getWishList();
     notifyListeners();
+  }
+
+  Future<void> getFilteredProducts({name = "",sortKey = "",page = 1,
+        brands = "",categories = "",min = "",max = ""})async{
+
+    final String url = "https://bafdo.com/api/v2/products/search" +
+        "?page=$page&name=$name&sort_key=$sortKey&brands=$brands&categories=$categories&min=$min&max=$max";
+
+    final response = await http.get(Uri.parse(url));
   }
 
 }

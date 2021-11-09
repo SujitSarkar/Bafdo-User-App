@@ -27,7 +27,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     final AuthProvider authProvider = Provider.of<AuthProvider>(context,listen: false);
 
     authProvider.getPrefUser();
-    publicProvider.fetchCategories();
+    publicProvider.fetchSpecialCategories();
     publicProvider.fetchBrands();
     publicProvider.fetchFeaturedCategories();
     publicProvider.fetchTopBrands();
@@ -36,6 +36,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     publicProvider.fetchHandPickProducts();
     publicProvider.fetchFlashDealProducts();
     publicProvider.fetchDailyFeaturedProducts();
+    publicProvider.getHomeProducts();
   }
   int seconds = 5;
 

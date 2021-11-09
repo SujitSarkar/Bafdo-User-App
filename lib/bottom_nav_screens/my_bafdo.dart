@@ -4,7 +4,7 @@ import 'package:bafdo/custom_widget/solid_color_button.dart';
 import 'package:bafdo/pages/login_with_number.dart';
 import 'package:bafdo/provider/auth_provider.dart';
 import 'package:bafdo/provider/user_provider.dart';
-import 'package:bafdo/sub_pages/account_page.dart';
+import 'package:bafdo/sub_pages/profile_page.dart';
 import 'package:bafdo/sub_pages/edit_account.dart';
 import 'package:bafdo/widgets/drawer_nav_page.dart';
 import 'package:bafdo/widgets/nav_page-appbar.dart';
@@ -39,6 +39,7 @@ class _ProfileState extends State<Profile> {
     } else {
       if (userProvider.userModel == null) {
         await userProvider.getUserByToken();
+        print(userProvider.prefUserModel.accessToken);
         setState(() => _isLoading = false);
       } else
         setState(() => _isLoading = false);

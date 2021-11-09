@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:bafdo/bottom_nav_screens/festival_nav.dart';
 import 'package:bafdo/bottom_nav_screens/home_nav.dart';
-import 'package:bafdo/bottom_nav_screens/profile.dart';
+import 'package:bafdo/bottom_nav_screens/my_bafdo.dart';
 import 'package:bafdo/bottom_nav_screens/wish_list_nav.dart';
 import 'package:bafdo/pages/add_priyo_manush_page.dart';
 import 'package:flutter/material.dart';

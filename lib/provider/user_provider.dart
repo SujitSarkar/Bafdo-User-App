@@ -37,6 +37,7 @@ class UserProvider extends AuthProvider{
       return false;
     }
   }
+
   void clearUserModel(){
     _userModel =null;
     notifyListeners();
