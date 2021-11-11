@@ -160,7 +160,14 @@ class _HomeNavState extends State<HomeNav> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (_) => CategoryPage(url: publicProvider.categories!.data![index].links!.subCategories)));
+                              builder: (context) => ProductPage(
+                                fromSpecial: 'Form Special',
+                                navigateFrom: publicProvider.categories!.data![index].name!,
+                                featuredCatImageLink: publicProvider.categories!.data![index].links!.products,
+                              )));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(builder: (_) => CategoryPage(url: publicProvider.categories!.data![index].links!.subCategories)));
                     },
                     child: specialCategoryListTile(
                         context,
@@ -279,7 +286,7 @@ class _HomeNavState extends State<HomeNav> {
                 margin: EdgeInsets.only(top: size.width*.03),
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: publicProvider.traditionalCategoriesProducts==null?0:publicProvider.traditionalCategoriesProducts!.data!.length<10?
+                  itemCount:publicProvider.traditionalCategoriesProducts!.data!.length<10?
                   publicProvider.traditionalCategoriesProducts!.data!.length:10,
                   itemBuilder: (context, index) {
                     return Container(
@@ -343,8 +350,7 @@ class _HomeNavState extends State<HomeNav> {
                 margin: EdgeInsets.only(top: size.width*.02),
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: publicProvider.handPickedProducts==null
-                      ?0:publicProvider.handPickedProducts!.data!.length<10?
+                  itemCount: publicProvider.handPickedProducts!.data!.length<10?
                   publicProvider.handPickedProducts!.data!.length:10,
                   itemBuilder: (context, index) {
                     return Container(
@@ -367,9 +373,7 @@ class _HomeNavState extends State<HomeNav> {
                 margin: EdgeInsets.only(top: size.width*.04),
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: publicProvider.flashDealProducts==null
-                      ?0
-                      :publicProvider.flashDealProducts!.data!.products!.data!.length<10
+                  itemCount:publicProvider.flashDealProducts!.data!.products!.data!.length<10
                       ?publicProvider.flashDealProducts!.data!.products!.data!.length:10,
                   itemBuilder: (context, index) {
                     return Container(
@@ -428,7 +432,7 @@ class _HomeNavState extends State<HomeNav> {
                 margin: EdgeInsets.only(top: size.width*.04),
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: publicProvider.dailyFeaturedProducts==null?0:publicProvider.dailyFeaturedProducts!.data!.length<3?
+                  itemCount:publicProvider.dailyFeaturedProducts!.data!.length<3?
                   publicProvider.dailyFeaturedProducts!.data!.length:3,
                   itemBuilder: (context, index) {
                     return Container(
@@ -461,7 +465,7 @@ class _HomeNavState extends State<HomeNav> {
                 margin: EdgeInsets.only(top: size.width*.04),
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: publicProvider.featuredCategories==null?0:publicProvider.featuredCategories!.data==null?0:publicProvider.featuredCategories!.data!.length,
+                  itemCount:publicProvider.featuredCategories!.data==null?0:publicProvider.featuredCategories!.data!.length,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: EdgeInsets.only(right: size.width*.04),
@@ -515,9 +519,7 @@ class _HomeNavState extends State<HomeNav> {
                 margin: EdgeInsets.only(top: size.width*.04),
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: publicProvider.homeProducts==null
-                      ?0
-                      :publicProvider.homeProducts!.data!.length<10
+                  itemCount:publicProvider.homeProducts!.data!.length<10
                       ?publicProvider.homeProducts!.data!.length:10,
                   itemBuilder: (context, index) {
                     return Container(

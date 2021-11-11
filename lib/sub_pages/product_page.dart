@@ -15,8 +15,9 @@ import 'package:provider/provider.dart';
 
 class ProductPage extends StatefulWidget {
   final String? navigateFrom;
+  final String? fromSpecial;
   final String? featuredCatImageLink;
-  ProductPage({required this.navigateFrom,this.featuredCatImageLink});
+  ProductPage({required this.navigateFrom,this.featuredCatImageLink,this.fromSpecial});
 
   @override
   _ProductPageState createState() => _ProductPageState();
@@ -188,7 +189,7 @@ class _ProductPageState extends State<ProductPage> {
         new StaggeredTile.count(2, index.isEven ? 2.2 : 2.5),
         mainAxisSpacing: size.width*.03,
         crossAxisSpacing: size.width*.03,
-      ):widget.navigateFrom == 'Feature Categories'?
+      ):widget.navigateFrom == 'Feature Categories' || widget.fromSpecial!=null?
       StaggeredGridView.countBuilder(
         crossAxisCount: 4,
         itemCount: publicProvider.featuredCategoriesProducts==null?0:publicProvider.featuredCategoriesProducts!.data!.length,

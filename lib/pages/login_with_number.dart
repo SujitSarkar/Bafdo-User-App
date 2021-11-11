@@ -20,7 +20,8 @@ class LoginWithNumber extends StatefulWidget {
 }
 
 class _LoginWithNumberState extends State<LoginWithNumber> {
-  final TextEditingController controller = TextEditingController(text: '');
+  final TextEditingController _mobile = TextEditingController(text: '');
+  final TextEditingController _password = TextEditingController(text: '');
 
 
   @override
@@ -41,8 +42,7 @@ class _LoginWithNumberState extends State<LoginWithNumber> {
           child: Column(
             //crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 150),
-
+              SizedBox(height: 100),
               Text(
                 'Great To See You Again',
                 textAlign: TextAlign.center,
@@ -91,7 +91,7 @@ class _LoginWithNumberState extends State<LoginWithNumber> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        '+880',
+                        '+88',
                         style: TextStyle(
                             fontFamily: 'taviraj',
                             fontWeight: FontWeight.normal,
@@ -103,7 +103,7 @@ class _LoginWithNumberState extends State<LoginWithNumber> {
                           padding: const EdgeInsets.only(left: 5),
                           // height: size.width * .2,
                           child: TextField(
-                            controller: controller,
+                            controller: _mobile,
                             keyboardType: TextInputType.phone,
                             cursorColor: Colors.black,
                             style: TextStyle(
@@ -126,20 +126,55 @@ class _LoginWithNumberState extends State<LoginWithNumber> {
                   ),
                 ),
               ),
+              SizedBox(height: size.width * .02),
+
+              ///Password Field
+              Container(
+                width: size.width,
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  'Password',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      fontFamily: 'taviraj',
+                      fontWeight: FontWeight.normal,
+                      color: ColorsVariables.textColor,
+                      fontSize: size.width * .04),
+                ),
+              ),
+              SizedBox(height: size.width * .02),
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(size.width * .022)),
+                child: TextField(
+                  controller: _password,
+                  cursorColor: Colors.black,
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: '\u2022 \u2022 \u2022 \u2022 \u2022 \u2022 \u2022 8',
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide.none,
+                    )
+                  ),
+                ),
+              ),
 
               SizedBox(height: size.width * .09),
 
               GradientButton(
                 onPressed: () {
-                  if(controller.text.isNotEmpty){
-                    if(controller.text.length==10){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>OTPPage(phoneNumber: '0${controller.text}')));
+                  if(_mobile.text.isNotEmpty){
+                    if(_mobile.text.length==11){
+                      if(_password.text.isNotEmpty){
+                        if(_password.text.length>=8){
+                          _validateDataAndLogin(authProvider, publicProvider);
+                        }else showToast('Password must be 8 character');
+                      }else showToast('Password required');
                     }else showToast('Invalid phone number');
                   }else showToast('Phone number required');
-
                 },
                 child: Text(
-                  'Get OTP',
+                  'Sign In',
                   style: TextStyle(
                       fontFamily: 'taviraj',
                       fontWeight: FontWeight.bold,
@@ -320,6 +355,39 @@ class _LoginWithNumberState extends State<LoginWithNumber> {
       borderRadius: BorderRadius.all(Radius.circular(5)),
       splashColor: Colors.pink.shade100,
     );
+  }
+
+  Future<void> _validateDataAndLogin(AuthProvider authProvider,PublicProvider publicProvider)async{
+    Map<String,String> userMap={
+      'email': _mobile.text,
+      'password': _password.text
+    };
+    showLoadingDialog(context);
+    await authProvider.loginAndGetUserInfo(userMap).then((value)async{
+      if(value){
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        preferences.setString('email_or_phone', authProvider.userInfoModel.user.phone);
+        preferences.setString('id', authProvider.userInfoModel.user.id.toString());
+        preferences.setString('name', authProvider.userInfoModel.user.name);
+        preferences.setString('access_token', authProvider.userInfoModel.accessToken);
+        await authProvider.getPrefUser();
+
+        closeLoadingDialog(context);
+        showToast(authProvider.userInfoModel.message);
+
+        authProvider.getPrefUser();
+        publicProvider.fetchFeaturedCategories();
+        publicProvider.fetchTraditionalCategories();
+        publicProvider.fetchHandPickProducts();
+        publicProvider.fetchFlashDealProducts();
+        publicProvider.fetchDailyFeaturedProducts();
+
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
+      }else{
+        closeLoadingDialog(context);
+        //showToast('Something went wrong! try again');
+      }
+    });
   }
 
   Future<void> _socialLogin(UserCredential? credential, AuthProvider authProvider,PublicProvider publicProvider)async{

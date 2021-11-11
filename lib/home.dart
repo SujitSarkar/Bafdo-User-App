@@ -3,7 +3,6 @@ import 'package:bafdo/bottom_nav_screens/festival_nav.dart';
 import 'package:bafdo/bottom_nav_screens/home_nav.dart';
 import 'package:bafdo/bottom_nav_screens/my_bafdo.dart';
 import 'package:bafdo/bottom_nav_screens/wish_list_nav.dart';
-import 'package:bafdo/pages/add_priyo_manush_page.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -60,15 +59,13 @@ class _HomeState extends State<Home> {
                         height: size.width*.2,
                         child: Image.asset(
                           'assets/app_icon/bottom_nav_icon/bottom_curve.png',
-                          fit: BoxFit.fill),),
-
+                          fit: BoxFit.fill)),
                       Container(
                         //padding: const EdgeInsets.symmetric(horizontal: 10),
                         width: size.width,
                         height: 80,
                         child: Row(
                           children: [
-
                             Expanded(
                               child: Container(
                                 padding: EdgeInsets.only(right: 5.0),
@@ -249,7 +246,9 @@ class _HomeState extends State<Home> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: FloatingActionButton(
-                            onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (_)=>AddPriyoManush()));}, child: Center(child: Icon(Icons.add,size: size.width*.13,)),
+                            onPressed: () {
+                              //Navigator.push(context, MaterialPageRoute(builder: (_)=>AddPriyoManush()));
+                            }, child: Center(child: Icon(Icons.add,size: size.width*.13)),
                             elevation: 0.1,
                           ),
                         ),

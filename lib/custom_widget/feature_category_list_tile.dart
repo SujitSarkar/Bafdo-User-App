@@ -42,6 +42,7 @@ class _FeatureCategoryListTileState extends State<FeatureCategoryListTile> {
     }
     return InkWell(
       onTap: () {
+        print(widget.productList!.id!);
         Navigator.push(
             context,
             MaterialPageRoute(

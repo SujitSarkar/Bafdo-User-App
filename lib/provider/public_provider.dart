@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:bafdo/model/cart_model.dart';
 import 'package:bafdo/model/flash_deal_product_model.dart';
 import 'package:bafdo/model/home_product_model.dart';
@@ -14,6 +15,7 @@ import 'package:bafdo/model/brands_top_model.dart';
 import 'package:bafdo/model/brands_model.dart';
 import 'package:bafdo/model/sliders_model.dart';
 import 'package:bafdo/model/traditional_categories_model.dart';
+import 'package:bafdo/widgets/notification_widget.dart';
 import 'package:http/http.dart' as http;
 
 class PublicProvider extends AuthProvider{
@@ -48,6 +50,9 @@ class PublicProvider extends AuthProvider{
   FlashDealProductModel? get flashDealProducts => _flashDealProducts;
   ProductList? _dailyFeaturedProducts;
   ProductList? get dailyFeaturedProducts => _dailyFeaturedProducts;
+
+  ProductList? _searchProducts;
+  ProductList? get searchProducts => _searchProducts;
 
   HomeProductModel? _homeProducts;
   HomeProductModel? get homeProducts => _homeProducts;
@@ -427,6 +432,22 @@ class PublicProvider extends AuthProvider{
     if(prefUserModel==null) await getPrefUser();
     _wishlistModel = await getWishList();
     notifyListeners();
+  }
+
+  Future<void> getSearchProducts(String name)async{
+    try{
+      final String url = "https://bafdo.com/api/v2/products/search?name=$name";
+      final response = await http.get(Uri.parse(url));
+      if(response.statusCode==200){
+        _searchProducts = productListFromJson(response.body);
+        notifyListeners();
+      }
+    }on SocketException{
+      showToast("No internet connection!");
+    }
+    catch(error){
+      showToast(error.toString());
+    }
   }
 
   Future<void> getFilteredProducts({name = "",sortKey = "",page = 1,

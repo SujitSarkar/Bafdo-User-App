@@ -352,7 +352,6 @@ class _ProductDetailState extends State<ProductDetail> {
                                 onImageChange: (index,reason){
                                   setState(() {
                                     _currentIndex = reason+1;
-
                                   });
                                 },
                                 images: publicProvider.productDetails!.data![0].photos!.map((item) {
@@ -373,8 +372,6 @@ class _ProductDetailState extends State<ProductDetail> {
                                     },
                                   );
                                 }).toList(),
-
-
                               ):Container(),
                             ),
                           )
@@ -385,177 +382,62 @@ class _ProductDetailState extends State<ProductDetail> {
                     Container(
                       width: size.width,
                       color: Color(0xffF1F9F9),
-                      padding: EdgeInsets.fromLTRB(
-                          size.width * .045, 0, 0, size.width * .045),
+                      padding: EdgeInsets.fromLTRB(size.width * .045, 0, 0, size.width * .045),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          publicProvider.productDetails!=null?Text(
+                          ///Product name
+                          Text(
                             publicProvider.productDetails!.data![0].name??'',
                             style: TextStyle(
                                 fontFamily: 'taviraj',
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.bold,
                                 color: ColorsVariables.textColor,
-                                fontStyle: FontStyle.normal,
                                 fontSize: size.width * .045),
-                          ):Text(''),
+                          ),
+
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Expanded(
                                   child: Container(
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
+                                    ///Price
+                                    Text(
+                                      '${publicProvider.productDetails!.data![0].priceHighLow??''}',
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                          fontFamily: 'taviraj',
+                                          color: ColorsVariables.textColor,
+                                          fontWeight:FontWeight.w500,
+                                          fontSize: size.width*.04),
+                                    ),
+                                    SizedBox(height: size.width * .03),
+
                                     Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
                                       children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              //  mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                Image.asset(
-                                                  'assets/app_icon/body_icon/tk.png',
-                                                ),
-                                                publicProvider.productDetails!=null?Text(
-                                                  '${publicProvider.productDetails!.data![0].priceHighLow??''}',
-                                                  style: TextStyle(
-                                                      fontFamily: 'taviraj',
-                                                      color: ColorsVariables
-                                                          .textColor,
-                                                      fontStyle:
-                                                          FontStyle.normal,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize:
-                                                          size.width * .05),
-                                                ):Text(''),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              width: size.width * .01,
-                                            ),
-                                            // Row(
-                                            //   crossAxisAlignment:
-                                            //       CrossAxisAlignment.start,
-                                            //   children: [
-                                            //     Image.asset(
-                                            //       'assets/app_icon/body_icon/tk_grey.png',
-                                            //     ),
-                                            //     publicProvider.productDetails!=null?Text(
-                                            //       '${publicProvider.productDetails!.data![0].priceLower??''}',
-                                            //       style: TextStyle(
-                                            //           fontFamily: 'taviraj',
-                                            //           color: Colors.grey,
-                                            //           fontStyle:
-                                            //               FontStyle.normal,
-                                            //           decoration: TextDecoration
-                                            //               .lineThrough,
-                                            //           fontWeight:
-                                            //               FontWeight.bold,
-                                            //           fontSize:
-                                            //               size.width * .04),
-                                            //     ):Text(''),
-                                            //   ],
-                                            // ),
-                                          ],
+                                        Icon(Icons.star,size: size.width * .04,color: Colors.pink),
+                                        Icon(Icons.star,size: size.width * .04,color: Colors.pink),
+                                        Icon(Icons.star,size: size.width * .04,color: Colors.pink),
+                                        Icon(Icons.star,size: size.width * .04,color: Colors.pink),
+                                        Icon(Icons.star,size: size.width * .04,color: Colors.pink),
+
+                                        SizedBox(width: size.width * .02),
+                                        Text(
+                                          '${publicProvider.productDetails!.data![0].rating}',
+                                          style: TextStyle(
+                                              color: ColorsVariables.textColor,
+                                              fontSize: size.width * .04,
+                                              fontWeight: FontWeight.bold),
                                         ),
-
                                       ],
                                     ),
                                     SizedBox(height: size.width * .03),
-                                    Row(
-                                      children: [
-                                        // Container(
-                                        //   decoration: BoxDecoration(
-                                        //       border: Border.all(
-                                        //         color: Color(0xffC31A65),
-                                        //       ),
-                                        //       borderRadius:
-                                        //           BorderRadius.circular(
-                                        //               size.width * .01)),
-                                        //   padding: EdgeInsets.fromLTRB(
-                                        //       size.width * .004,
-                                        //       size.width * .001,
-                                        //       size.width * .004,
-                                        //       size.width * .001),
-                                        //   child: Padding(
-                                        //     padding: const EdgeInsets.only(
-                                        //         left: 5,
-                                        //         right: 5,
-                                        //         top: 2,
-                                        //         bottom: 2),
-                                        //     child: Row(
-                                        //       children: [
-                                        //         publicProvider.productDetails!=null?Text(
-                                        //           '${publicProvider.productDetails!.data![0].discount??''}',
-                                        //           style: TextStyle(
-                                        //             color: Color(0xffC31A65),
-                                        //             fontSize: size.width * .025,
-                                        //           ),
-                                        //         ):Text(''),
-                                        //         Text(
-                                        //           '%OFF',
-                                        //           style: TextStyle(
-                                        //             color: Color(0xffC31A65),
-                                        //             fontSize: size.width * .025,
-                                        //           ),
-                                        //         )
-                                        //       ],
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                        SizedBox(width: size.width * .05),
-                                        publicProvider.productDetails!=null?Row(
-                                          children: [
-                                            publicProvider.productDetails!.data![0].rating==1?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
-                                                :publicProvider.productDetails!.data![0].rating==2?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
-                                                :publicProvider.productDetails!.data![0].rating==3?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
-                                                :publicProvider.productDetails!.data![0].rating==4?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
-                                                :publicProvider.productDetails!.data![0].rating==0.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65))
-                                                :publicProvider.productDetails!.data![0].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))                                                :Icon(Icons.star_border,size: size.width * .032,),
-                                            publicProvider.productDetails!.data![0].rating==2?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
-                                                :publicProvider.productDetails!.data![0].rating==3?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
-                                                :publicProvider.productDetails!.data![0].rating==4?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
-                                                :publicProvider.productDetails!.data![0].rating==1.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65))
-                                                :publicProvider.productDetails!.data![0].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
-                                                :Icon(Icons.star_border,size: size.width * .032,),
-                                            publicProvider.productDetails!.data![0].rating==3?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
-                                                :publicProvider.productDetails!.data![0].rating==4?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
-                                                :publicProvider.productDetails!.data![0].rating==2.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65))
-                                                :publicProvider.productDetails!.data![0].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
-                                                :Icon(Icons.star_border,size: size.width * .032,),
-                                            publicProvider.productDetails!.data![0].rating==4?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
-                                                :publicProvider.productDetails!.data![0].rating==3.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65))
-                                                :publicProvider.productDetails!.data![0].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
-                                                :Icon(Icons.star_border,size: size.width * .032,),
-                                            publicProvider.productDetails!.data![0].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
-                                                :publicProvider.productDetails!.data![0].rating==4.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65))
-                                                :Icon(Icons.star_border,size: size.width * .032,),
 
-                                            SizedBox(
-                                              width: size.width * .02,
-                                            ),
-                                            Text(
-                                              '${publicProvider.productDetails!.data![0].rating}',
-                                              style: TextStyle(
-                                                  color: ColorsVariables.textColor,
-                                                  fontSize: size.width * .03,
-                                                  letterSpacing: 0.3,
-                                                  fontWeight:
-                                                  FontWeight.bold),
-                                            ),
-                                          ],
-                                        ):Container(),
-                                      ],
-                                    ),
-                                    SizedBox(height: size.width * .03),
                                     publicProvider.productDetails!=null?Container(
                                       padding: EdgeInsets.only(
                                         right: size.width * .4,
@@ -577,66 +459,11 @@ class _ProductDetailState extends State<ProductDetail> {
                                       )
                                     ):Container(),
                                     SizedBox(height: size.width * .03),
-                                    // Row(
-                                    //   children: [
-                                    //     Text(
-                                    //       '108 Reviews',
-                                    //       style: TextStyle(
-                                    //           fontFamily: 'taviraj',
-                                    //           fontWeight: FontWeight.w500,
-                                    //           color: Colors.grey,
-                                    //           fontStyle: FontStyle.normal,
-                                    //           fontSize: size.width * .03),
-                                    //     ),
-                                    //     SizedBox(
-                                    //       width: size.width * .03,
-                                    //     ),
-                                    //     Container(
-                                    //       height: size.width * .04,
-                                    //       child: VerticalDivider(
-                                    //         color: Color(0xff85848A),
-                                    //         thickness: 2,
-                                    //       ),
-                                    //     ),
-                                    //     SizedBox(
-                                    //       width: size.width * .03,
-                                    //     ),
-                                    //     Text(
-                                    //       '1021 Orders',
-                                    //       style: TextStyle(
-                                    //           fontFamily: 'taviraj',
-                                    //           fontWeight: FontWeight.w500,
-                                    //           color: Colors.grey,
-                                    //           fontStyle: FontStyle.normal,
-                                    //           fontSize: size.width * .03),
-                                    //     ),
-                                    //     SizedBox(
-                                    //       width: size.width * .03,
-                                    //     ),
-                                    //     Container(
-                                    //       height: size.width * .04,
-                                    //       child: VerticalDivider(
-                                    //         color: Color(0xff85848A),
-                                    //         thickness: 2,
-                                    //       ),
-                                    //     ),
-                                    //     SizedBox(
-                                    //       width: size.width * .03,
-                                    //     ),
-                                    //     Text(
-                                    //       '2020 Wish',
-                                    //       style: TextStyle(
-                                    //           fontFamily: 'taviraj',
-                                    //           fontWeight: FontWeight.w500,
-                                    //           color: Colors.grey,
-                                    //           fontStyle: FontStyle.normal,
-                                    //           fontSize: size.width * .03),
-                                    //     ),
-                                    //   ],
-                                    // )
                                   ],
                                 ),
                               )),
+
+                              ///Share Logo
                               Container(
                                 decoration: BoxDecoration(
                                     color: Color(0xffFDE3EE),
@@ -676,7 +503,6 @@ class _ProductDetailState extends State<ProductDetail> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(''),
                               Text(
                                 'Color, Size, Packaging',
                                 style: TextStyle(
@@ -685,7 +511,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                     fontStyle: FontStyle.normal,
                                     fontSize: size.width * .04),
                               ),
-                              Text('')
+
                               // Text(
                               //   'Grey, M, Dhaka BD',
                               //   style: TextStyle(
@@ -823,26 +649,8 @@ class _ProductDetailState extends State<ProductDetail> {
                       padding: EdgeInsets.all(
                         size.width * .045,
                       ),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'Product Description: ',
-                                style: TextStyle(
-                                    fontFamily: 'taviraj',
-                                    color: ColorsVariables.textColor,
-                                    fontStyle: FontStyle.normal,
-                                    fontSize: size.width * .035),
-                              ),
-                              publicProvider.productDetails!=null?Expanded(
-                                child: Html(
-                                  data: publicProvider.productDetails!.data![0].description??'',
-                                ),
-                              ):Text('')
-                            ],
-                          )
-                        ],
+                      child: Html(
+                        data: publicProvider.productDetails!.data![0].description??'',
                       ),
                     ),
                     SizedBox(height: size.width * .04),

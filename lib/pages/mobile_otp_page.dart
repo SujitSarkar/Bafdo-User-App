@@ -15,8 +15,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OTPPage extends StatefulWidget {
-  String phoneNumber;
-  OTPPage({required this.phoneNumber});
+  final String phoneNumber;
+  final String password;
+  final String fullName;
+  OTPPage({required this.phoneNumber,required this.password,required this.fullName});
 
   @override
   _OTPPageState createState() => _OTPPageState();
@@ -48,9 +50,10 @@ class _OTPPageState extends State<OTPPage> {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       authProvider = Provider.of<AuthProvider>(context, listen: false);
       publicProvider = Provider.of<PublicProvider>(context, listen: false);
+      _f1.requestFocus();
+      _phoneAuth();
     });
-    _f1.requestFocus();
-    _phoneAuth();
+
   }
 
   void startTimer() {
@@ -83,41 +86,12 @@ class _OTPPageState extends State<OTPPage> {
       verificationCompleted: (PhoneAuthCredential credential) async {
         await auth.signInWithCredential(credential).then((value) {
           if (value.user != null) {
-            Map<String, String> userMap = {
-              'email_or_phone': widget.phoneNumber
+            Map<String,String> userMap={
+              'name': widget.fullName,
+              'email_or_phone': widget.phoneNumber,
+              'password': widget.password
             };
-            authProvider!
-                .socialLoginAndGetUserInfo(userMap)
-                .then((value) async {
-              if (value) {
-                SharedPreferences preferences =
-                    await SharedPreferences.getInstance();
-                preferences.setString(
-                    'email_or_phone', authProvider!.userInfoModel.user.phone);
-                preferences.setString(
-                    'id', authProvider!.userInfoModel.user.id.toString());
-                preferences.setString(
-                    'name', authProvider!.userInfoModel.user.name);
-                preferences.setString(
-                    'access_token', authProvider!.userInfoModel.accessToken);
-                await authProvider!.getPrefUser();
-                setState(() => _isLoading = false);
-                _timer!.cancel();
-
-                authProvider!.getPrefUser();
-                publicProvider!.fetchFeaturedCategories();
-                publicProvider!.fetchTraditionalCategories();
-                publicProvider!.fetchHandPickProducts();
-                publicProvider!.fetchFlashDealProducts();
-                publicProvider!.fetchDailyFeaturedProducts();
-
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => Home()),
-                    (route) => false);
-              } else
-                showToast('Something went wrong! try again');
-            });
+            _loginUser(userMap);
           } else {
             setState(() => _isLoading = false);
             showToast('Verification Failed! Try again');
@@ -214,7 +188,7 @@ class _OTPPageState extends State<OTPPage> {
                 ///Continue Button
                 GradientButton(
                   onPressed: () {
-                    _otpVerificationAndSignIn(publicProvider);
+                    _otpVerificationAndSignIn();
                   },
                   child: Text('Sign in',
                       style: PublicVariables.primaryBtnTextStyle(size)),
@@ -274,7 +248,7 @@ class _OTPPageState extends State<OTPPage> {
         ),
       );
 
-  Future<void> _otpVerificationAndSignIn(PublicProvider publicProvider) async {
+  Future<void> _otpVerificationAndSignIn() async {
     showLoadingDialog(context);
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: _verificationId!,
@@ -283,36 +257,12 @@ class _OTPPageState extends State<OTPPage> {
     // Sign the user in (or link) with the credential
     await FirebaseAuth.instance.signInWithCredential(credential).then((value) {
       if (value.user != null) {
-        Map<String, String> userMap = {'email_or_phone': widget.phoneNumber};
-        authProvider!.socialLoginAndGetUserInfo(userMap).then((value) async {
-          if (value) {
-            SharedPreferences preferences =
-                await SharedPreferences.getInstance();
-            preferences.setString(
-                'email_or_phone', authProvider!.userInfoModel.user.phone);
-            preferences.setString(
-                'id', authProvider!.userInfoModel.user.id.toString());
-            preferences.setString(
-                'name', authProvider!.userInfoModel.user.name);
-            preferences.setString(
-                'access_token', authProvider!.userInfoModel.accessToken);
-            await authProvider!.getPrefUser();
-            setState(() => _isLoading = false);
-            _timer!.cancel();
-            authProvider!.getPrefUser();
-            publicProvider.fetchFeaturedCategories();
-            publicProvider.fetchTraditionalCategories();
-            publicProvider.fetchHandPickProducts();
-            publicProvider.fetchFlashDealProducts();
-            publicProvider.fetchDailyFeaturedProducts();
-
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => Home()),
-                (route) => false);
-          } else
-            showToast('Something went wrong! try again');
-        });
+        Map<String,String> userMap={
+          'name': widget.fullName,
+          'email_or_phone': widget.phoneNumber,
+          'password': widget.password
+        };
+        _loginUser(userMap);
       } else {
         closeLoadingDialog(context);
         showToast('Invalid OTP');
@@ -373,4 +323,38 @@ class _OTPPageState extends State<OTPPage> {
           style: PublicVariables.otpTextStyle(size),
         ),
       );
+
+  Future<void> _loginUser(Map<String,String> userMap)async{
+    showLoadingDialog(context);
+    await authProvider!.userSignup(userMap).then((value)async{
+      if(value){
+        showToast(authProvider!.signupModel.message);
+        Map<String,String> map={
+          'email': widget.phoneNumber,
+          'password': widget.password
+        };
+        await authProvider!.loginAndGetUserInfo(map).then((value)async{
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          preferences.setString('email_or_phone', authProvider!.userInfoModel.user.phone);
+          preferences.setString('id', authProvider!.userInfoModel.user.id.toString());
+          preferences.setString('name', authProvider!.userInfoModel.user.name);
+          preferences.setString('access_token', authProvider!.userInfoModel.accessToken);
+          await authProvider!.getPrefUser();
+          closeLoadingDialog(context);
+          showToast(authProvider!.userInfoModel.message);
+
+          authProvider!.getPrefUser();
+          publicProvider!.fetchFeaturedCategories();
+          publicProvider!.fetchTraditionalCategories();
+          publicProvider!.fetchHandPickProducts();
+          publicProvider!.fetchFlashDealProducts();
+          publicProvider!.fetchDailyFeaturedProducts();
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
+        });
+      }else{
+        closeLoadingDialog(context);
+        showToast(authProvider!.signupModel.message);
+      }
+    });
+  }
 }

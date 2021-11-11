@@ -1,8 +1,8 @@
+import 'package:bafdo/pages/mobile_otp_page.dart';
 import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/pages/login_page.dart';
 import 'package:bafdo/provider/auth_provider.dart';
-import 'package:bafdo/seller_collection/seller_home.dart';
 import 'package:bafdo/widgets/form_decoration.dart';
 import 'package:bafdo/widgets/gradient_button.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../home.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -23,8 +22,9 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _obscure = true;
   bool _checked = true;
   TextEditingController _name= TextEditingController(text: '');
-  TextEditingController _email= TextEditingController(text: '');
+  TextEditingController _emailOrPhone= TextEditingController(text: '');
   TextEditingController _password= TextEditingController(text: '');
+  String _buttonMgs='Sign Up';
 
   @override
   Widget build(BuildContext context) {
@@ -36,24 +36,14 @@ class _RegisterPageState extends State<RegisterPage> {
         backgroundColor: ColorsVariables.backgrowndColor,
         elevation: 0,
         leading: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
+            onTap: ()=> Navigator.pop(context),
             child: Image.asset('assets/app_icon/app_bar_icon/arrow_left.png')),
         actions: [
           InkWell(
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => SellerHome()));
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Seller',
-                  style:
-                      TextStyle(color: ColorsVariables.textColor, fontSize: 25),
-                ),
-              )),
+              onTap: ()=>Navigator.pop(context),
+              child: Image.asset(
+                'assets/app_icon/app_bar_icon/close.png',
+              ))
         ],
       ),
       backgroundColor: ColorsVariables.backgrowndColor,
@@ -96,7 +86,7 @@ class _RegisterPageState extends State<RegisterPage> {
               _textFieldBuilder(size, 'Full Name', 'Your Full name',
                   suffixImage: ''),
               SizedBox(height: size.width * .04),
-              _textFieldBuilder(size, 'Email', 'example@gmail.com',
+              _textFieldBuilder(size, 'Email or Phone', 'saidur@gmail.com or 01795302389',
                   suffixImage: 'assets/app_icon/body_icon/message.png'),
               SizedBox(height: size.width * .04),
 
@@ -199,7 +189,7 @@ class _RegisterPageState extends State<RegisterPage> {
               GradientButton(
                 onPressed: ()=>_validateDataAndSignup(authProvider, publicProvider),
                 child: Text(
-                  'Sign Up',
+                  _buttonMgs,
                   style: TextStyle(
                       fontFamily: 'taviraj',
                       fontWeight: FontWeight.bold,
@@ -292,15 +282,28 @@ class _RegisterPageState extends State<RegisterPage> {
           TextFormField(
             controller: title=='Full Name'
                 ?_name
-                :_email,
+                :_emailOrPhone,
+            onChanged: (val){
+              if(title=='Email or Phone'){
+                if(_emailOrPhone.text.contains('@') || _emailOrPhone.text.contains('.com')){
+                  setState(() {
+                    _buttonMgs='Sign Up';
+                  });
+                }else{
+                  setState(() {
+                    _buttonMgs='Get OTP';
+                  });
+                }
+              }
+            },
             keyboardType: title=='Full Name'
                 ?TextInputType.text
                 :TextInputType.emailAddress,
             decoration: formDecoration(size).copyWith(
               hintText: hint,
-              suffix: suffixImage != ''
-                  ? Image.asset(suffixImage!, height: 18)
-                  : null,
+              // suffix: suffixImage != ''
+              //     ? Image.asset(suffixImage!, height: 18)
+              //     : null,
             ),
             style: TextStyle(
                 fontFamily: 'taviraj',
@@ -372,20 +375,26 @@ class _RegisterPageState extends State<RegisterPage> {
     });
   }
 
-
   Future<void> _validateDataAndSignup(AuthProvider authProvider,PublicProvider publicProvider)async{
     if(_checked){
-      if(_name.text.isNotEmpty && _email.text.isNotEmpty && _password.text.isNotEmpty){
-        if(_email.text.contains('@') && _email.text.contains('.com')){
+      if(_name.text.isNotEmpty && _emailOrPhone.text.isNotEmpty && _password.text.isNotEmpty){
+        if(_emailOrPhone.text.contains('@') && _emailOrPhone.text.contains('.com')){
           if(_password.text.length>=8){
             Map<String,String> userMap={
               'name': _name.text,
-              'email_or_phone': _email.text,
+              'email_or_phone': _emailOrPhone.text,
               'password': _password.text
             };
             _loginUser(authProvider, publicProvider, userMap);
           }else showToast('Password must 8 character');
-        }else showToast('Invalid email');
+        }else{
+          if(_emailOrPhone.text.length==11){
+            Navigator.push(context, MaterialPageRoute(builder: (_)=>OTPPage(
+                phoneNumber: _emailOrPhone.text,
+                password: _password.text,
+                fullName: _name.text)));
+          }else showToast('Invalid phone number');
+        }
       }else showToast('Missing user information');
     }else showToast('Select Terms & Condition');
   }
@@ -396,7 +405,7 @@ class _RegisterPageState extends State<RegisterPage> {
       if(value){
         showToast(authProvider.signupModel.message);
         Map<String,String> map={
-          'phone': _email.text,
+          'email': _emailOrPhone.text,
           'password': _password.text
         };
         await authProvider.loginAndGetUserInfo(map).then((value)async{
@@ -415,7 +424,6 @@ class _RegisterPageState extends State<RegisterPage> {
           publicProvider.fetchHandPickProducts();
           publicProvider.fetchFlashDealProducts();
           publicProvider.fetchDailyFeaturedProducts();
-
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (route) => false);
         });
       }else{

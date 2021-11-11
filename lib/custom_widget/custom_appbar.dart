@@ -6,16 +6,17 @@ class CustomAppBar extends StatelessWidget {
   final Widget? title;
   final Widget trailing1;
   final Widget trailing2;
+  final bool? hideUnderLine;
 
   CustomAppBar({
     required this.leading,
     required this.title,
     required this.trailing1,
     required this.trailing2,
+    this.hideUnderLine
   });
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 15),
@@ -38,8 +39,12 @@ class CustomAppBar extends StatelessWidget {
                 )
               ],
             ),
-            SizedBox(height: 2.0),
-            Divider(color: ColorsVariables.dividerColor)
+            hideUnderLine==true
+                ?Container()
+                :SizedBox(height: 2.0),
+            hideUnderLine==true
+                ?Container()
+                :Divider(color: ColorsVariables.dividerColor)
           ],
         ),
       ),

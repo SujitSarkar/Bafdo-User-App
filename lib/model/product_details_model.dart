@@ -77,7 +77,7 @@ class Datum {
   bool? hasDiscount;
   String? strokedPrice;
   String? mainPrice;
-  int? calculablePrice;
+  dynamic calculablePrice;
   String? currencySymbol;
   int? currentStock;
   String? unit;

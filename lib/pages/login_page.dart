@@ -333,10 +333,10 @@ class _LogInPageState extends State<LogInPage> {
 
   Future<void> _validateDataAndLogin(AuthProvider authProvider,PublicProvider publicProvider)async{
       if(_email.text.isNotEmpty && _password.text.isNotEmpty){
-        if(_email.text.contains('@') && _email.text.contains('.com')){
+        if(!_email.text.contains('@') && !_email.text.contains('.com')){
           if(_password.text.length>=8){
             Map<String,String> userMap={
-              'phone': _email.text,
+              'email': _email.text,
               'password': _password.text
             };
             showLoadingDialog(context);
