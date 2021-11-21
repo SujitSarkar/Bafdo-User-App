@@ -1,6 +1,7 @@
 import 'package:bafdo/pages/splash_Screen_page.dart';
 import 'package:bafdo/provider/auth_provider.dart';
 import 'package:bafdo/provider/public_provider.dart';
+import 'package:bafdo/provider/sqlite_database_helper.dart';
 import 'package:bafdo/provider/user_provider.dart';
 import 'package:bafdo/variables/color_variable.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => PublicProvider()),
         ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => DatabaseHelper()),
       ],
       child: MaterialApp(
         //locale: DevicePreview.locale(context), // Add the locale here

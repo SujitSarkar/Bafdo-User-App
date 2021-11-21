@@ -43,6 +43,7 @@ dependencies:
   cached_network_image:
   intl:
   wifi_info_plugin_plus: ^2.0.2
+  sqflite: ^2.0.0+4
 
 dev_dependencies:
   flutter_test:
