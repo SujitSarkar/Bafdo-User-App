@@ -1,20 +1,19 @@
 import 'package:bafdo/bottom_nav_screens/wish_list_nav.dart';
-import 'package:bafdo/variables/colors.dart';
-import 'package:bafdo/custom_widget/related_product_list_tile.dart';
-import 'package:bafdo/widgets/notification_widget.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:bafdo/custom_widget/custom_appbar.dart';
+import 'package:bafdo/custom_widget/related_product_list_tile.dart';
 import 'package:bafdo/home.dart';
 import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/sub_pages/cart_page.dart';
 import 'package:bafdo/sub_pages/product_details_dialog.dart';
 import 'package:bafdo/sub_pages/product_search_page.dart';
+import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/widgets/gradient_button.dart';
+import 'package:bafdo/widgets/notification_widget.dart';
 import 'package:carousel_pro_nullsafety/carousel_pro_nullsafety.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletons/skeletons.dart';
 
 class ProductDetail extends StatefulWidget {
   final int? productId;
@@ -63,11 +62,8 @@ class _ProductDetailState extends State<ProductDetail> {
         preferredSize: Size.fromHeight(75),
         child: CustomAppBar(
           leading: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child:
-                  Image.asset('assets/app_icon/app_bar_icon/arrow_left.png')),
+              onTap: ()=>Navigator.pop(context),
+              child:Image.asset('assets/app_icon/app_bar_icon/arrow_left.png')),
           trailing1: PopupMenuButton(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8.0))),
@@ -95,9 +91,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                   color: Colors.grey,
                                   scale: .8,
                                 ),
-                                SizedBox(
-                                  width: 30,
-                                ),
+                                SizedBox(width: 30),
                                 Text(
                                   "Home",
                                   style: TextStyle(
@@ -109,9 +103,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                 ),
                               ],
                             ),
-                            SizedBox(
-                              height: 8,
-                            ),
+                            SizedBox(height: 8),
                             Divider(
                               height: 1,
                               color: Colors.grey,
@@ -139,9 +131,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                   'assets/app_icon/text_field_icon/search_icon.png',
                                   scale: .8,
                                 ),
-                                SizedBox(
-                                  width: 30,
-                                ),
+                                SizedBox(width: 30),
                                 Text(
                                   "Search",
                                   style: TextStyle(
@@ -153,12 +143,10 @@ class _ProductDetailState extends State<ProductDetail> {
                                 ),
                               ],
                             ),
-                            SizedBox(
-                              height: 8,
-                            ),
+                            SizedBox(height: 8),
                             Divider(
                               height: 1,
-                              color: Colors.grey,
+                              color: Colors.grey
                             )
                           ],
                         ),
@@ -259,7 +247,7 @@ class _ProductDetailState extends State<ProductDetail> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-
+                    ///Product Image
                     Container(
                       width: size.width,
                       height: size.width,
@@ -379,6 +367,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       ),
                     ),
                     SizedBox(height: size.width * .02),
+                    ///Product Name
                     Container(
                       width: size.width,
                       color: Color(0xffF1F9F9),
@@ -542,115 +531,28 @@ class _ProductDetailState extends State<ProductDetail> {
                         ],
                       ),
                     ),
+                
                     SizedBox(height: size.width * .04),
-                    // Container(
-                    //   width: size.width,
-                    //   color: Color(0xffF1F9F9),
-                    //   padding: EdgeInsets.fromLTRB(
-                    //       size.width * .045,
-                    //       size.width * .015,
-                    //       size.width * .045,
-                    //       size.width * .015),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //     children: [
-                    //       Column(
-                    //         mainAxisAlignment: MainAxisAlignment.start,
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         children: [
-                    //           Text(
-                    //             'Discount & Coupon',
-                    //             style: TextStyle(
-                    //                 fontFamily: 'taviraj',
-                    //                 color: ColorsVariables.textColor,
-                    //                 fontStyle: FontStyle.normal,
-                    //                 fontSize: size.width * .04),
-                    //           ),
-                    //           Row(
-                    //             children: [
-                    //               Stack(children: [
-                    //                 Image.asset(
-                    //                     'assets/app_icon/body_icon/pink_button.png'),
-                    //                 Positioned.fill(
-                    //                     child: Center(
-                    //                         child: Text(
-                    //                   '20%off',
-                    //                   style: TextStyle(
-                    //                       fontFamily: 'taviraj',
-                    //                       color: Colors.white,
-                    //                       fontStyle: FontStyle.normal,
-                    //                       fontWeight: FontWeight.w500,
-                    //                       fontSize: size.width * .035),
-                    //                 )))
-                    //               ]),
-                    //               SizedBox(
-                    //                 width: 20,
-                    //               ),
-                    //               Stack(children: [
-                    //                 Image.asset(
-                    //                     'assets/app_icon/body_icon/pink_button.png'),
-                    //                 Positioned.fill(
-                    //                     child: Center(
-                    //                         child: Text(
-                    //                   '10%off',
-                    //                   style: TextStyle(
-                    //                       fontFamily: 'taviraj',
-                    //                       color: Colors.white,
-                    //                       fontStyle: FontStyle.normal,
-                    //                       fontWeight: FontWeight.w500,
-                    //                       fontSize: size.width * .035),
-                    //                 )))
-                    //               ]),
-                    //             ],
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       Text(
-                    //         'Get',
-                    //         style: TextStyle(
-                    //             fontFamily: 'taviraj',
-                    //             fontWeight: FontWeight.w500,
-                    //             color: Colors.pink,
-                    //             fontStyle: FontStyle.normal,
-                    //             fontSize: size.width * .035),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // SizedBox(height: size.width * .04),
-                    // Container(
-                    //   width: size.width,
-                    //   color: Color(0xffF1F9F9),
-                    //   padding: EdgeInsets.fromLTRB(
-                    //       size.width * .045,
-                    //       size.width * .045,
-                    //       size.width * .045,
-                    //       size.width * .045),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //     children: [
-                    //       Text(
-                    //         'Overview',
-                    //         style: TextStyle(
-                    //             fontFamily: 'taviraj',
-                    //             fontWeight: FontWeight.w500,
-                    //             color: Colors.pink,
-                    //             fontStyle: FontStyle.normal,
-                    //             fontSize: size.width * .035),
-                    //       ),
-                    //       Image.asset('assets/app_icon/body_icon/next_icon.png')
-                    //     ],
-                    //   ),
-                    // ),
-                    SizedBox(height: size.width * .04),
+
+                    ///Description
                     Container(
                       width: size.width,
                       color: Color(0xffF1F9F9),
                       padding: EdgeInsets.all(
                         size.width * .045,
                       ),
-                      child: Html(
-                        data: publicProvider.productDetails!.data![0].description??'',
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Description:',style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: size.width*.04,
+                            fontFamily:'taviraj'
+                          )),
+                          Html(
+                            data: publicProvider.productDetails!.data![0].description??'',
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(height: size.width * .04),
