@@ -69,7 +69,7 @@ class DatabaseHelper extends ChangeNotifier{
   Future<int> updateAddress(AddressModel addressModel) async {
     Database db = await this.database;
     var result = await db.update(addressTable, addressModel.toMap(),
-        where: '$colAddress = ?', whereArgs: [addressModel.address]);
+        where: '$colphone = ?', whereArgs: [addressModel.phone]);
     await getAddressList();
     return result;
   }

@@ -1,6 +1,7 @@
 import 'package:bafdo/pages/login_with_number.dart';
 import 'package:bafdo/provider/auth_provider.dart';
 import 'package:bafdo/provider/user_provider.dart';
+import 'package:bafdo/sub_pages/purchase_history_page.dart';
 import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/custom_widget/custom_appbar.dart';
 import 'package:bafdo/sub_pages/edit_account.dart';
@@ -95,7 +96,7 @@ class _AccountPageState extends State<AccountPage> {
         _option(size, 'assets/app_icon/body_icon/user.png', 'My Account',
             Icons.chevron_right_outlined),
         _option(size, 'assets/app_icon/body_icon/notification.png',
-            'Notifications', Icons.chevron_right_outlined),
+            'Purchase History', Icons.chevron_right_outlined),
         _option(size, 'assets/app_icon/body_icon/sliders.png', 'Settings',
             Icons.chevron_right_outlined),
         _option(size, 'assets/app_icon/body_icon/help.png', 'Help',
@@ -239,7 +240,10 @@ class _AccountPageState extends State<AccountPage> {
               ListTile(
                 onTap: ()async{
                   SharedPreferences preferences= await SharedPreferences.getInstance();
-                  if(title=='Logout'){
+                  if(title=='Purchase History'){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>PurchaseHistoryPage()));
+                  }
+                  else if(title=='Logout'){
                     preferences.clear();
                     authProvider.clearPrefModel();
                     userProvider.clearUserModel();

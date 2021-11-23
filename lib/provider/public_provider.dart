@@ -5,6 +5,7 @@ import 'package:bafdo/model/flash_deal_product_model.dart';
 import 'package:bafdo/model/home_product_model.dart';
 import 'package:bafdo/model/product_details_model.dart';
 import 'package:bafdo/model/product_list_model.dart';
+import 'package:bafdo/model/purchase_history_model.dart';
 import 'package:bafdo/model/related_product_model.dart';
 import 'package:bafdo/model/reviews_model.dart';
 import 'package:bafdo/model/anniversary_product_list_model.dart';
@@ -33,6 +34,8 @@ class PublicProvider extends AuthProvider{
   Reviews? _reviews;
   List<CartModel>? _carts;
   WishlistModel? _wishlistModel;
+  PurchaseHistoryModel? _purchaseHistoryModel;
+  get purchaseHistoryModel=>_purchaseHistoryModel;
 
   AnniversaryProductList? get traditionalCategoriesProducts => _traditionalCategoriesProducts;
   AnniversaryProductList? _featuredCategoriesProducts;
@@ -457,6 +460,44 @@ class PublicProvider extends AuthProvider{
         "?page=$page&name=$name&sort_key=$sortKey&brands=$brands&categories=$categories&min=$min&max=$max";
 
     final response = await http.get(Uri.parse(url));
+  }
+
+  Future<bool> createNewOrder(String ownerId, String paymentMethod) async {
+   try{
+     if(prefUserModel==null) await getPrefUser();
+     var postBody = jsonEncode({
+       "owner_id": "$ownerId",
+       "user_id": "${prefUserModel.id}",
+       "payment_type": "$paymentMethod"
+     });
+     final response = await http.post(Uri.parse("https://bafdo.com/api/v2/payments/pay/cod"),
+         headers: {
+           "Content-Type": "application/json",
+           "Authorization": "Bearer ${prefUserModel.accessToken}"
+         }, body: postBody);
+     if(response.statusCode==200){
+       return true;
+     }else{return false;}
+
+   }on SocketException{
+     showToast("No internet connection!");
+     return false;
+   }
+   catch(error){
+     showToast(error.toString());
+     return false;
+   }
+  }
+
+  Future<void> getOrderList({String userId='0', page=1, paymentStatus="", deliveryStatus=""}) async {
+    var url = "https://bafdo.com/api/v2/purchase-history/" +
+        userId + "?page=$page&payment_status=$paymentStatus&delivery_status=$deliveryStatus";
+
+    final response = await http.get(Uri.parse(url));
+    _purchaseHistoryModel = purchaseHistoryModelFromJson(response.body);
+    print(_purchaseHistoryModel!.data!.length);
+    notifyListeners();
+
   }
 
 }

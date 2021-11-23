@@ -271,6 +271,7 @@ class _ProfileState extends State<Profile> {
 
       String base64Image = base64Encode(_image!.readAsBytesSync());
       String fileName = _image!.path.split("/").last;
+      print('Image File Name: $fileName');
       showLoadingDialog(context);
       await userProvider
           .profileImageUpdate(base64Image, fileName)

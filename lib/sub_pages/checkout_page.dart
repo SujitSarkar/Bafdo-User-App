@@ -1,5 +1,6 @@
 import 'package:bafdo/custom_widget/custom_appbar.dart';
 import 'package:bafdo/model/address_model.dart';
+import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/provider/sqlite_database_helper.dart';
 import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/widgets/gradient_button.dart';
@@ -9,14 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CheckoutPage extends StatefulWidget {
-  const CheckoutPage({Key? key}) : super(key: key);
+  final String ownerId;
+  final String totalAmount;
+  const CheckoutPage({Key? key,required this.ownerId,required this.totalAmount}) : super(key: key);
 
   @override
   _CheckoutPageState createState() => _CheckoutPageState();
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
-  String paymentItem = 'nogot';
+  String paymentItem = 'Cash On Delivery';
   int selectIndex = 0;
   int _counter=0;
   bool _addressLoading=false;
@@ -37,6 +40,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final DatabaseHelper databaseHelper = Provider.of<DatabaseHelper>(context);
+    final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
     if(_counter==0) _customInit(databaseHelper);
 
     return Scaffold(
@@ -45,11 +49,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
         preferredSize: Size.fromHeight(60.0),
         child: CustomAppBar(
           leading: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child:
-                  Image.asset('assets/app_icon/app_bar_icon/arrow_left.png')),
+              onTap: ()=> Navigator.pop(context),
+              child: Image.asset('assets/app_icon/app_bar_icon/arrow_left.png')),
           title: Text('Checkout',
               style: TextStyle(
                   fontFamily: 'taviraj',
@@ -57,7 +58,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   fontStyle: FontStyle.normal,
                   fontSize: size.width * .04)),
           trailing1: InkWell(
-              onTap: () {},
+              onTap: ()=>Navigator.pop(context),
               child: Image.asset('assets/app_icon/app_bar_icon/close.png')),
           trailing2: Container(),
         ),
@@ -118,10 +119,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       InkWell(
                         onTap: () {
                           setState(() {
-                            paymentItem = 'nogot';
+                            paymentItem = 'nagad';
                           });
                         },
-                        child: paymentItem == 'nogot'
+                        child: paymentItem == 'nagad'
                             ?Image.asset(
                                 'assets/app_icon/body_icon/squire_pink_box.png')
                             : Padding(
@@ -167,10 +168,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       InkWell(
                         onTap: () {
                           setState(() {
-                            paymentItem = 'ssl';
+                            paymentItem = 'Cash On Delivery';
                           });
                         },
-                        child: paymentItem == 'ssl'
+                        child: paymentItem == 'Cash On Delivery'
                             ? Image.asset(
                                 'assets/app_icon/body_icon/squire_pink_box.png')
                             : Padding(
@@ -181,10 +182,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(
-                          'assets/app_icon/body_icon/ssl_logo.png',height:size.width * .20,width:  size.width * .15,
-
-                        ),
+                        child: Text('Cash On Delivery'),
                       ),
                     ],
                   ),
@@ -210,17 +208,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 color: ColorsVariables.textColor,
                                 fontStyle: FontStyle.normal,
                                 fontSize: size.width * .04)),
-                        Row(
-                          children: [
-                            Image.asset('assets/app_icon/body_icon/tk.png'),
-                            Text('20.00',
-                                style: TextStyle(
-                                    fontFamily: 'taviraj',
-                                    color: ColorsVariables.textColor,
-                                    fontStyle: FontStyle.normal,
-                                    fontSize: size.width * .04)),
-                          ],
-                        ),
+                        Text('৳ 0.00',
+                            style: TextStyle(
+                                fontFamily: 'taviraj',
+                                color: ColorsVariables.textColor,
+                                fontStyle: FontStyle.normal,
+                                fontSize: size.width * .04)),
                       ],
                     ),
                   ),
@@ -235,17 +228,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 color: ColorsVariables.textColor,
                                 fontStyle: FontStyle.normal,
                                 fontSize: size.width * .04)),
-                        Row(
-                          children: [
-                            Image.asset('assets/app_icon/body_icon/tk.png'),
-                            Text('79.95',
-                                style: TextStyle(
-                                    fontFamily: 'taviraj',
-                                    color: ColorsVariables.textColor,
-                                    fontStyle: FontStyle.normal,
-                                    fontSize: size.width * .04)),
-                          ],
-                        ),
+                        Text('৳${widget.totalAmount}',
+                            style: TextStyle(
+                                fontFamily: 'taviraj',
+                                color: ColorsVariables.textColor,
+                                fontStyle: FontStyle.normal,
+                                fontSize: size.width * .04)),
                       ],
                     ),
                   ),
@@ -265,19 +253,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 fontWeight: FontWeight.bold,
                                 fontStyle: FontStyle.normal,
                                 fontSize: size.width * .04)),
-                        Row(
-                          children: [
-                            Image.asset('assets/app_icon/body_icon/tk.png'),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('99.95',
-                                  style: TextStyle(
-                                      fontFamily: 'taviraj',
-                                      color: ColorsVariables.textColor,
-                                      fontStyle: FontStyle.normal,
-                                      fontSize: size.width * .04)),
-                            ),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('৳ ${widget.totalAmount}',
+                              style: TextStyle(
+                                  fontFamily: 'taviraj',
+                                  color: ColorsVariables.textColor,
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: size.width * .04)),
                         ),
                       ],
                     ),
@@ -285,12 +268,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 ],
               )),
 
+          ///Order Button
           Padding(
             padding: const EdgeInsets.all(18.0),
             child: GradientButton(
-              onPressed: (){},
+              onPressed: ()async{
+                showLoadingDialog(context);
+                await publicProvider.createNewOrder(widget.ownerId, paymentItem).then((value)async{
+                  await publicProvider.fetchCartList();
+                  closeLoadingDialog(context);
+                });
+              },
               child: Text(
-                'Payment',
+                'Complete Order',
                 style: TextStyle(
                     fontFamily: 'taviraj',
                     fontWeight: FontWeight.bold,
@@ -304,10 +294,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ),
           ),
 
-          SizedBox(
-            height: 50,
-          ),
-
+          SizedBox(height: 50),
         ],
       ),
     );

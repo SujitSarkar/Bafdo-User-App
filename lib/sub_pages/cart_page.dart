@@ -324,44 +324,6 @@ class _CartPageState extends State<CartPage> {
                 ),
               ),
               SizedBox(height: size.width * .25)
-              // Padding(
-              //   padding: const EdgeInsets.all(8.0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       Text("More To Love",
-              //           style: TextStyle(
-              //               fontFamily: 'taviraj',
-              //               color: ColorsVariables.textColor,
-              //               fontStyle: FontStyle.normal,
-              //               fontWeight: FontWeight.w500,
-              //               fontSize: size.width * .045)),
-              //       Text("See More",
-              //           style: TextStyle(
-              //               fontFamily: 'taviraj',
-              //               color: Colors.grey,
-              //               fontStyle: FontStyle.normal,
-              //               fontWeight: FontWeight.w500,
-              //               fontSize: size.width * .045)),
-              //     ],
-              //   ),
-              // ),
-              // Container(
-              //   height: size.height * .8,
-              //   width: size.width,
-              //   child: new StaggeredGridView.countBuilder(
-              //     physics: NeverScrollableScrollPhysics(),
-              //     crossAxisCount: 4,
-              //     itemCount: 18,
-              //     itemBuilder: (BuildContext context, int index) {
-              //       return FeatureCategoryListTile();
-              //     },
-              //     staggeredTileBuilder: (int index) =>
-              //         new StaggeredTile.count(2, index.isEven ? 2 : 3),
-              //     mainAxisSpacing: 4.0,
-              //     crossAxisSpacing: 4.0,
-              //   ),
-              // ),
             ],
           ),
 
@@ -388,12 +350,7 @@ class _CartPageState extends State<CartPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CartPage()));
-                          },
+                          onTap: () {},
                           child: Container(
                             width: size.width * .36,
                             height: size.width * .13,
@@ -416,7 +373,10 @@ class _CartPageState extends State<CartPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => CheckoutPage()),
+                                  builder: (context) => CheckoutPage(
+                                    ownerId: publicProvider.carts![0].ownerId.toString(),
+                                    totalAmount: _totalPrice.toString(),
+                                  )),
                             );
                           },
                           child: Container(
