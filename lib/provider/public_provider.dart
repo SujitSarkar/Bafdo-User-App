@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bafdo/model/cart_model.dart';
 import 'package:bafdo/model/flash_deal_product_model.dart';
 import 'package:bafdo/model/home_product_model.dart';
+import 'package:bafdo/model/order_details_model.dart';
 import 'package:bafdo/model/product_details_model.dart';
 import 'package:bafdo/model/product_list_model.dart';
 import 'package:bafdo/model/purchase_history_model.dart';
@@ -36,6 +37,8 @@ class PublicProvider extends AuthProvider{
   WishlistModel? _wishlistModel;
   PurchaseHistoryModel? _purchaseHistoryModel;
   get purchaseHistoryModel=>_purchaseHistoryModel;
+  OrderDetailsModel? _orderDetailsModel;
+  get orderDetailsModel=>_orderDetailsModel;
 
   AnniversaryProductList? get traditionalCategoriesProducts => _traditionalCategoriesProducts;
   AnniversaryProductList? _featuredCategoriesProducts;
@@ -171,7 +174,6 @@ class PublicProvider extends AuthProvider{
       var response = await http.get(Uri.parse(url));
       Brands brands = brandsFromJson(response.body);
       return brands;
-
     }catch(error){
       print(error.toString());
       return null;
@@ -458,7 +460,6 @@ class PublicProvider extends AuthProvider{
 
     final String url = "https://bafdo.com/api/v2/products/search" +
         "?page=$page&name=$name&sort_key=$sortKey&brands=$brands&categories=$categories&min=$min&max=$max";
-
     final response = await http.get(Uri.parse(url));
   }
 
@@ -490,14 +491,33 @@ class PublicProvider extends AuthProvider{
   }
 
   Future<void> getOrderList({String userId='0', page=1, paymentStatus="", deliveryStatus=""}) async {
-    var url = "https://bafdo.com/api/v2/purchase-history/" +
-        userId + "?page=$page&payment_status=$paymentStatus&delivery_status=$deliveryStatus";
+    try{
+      final String url = "https://bafdo.com/api/v2/purchase-history/" +
+          userId + "?page=$page&payment_status=$paymentStatus&delivery_status=$deliveryStatus";
 
-    final response = await http.get(Uri.parse(url));
-    _purchaseHistoryModel = purchaseHistoryModelFromJson(response.body);
-    print(_purchaseHistoryModel!.data!.length);
-    notifyListeners();
+      final response = await http.get(Uri.parse(url));
+      _purchaseHistoryModel = purchaseHistoryModelFromJson(response.body);
+      notifyListeners();
+    }on SocketException{
+      showToast("No internet connection!");
+    }catch(error){
+      showToast(error.toString());
+    }
+  }
 
+  Future<void> getOrderDetails(String link) async {
+    try{
+      print(link);
+      final response = await http.get(Uri.parse(link));
+      _orderDetailsModel = orderDetailsModelFromJson(response.body);
+      print(response.body);
+      //_orderDetailsModel!.data![0].code;
+      notifyListeners();
+    }on SocketException{
+      showToast("No internet connection!");
+    }catch(error){
+      showToast(error.toString());
+    }
   }
 
 }

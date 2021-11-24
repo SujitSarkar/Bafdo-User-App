@@ -276,7 +276,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 showLoadingDialog(context);
                 await publicProvider.createNewOrder(widget.ownerId, paymentItem).then((value)async{
                   await publicProvider.fetchCartList();
+                  showToast('Order Placed Successfully');
                   closeLoadingDialog(context);
+                  Navigator.pop(context);
                 });
               },
               child: Text(
@@ -356,7 +358,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       );
   }
 
-    void updateAddressDialog(DatabaseHelper databaseHelper, Size size){
+    void updateAddressDialog(DatabaseHelper databaseHelper, int index, Size size){
     showDialog(
       context: context,
        builder: (context)=>StatefulBuilder(builder: (context, setState)=>AlertDialog(
@@ -382,7 +384,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   setState(()=> _addressLoading=true);
                   AddressModel addressModel=AddressModel(
                     _country.text,_address.text,_city.text,_phone.text,_zip.text);
-                    databaseHelper.updateAddress(addressModel).then((value){
+                    databaseHelper.updateAddress(addressModel,databaseHelper.addressList[index].phone).then((value){
                       setState(()=> _addressLoading=false);
                         showToast('Address Update');
                         _address.clear();_phone.clear();_zip.clear();_country.clear();
@@ -492,7 +494,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               _city.text=databaseHelper.addressList[index].city;
               _zip.text=databaseHelper.addressList[index].zip;
               _phone.text=databaseHelper.addressList[index].phone;
-              updateAddressDialog(databaseHelper, size);
+              updateAddressDialog(databaseHelper,index, size);
             }, child: Icon(Icons.edit_outlined)),
           ],
         ),

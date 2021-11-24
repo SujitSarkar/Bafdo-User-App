@@ -1,7 +1,7 @@
+import 'package:bafdo/pages/all_order_page.dart';
 import 'package:bafdo/pages/login_with_number.dart';
 import 'package:bafdo/provider/auth_provider.dart';
 import 'package:bafdo/provider/user_provider.dart';
-import 'package:bafdo/sub_pages/purchase_history_page.dart';
 import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/custom_widget/custom_appbar.dart';
 import 'package:bafdo/sub_pages/edit_account.dart';
@@ -241,7 +241,7 @@ class _AccountPageState extends State<AccountPage> {
                 onTap: ()async{
                   SharedPreferences preferences= await SharedPreferences.getInstance();
                   if(title=='Purchase History'){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>PurchaseHistoryPage()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>AllOrderListPage()));
                   }
                   else if(title=='Logout'){
                     preferences.clear();

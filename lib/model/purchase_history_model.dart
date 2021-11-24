@@ -73,7 +73,6 @@ class DatumLinks {
   DatumLinks({
     this.details,
   });
-
   String? details;
 
   factory DatumLinks.fromJson(Map<String, dynamic> json) => DatumLinks(
@@ -89,10 +88,10 @@ class PurchaseHistoryModelLinks {
     this.next,
   });
 
-  String? first;
-  String? last;
+  dynamic first;
+  dynamic last;
   dynamic prev;
-  String? next;
+  dynamic next;
 
   factory PurchaseHistoryModelLinks.fromJson(Map<String, dynamic> json) => PurchaseHistoryModelLinks(
     first: json["first"],
@@ -100,13 +99,6 @@ class PurchaseHistoryModelLinks {
     prev: json["prev"],
     next: json["next"],
   );
-
-  Map<String, dynamic> toJson() => {
-    "first": first,
-    "last": last,
-    "prev": prev,
-    "next": next,
-  };
 }
 
 class Meta {

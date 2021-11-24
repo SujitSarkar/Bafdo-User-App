@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PurchaseHistoryPage extends StatefulWidget {
-  const PurchaseHistoryPage({Key? key}) : super(key: key);
+  const PurchaseHistoryPage({Key? key}):super(key: key);
 
   @override
   _PurchaseHistoryPageState createState() => _PurchaseHistoryPageState();
@@ -20,11 +20,9 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
 
   Future<void> _customInit(PublicProvider publicProvider) async {
     _counter++;
-    if(publicProvider.purchaseHistoryModel==null){
       setState(()=>_isLoading = true);
       await publicProvider.getOrderList(userId: publicProvider.prefUserModel.id);
       setState(()=>_isLoading = false);
-    }
   }
 
   @override

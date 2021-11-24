@@ -16,9 +16,9 @@ class DatabaseHelper extends ChangeNotifier{
   String colId = 'id';
   String colCountry = 'country';
   String colAddress = 'address';
-  String colcity = 'city';
-  String colphone = 'phone';
-  String colzip = 'zip';
+  String colCity = 'city';
+  String colPhone = 'phone';
+  String colZip = 'zip';
 
   DatabaseHelper._createInstance(); //Named constructor to create instance of DatabaseHelper
 
@@ -30,7 +30,7 @@ class DatabaseHelper extends ChangeNotifier{
   void _createDB(Database db, int version) async {
     await db.execute(
         'CREATE TABLE $addressTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, '
-            '$colCountry TEXT, $colAddress TEXT, $colcity TEXT, $colphone TEXT, $colzip TEXT)');
+            '$colCountry TEXT, $colAddress TEXT, $colCity TEXT, $colPhone TEXT, $colZip TEXT)');
   }
 
   Future<Database> initializeDatabase() async {
@@ -66,10 +66,10 @@ class DatabaseHelper extends ChangeNotifier{
   }
 
   //update operation
-  Future<int> updateAddress(AddressModel addressModel) async {
+  Future<int> updateAddress(AddressModel addressModel,String phone) async {
     Database db = await this.database;
     var result = await db.update(addressTable, addressModel.toMap(),
-        where: '$colphone = ?', whereArgs: [addressModel.phone]);
+        where: '$colPhone = ?', whereArgs: [phone]);
     await getAddressList();
     return result;
   }

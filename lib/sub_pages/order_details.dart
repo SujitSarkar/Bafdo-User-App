@@ -1,11 +1,13 @@
+import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/custom_widget/custom_appbar.dart';
-import 'package:bafdo/custom_widget/feature_category_list_tile.dart';
+import 'package:bafdo/widgets/notification_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:provider/provider.dart';
 
 class OrderDetails extends StatefulWidget {
-  const OrderDetails({Key? key}) : super(key: key);
+  final String link;
+  const OrderDetails({Key? key,required this.link}) : super(key: key);
 
   @override
   _OrderDetailsState createState() => _OrderDetailsState();
@@ -13,9 +15,21 @@ class OrderDetails extends StatefulWidget {
 
 class _OrderDetailsState extends State<OrderDetails> {
   double _animatedHeight = 150.0;
+  int _counter=0;
+  bool _isLoading=true;
+
+  Future<void> _customInit(PublicProvider publicProvider)async{
+    _counter++;
+    //print(widget.link.replaceAll('v1', 'v2'));
+    await publicProvider.getOrderDetails(widget.link.replaceAll('v1', 'v2'));
+    setState(()=>_isLoading=false);
+  }
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
+    final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
+    if(_counter==0) _customInit(publicProvider);
+
     return Scaffold(
       backgroundColor: Color(0xffF9F6F6),
       appBar: PreferredSize(
@@ -25,9 +39,7 @@ class _OrderDetailsState extends State<OrderDetails> {
         ),
         child: CustomAppBar(
           leading: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
+              onTap: ()=>Navigator.pop(context),
               child:
                   Image.asset('assets/app_icon/app_bar_icon/arrow_left.png')),
           trailing1: Padding(
@@ -74,7 +86,9 @@ class _OrderDetailsState extends State<OrderDetails> {
           ),
         ),
       ),
-      body: ListView(
+      body:_isLoading
+          ? showLoadingWidget
+          : ListView(
         children: [
           Card(
             shape: RoundedRectangleBorder(
@@ -110,7 +124,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                         Row(
                           children: [
                             Text(
-                              '#BFD7387263763',
+                              '58698',
                               style: TextStyle(
                                   fontFamily: 'taviraj',
                                   color: ColorsVariables.textColor,
@@ -833,47 +847,47 @@ class _OrderDetailsState extends State<OrderDetails> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'More To Love',
-                  style: TextStyle(
-                      fontFamily: 'taviraj',
-                      color: ColorsVariables.textColor,
-                      fontWeight: FontWeight.w600,
-                      fontStyle: FontStyle.normal,
-                      fontSize: size.width * .045),
-                ),
-                Text(
-                  'See More',
-                  style: TextStyle(
-                      fontFamily: 'taviraj',
-                      color: ColorsVariables.dividerColor,
-                      fontStyle: FontStyle.normal,
-                      fontSize: size.width * .045),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            height: size.height * .8,
-            width: size.width,
-            child: new StaggeredGridView.countBuilder(
-              physics: NeverScrollableScrollPhysics(),
-              crossAxisCount: 4,
-              itemCount: 18,
-              itemBuilder: (BuildContext context, int index) {
-                return FeatureCategoryListTile();
-              },
-              staggeredTileBuilder: (int index) =>
-                  new StaggeredTile.count(2, index.isEven ? 2 : 3),
-              mainAxisSpacing: 4.0,
-              crossAxisSpacing: 4.0,
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       Text(
+          //         'More To Love',
+          //         style: TextStyle(
+          //             fontFamily: 'taviraj',
+          //             color: ColorsVariables.textColor,
+          //             fontWeight: FontWeight.w600,
+          //             fontStyle: FontStyle.normal,
+          //             fontSize: size.width * .045),
+          //       ),
+          //       Text(
+          //         'See More',
+          //         style: TextStyle(
+          //             fontFamily: 'taviraj',
+          //             color: ColorsVariables.dividerColor,
+          //             fontStyle: FontStyle.normal,
+          //             fontSize: size.width * .045),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // Container(
+          //   height: size.height * .8,
+          //   width: size.width,
+          //   child: new StaggeredGridView.countBuilder(
+          //     physics: NeverScrollableScrollPhysics(),
+          //     crossAxisCount: 4,
+          //     itemCount: 18,
+          //     itemBuilder: (BuildContext context, int index) {
+          //       return FeatureCategoryListTile();
+          //     },
+          //     staggeredTileBuilder: (int index) =>
+          //         new StaggeredTile.count(2, index.isEven ? 2 : 3),
+          //     mainAxisSpacing: 4.0,
+          //     crossAxisSpacing: 4.0,
+          //   ),
+          // ),
         ],
       ),
     );

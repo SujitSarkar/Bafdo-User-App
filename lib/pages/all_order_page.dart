@@ -1,10 +1,12 @@
-import 'package:bafdo/sub_pages/notifications_page.dart';
+import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/sub_pages/product_search_page.dart';
 import 'package:bafdo/variables/color_variable.dart';
 import 'package:bafdo/variables/public_variables.dart';
 import 'package:bafdo/widget_tile/order_list_tile.dart';
 import 'package:bafdo/widgets/custom_appbar.dart';
+import 'package:bafdo/widgets/notification_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AllOrderListPage extends StatefulWidget {
 
@@ -14,10 +16,20 @@ class AllOrderListPage extends StatefulWidget {
 
 class _AllOrderListPageState extends State<AllOrderListPage> with SingleTickerProviderStateMixin{
   TabController? _tabController;
-  List<String> _stateList=[
-    'All','Unpaid','Confirmed','Processing','Shipped','Delivered'
-  ];
-  String? _selectedOrderState;
+  List<String> _stateList=['All','Unpaid','Confirmed','Processing','Shipped','Delivered'];
+  String _selectedOrderState='All';
+
+  int _counter = 0;
+  bool _isLoading = false;
+
+  Future<void> _customInit(PublicProvider publicProvider) async {
+    _counter++;
+    if(publicProvider.purchaseHistoryModel==null){
+      setState(()=>_isLoading = true);
+      await publicProvider.getOrderList(userId: publicProvider.prefUserModel.id);
+      setState(()=>_isLoading = false);
+    }
+  }
 
   @override
   void initState() {
@@ -28,7 +40,8 @@ class _AllOrderListPageState extends State<AllOrderListPage> with SingleTickerPr
   @override
   Widget build(BuildContext context) {
     final Size size= MediaQuery.of(context).size;
-
+    final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
+    if (_counter == 0) _customInit(publicProvider);
     return Scaffold(
       backgroundColor: BColors.appBgColor,
       appBar: PreferredSize(
@@ -37,16 +50,18 @@ class _AllOrderListPageState extends State<AllOrderListPage> with SingleTickerPr
             leading: Image.asset('assets/app_icon/app_bar_icon/arrow_left.png'),
             leadingPress: ()=>Navigator.pop(context),
             title: 'Orders',
-            trailing: Image.asset('assets/app_icon/text_field_icon/search_icon.png'),
-            trailingPress: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>ProductSearchPage())),
+            trailing: Image.asset('assets/app_icon/app_bar_icon/close.png'),
+            trailingPress: ()=>Navigator.pop(context),
             trailing2: Container(),
           ),
       ),
-      body: _bodyUI(size),
+      body:_isLoading
+          ?showLoadingWidget
+          :_bodyUI(size,publicProvider),
     );
   }
 
-  Widget _bodyUI(Size size)=>Column(
+  Widget _bodyUI(Size size,PublicProvider publicProvider)=>Column(
     children: [
       ///Tab bar
       TabBar(
@@ -79,11 +94,17 @@ class _AllOrderListPageState extends State<AllOrderListPage> with SingleTickerPr
 
       ///Order List
       Expanded(
-        child: ListView.builder(
-          //shrinkWrap: true,
-          physics: BouncingScrollPhysics(),
-          itemCount: 40,
-          itemBuilder: (context, index)=>OrderListTile(),
+        child: RefreshIndicator(
+          onRefresh: ()async=> await publicProvider.getOrderList(userId: publicProvider.prefUserModel.id),
+          backgroundColor: Colors.white,
+          child: ListView.builder(
+            physics: BouncingScrollPhysics(),
+            itemCount: publicProvider.purchaseHistoryModel.data.length,
+            itemBuilder: (context, index)=>
+            _selectedOrderState==publicProvider.purchaseHistoryModel.data[index].paymentStatusString!||_selectedOrderState=='All'
+                ?OrderListTile(orderModel: publicProvider.purchaseHistoryModel.data[index])
+                :Container(),
+          ),
         ),
       )
     ],
