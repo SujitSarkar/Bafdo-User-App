@@ -3,6 +3,8 @@ import 'package:bafdo/custom_widget/custom_appbar.dart';
 import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/sub_pages/checkout_page.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
@@ -77,44 +79,6 @@ class _CartPageState extends State<CartPage> {
             ? Stack(children: [
           ListView(
             children: [
-              // Row(
-              //   children: [
-              //     InkWell(
-              //       onTap: () {
-              //         setState(() {
-              //           selectAll = !selectAll;
-              //         });
-              //         if(selectAll==true){
-              //           for(int i=0;i<publicProvider.carts![0].cartItems!.length;i++){
-              //             tPrice=(publicProvider.carts![0].cartItems![i].price!*publicProvider.carts![0].cartItems![i].quantity!);
-              //           }
-              //           setState(() {
-              //             totalPrice=tPrice;
-              //           });
-              //         }else{
-              //           setState(() {
-              //             totalPrice=0;
-              //           });
-              //         }
-              //       },
-              //       child: selectAll == true
-              //           ? Image.asset(
-              //               'assets/app_icon/body_icon/squire_pink_box.png')
-              //           : Padding(
-              //               padding: const EdgeInsets.all(8.0),
-              //               child: Image.asset(
-              //                   'assets/app_icon/body_icon/squire_grey_box.png'),
-              //             ),
-              //     ),
-              //     Text('Select All',
-              //         style: TextStyle(
-              //             fontFamily: 'taviraj',
-              //             color: ColorsVariables.textColor,
-              //             fontStyle: FontStyle.normal,
-              //             fontWeight: FontWeight.w500,
-              //             fontSize: size.width * .045))
-              //   ],
-              // ),
               ///Cart item list
               ListView.builder(
                 // scrollDirection: Axis.vertical,
@@ -144,13 +108,15 @@ class _CartPageState extends State<CartPage> {
                                     width: size.width * .15,
                                     decoration: BoxDecoration(
                                         color: Colors.grey.shade100,
-                                        borderRadius:
-                                            BorderRadius.all(Radius.circular(5))),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(size.width * .02),
-                                      child: Image.network(
-                                          'https://bafdo.com/public/${publicProvider.carts![0].cartItems![index].productThumbnailImage!}',
-                                          fit: BoxFit.fill),
+                                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                                      child: CachedNetworkImage(
+                                        imageUrl: "https://bafdo.com/public/${publicProvider.carts![0].cartItems![index].productThumbnailImage!}",
+                                        placeholder: (context, url) => CupertinoActivityIndicator(),
+                                        errorWidget: (context, url, error) => Icon(Icons.error),
+                                          fit: BoxFit.cover
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -199,14 +165,8 @@ class _CartPageState extends State<CartPage> {
                                         1) {
                                       showLoadingDialog(context);
                                       await publicProvider
-                                          .updateCart(
-                                              publicProvider.carts![0]
-                                                  .cartItems![index].id!,
-                                              (publicProvider
-                                                      .carts![0]
-                                                      .cartItems![index]
-                                                      .quantity! -
-                                                  1))
+                                          .updateCart(publicProvider.carts![0].cartItems![index].id!,
+                                              (publicProvider.carts![0].cartItems![index].quantity!-1))
                                           .then((value) async {
                                         await publicProvider.fetchCartList();
                                         closeLoadingDialog(context);

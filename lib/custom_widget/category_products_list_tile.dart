@@ -450,7 +450,7 @@ class _OfferListTileState extends State<OfferListTile> {
 }
 
 Widget getFavoriteOfferCard(BuildContext context) {
-  Size size = MediaQuery.of(context).size;
+  final Size size = MediaQuery.of(context).size;
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: Card(

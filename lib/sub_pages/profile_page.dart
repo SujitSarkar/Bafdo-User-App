@@ -82,7 +82,7 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Widget _bodyUI(Size size, UserProvider userProvider) {
-    return ListView(
+    return userProvider.userModel!=null? ListView(
       children: [
         SizedBox(
           height: size.width * .05,
@@ -103,7 +103,7 @@ class _AccountPageState extends State<AccountPage> {
             Icons.chevron_right_outlined),
         _option(size, 'assets/app_icon/body_icon/logout.png', 'Logout', null)
       ],
-    );
+    ):Container();
   }
 
   Widget _userVerifiedCard(Size size, UserProvider userProvider) {

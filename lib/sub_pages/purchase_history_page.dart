@@ -1,7 +1,5 @@
 import 'package:bafdo/custom_widget/custom_appbar.dart';
-import 'package:bafdo/provider/auth_provider.dart';
 import 'package:bafdo/provider/public_provider.dart';
-import 'package:bafdo/provider/user_provider.dart';
 import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
 import 'package:flutter/material.dart';

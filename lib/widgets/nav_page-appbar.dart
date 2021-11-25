@@ -134,10 +134,10 @@ class _NavPageAppBarState extends State<NavPageAppBar> {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => NotificationPage()));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) => NotificationPage()));
                       },
                       child: CircleAvatar(
                         backgroundColor: Colors.white,
@@ -159,7 +159,7 @@ class _NavPageAppBarState extends State<NavPageAppBar> {
                           shape: BoxShape.circle,
                         ),
                         child: Text(
-                          '3',
+                          '0',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: size.width * .02),

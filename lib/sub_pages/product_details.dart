@@ -9,7 +9,9 @@ import 'package:bafdo/sub_pages/product_search_page.dart';
 import 'package:bafdo/variables/colors.dart';
 import 'package:bafdo/widgets/gradient_button.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro_nullsafety/carousel_pro_nullsafety.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
@@ -26,13 +28,15 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
-  //SharedPreferences? preferences;
   int _counter=0;
   bool thumbValue = false;
   int reviewCount=1;
   int _currentIndex = 1;
   bool wishListSelect = false;
   bool _isLoading = false;
+  int quantity=1;
+  String _selectedColor='',_selectedSize='';
+  List<String> clrList=['Blue','Green','Yellow','Red','Black','Orange'];
 
   Future<void> fetch(PublicProvider publicProvider)async {
       setState(()=> _isLoading=true);
@@ -46,7 +50,7 @@ class _ProductDetailState extends State<ProductDetail> {
     final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
     final Size size = MediaQuery.of(context).size;
     if(_counter==0){
-      setState(()=> _counter++);
+      _counter++;
       fetch(publicProvider);
       if(publicProvider.prefUserModel!=null){
         publicProvider.isProductWished(widget.productId!).then((value){
@@ -55,7 +59,6 @@ class _ProductDetailState extends State<ProductDetail> {
           }
         });
       }
-
     }
     return Scaffold(
       appBar: PreferredSize(
@@ -228,12 +231,11 @@ class _ProductDetailState extends State<ProductDetail> {
           ),
         ],
       ):
-      SafeArea(child: _bodyUI(context,publicProvider)),
+      SafeArea(child: _bodyUI(context,publicProvider,size)),
     );
   }
 
-  Widget _bodyUI(BuildContext context,PublicProvider publicProvider) {
-    Size size = MediaQuery.of(context).size;
+  Widget _bodyUI(BuildContext context,PublicProvider publicProvider,Size size) {
     return Container(
       width: size.width,
       height: size.height,
@@ -352,8 +354,10 @@ class _ProductDetailState extends State<ProductDetail> {
                                           color: Color(0xffF7F5F5),
                                           borderRadius: BorderRadius.circular(16),
                                         ),
-                                        child: Image.network(
-                                          'https://bafdo.com/public/${item.path}',
+                                        child: CachedNetworkImage(
+                                          imageUrl: 'https://bafdo.com/public/${item.path}',
+                                          placeholder: (context, url) => CupertinoActivityIndicator(),
+                                          errorWidget: (context, url, error) => Icon(Icons.error),
                                           fit: BoxFit.fill,
                                         ),
                                       );
@@ -367,6 +371,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       ),
                     ),
                     SizedBox(height: size.width * .02),
+
                     ///Product Name
                     Container(
                       width: size.width,
@@ -397,7 +402,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                   children: [
                                     ///Price
                                     Text(
-                                      '${publicProvider.productDetails!.data![0].priceHighLow??''}',
+                                      '${publicProvider.productDetails!.data![0].mainPrice??''}',
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
                                           fontFamily: 'taviraj',
@@ -477,14 +482,12 @@ class _ProductDetailState extends State<ProductDetail> {
                       ),
                     ),
                     SizedBox(height: size.width * .04),
+
+                    ///Product Size, Color
                     Container(
                       width: size.width,
                       color: Color(0xffF1F9F9),
-                      padding: EdgeInsets.fromLTRB(
-                          size.width * .045,
-                          size.width * .015,
-                          size.width * .045,
-                          size.width * .015),
+                      padding: EdgeInsets.all(size.width * .045),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -493,29 +496,20 @@ class _ProductDetailState extends State<ProductDetail> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Color, Size, Packaging',
+                                'Color, Size',
                                 style: TextStyle(
                                     fontFamily: 'taviraj',
                                     color: ColorsVariables.textColor,
                                     fontStyle: FontStyle.normal,
                                     fontSize: size.width * .04),
                               ),
-
-                              // Text(
-                              //   'Grey, M, Dhaka BD',
-                              //   style: TextStyle(
-                              //       fontFamily: 'poppins',
-                              //       color: Colors.grey,
-                              //       fontStyle: FontStyle.normal,
-                              //       fontSize: size.width * .04),
-                              // )
                             ],
                           ),
                           InkWell(
                             onTap: () {
                               showDialog(
                                 context: context,
-                                builder: (_) => ProductDetailsDialog(),
+                                builder: (_) => _showColorSizeDialog(publicProvider,size),
                               );
                             },
                             child: Text(
@@ -531,11 +525,10 @@ class _ProductDetailState extends State<ProductDetail> {
                         ],
                       ),
                     ),
-                
                     SizedBox(height: size.width * .04),
 
                     ///Description
-                    Container(
+                    publicProvider.productDetails!.data![0].description!=null?Container(
                       width: size.width,
                       color: Color(0xffF1F9F9),
                       padding: EdgeInsets.all(
@@ -549,158 +542,13 @@ class _ProductDetailState extends State<ProductDetail> {
                             fontSize: size.width*.04,
                             fontFamily:'taviraj'
                           )),
-                          Html(
-                            data: publicProvider.productDetails!.data![0].description??'',
-                          ),
+                          Html(data: publicProvider.productDetails!.data![0].description??''),
                         ],
                       ),
-                    ),
+                    ):Container(),
                     SizedBox(height: size.width * .04),
-                    // Container(
-                    //   width: size.width,
-                    //   color: Color(0xffF1F9F9),
-                    //   padding: EdgeInsets.fromLTRB(
-                    //       size.width * .045,
-                    //       size.width * .045,
-                    //       size.width * .045,
-                    //       size.width * .045),
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       Text(
-                    //         'Frequently Bought Together',
-                    //         style: TextStyle(
-                    //             fontFamily: 'taviraj',
-                    //             color: ColorsVariables.textColor,
-                    //             fontStyle: FontStyle.normal,
-                    //             fontWeight: FontWeight.bold,
-                    //             fontSize: size.width * .035),
-                    //       ),
-                    //       SizedBox(height: size.width * .03),
-                    //       Container(
-                    //         height: size.width * .6,
-                    //         child: ListView.separated(
-                    //           separatorBuilder: (context, index) {
-                    //             return SizedBox(width: size.width * .02);
-                    //           },
-                    //           scrollDirection: Axis.horizontal,
-                    //           itemCount: 5,
-                    //           itemBuilder: (context, index) {
-                    //             return FeatureCategoryListTile();
-                    //           },
-                    //         ),
-                    //       ),
-                    //       Row(children: [
-                    //         Image.asset(
-                    //             'assets/app_icon/body_icon/pink_sign.png'),
-                    //         Text(
-                    //           ' This item:',
-                    //           style: TextStyle(
-                    //               fontFamily: 'taviraj',
-                    //               color: ColorsVariables.textColor,
-                    //               fontStyle: FontStyle.normal,
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: size.width * .035),
-                    //         ),
-                    //         Text(
-                    //           'Assorted Sizes, 100 ct, packaging 5tk',
-                    //           style: TextStyle(
-                    //               fontFamily: 'taviraj',
-                    //               color: ColorsVariables.textColor,
-                    //               fontSize: size.width * .035),
-                    //         )
-                    //       ]),
-                    //       Row(children: [
-                    //         Image.asset(
-                    //             'assets/app_icon/body_icon/pink_sign.png'),
-                    //         Text(
-                    //           ' This item:',
-                    //           style: TextStyle(
-                    //               fontFamily: 'taviraj',
-                    //               color: ColorsVariables.textColor,
-                    //               fontStyle: FontStyle.normal,
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: size.width * .035),
-                    //         ),
-                    //         Text(
-                    //           'Assorted Sizes, 100 ct, packaging 5tk',
-                    //           style: TextStyle(
-                    //               fontFamily: 'taviraj',
-                    //               color: ColorsVariables.textColor,
-                    //               fontSize: size.width * .035),
-                    //         )
-                    //       ]),
-                    //       Padding(
-                    //         padding: const EdgeInsets.only(top: 20, bottom: 20),
-                    //         child: Row(
-                    //           mainAxisAlignment: MainAxisAlignment.center,
-                    //           children: [
-                    //             Text(
-                    //               'Total Price: ',
-                    //               style: TextStyle(
-                    //                   fontFamily: 'taviraj',
-                    //                   color: ColorsVariables.textColor,
-                    //                   fontSize: size.width * .055),
-                    //             ),
-                    //             Image.asset('assets/app_icon/body_icon/tk.png'),
-                    //             Text(
-                    //               '15',
-                    //               style: TextStyle(
-                    //                   fontFamily: 'taviraj',
-                    //                   color: ColorsVariables.textColor,
-                    //                   fontSize: size.width * .055),
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ),
-                    //       Center(
-                    //         child: GradientButton(
-                    //           onPressed: () {},
-                    //           child: Text(
-                    //             'Add Both To Cart',
-                    //             style: TextStyle(
-                    //                 fontFamily: 'taviraj',
-                    //                 fontWeight: FontWeight.bold,
-                    //                 color: ColorsVariables.splashSkip,
-                    //                 fontStyle: FontStyle.normal,
-                    //                 fontSize: size.width * .045),
-                    //           ),
-                    //           borderRadius: 6.97,
-                    //           height: size.width * .13,
-                    //           width: size.width * .5,
-                    //           gradientColors: [
-                    //             Colors.pink.shade600,
-                    //             Colors.pink.shade400
-                    //           ],
-                    //         ),
-                    //       ),
-                    //       SizedBox(height: size.width * .03),
-                    //       Text(
-                    //         'Related Product',
-                    //         style: TextStyle(
-                    //             fontFamily: 'taviraj',
-                    //             color: ColorsVariables.textColor,
-                    //             fontStyle: FontStyle.normal,
-                    //             fontWeight: FontWeight.bold,
-                    //             fontSize: size.width * .045),
-                    //       ),
-                    //       Container(
-                    //         height: size.width * .6,
-                    //         child: ListView.separated(
-                    //           separatorBuilder: (context, index) {
-                    //             return SizedBox(width: size.width * .02);
-                    //           },
-                    //           scrollDirection: Axis.horizontal,
-                    //           itemCount: 5,
-                    //           itemBuilder: (context, index) {
-                    //             return FeatureCategoryListTile();
-                    //           },
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    //SizedBox(height: size.width * .04),
+
+                    ///Reviews
                     ListView.builder(
                         itemCount: publicProvider.reviews==null?0:publicProvider.reviews!.data!.length==0?0:reviewCount,
                         physics: ClampingScrollPhysics(),
@@ -709,6 +557,8 @@ class _ProductDetailState extends State<ProductDetail> {
                           return getReviewTemplate(context,publicProvider,index);
                         }),
                     SizedBox(height: size.width * .02),
+
+                    ///Related Product
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: Align(
@@ -874,8 +724,7 @@ class _ProductDetailState extends State<ProductDetail> {
   }
 
   Widget getReviewTemplate(BuildContext context,PublicProvider publicProvider,int index) {
-    Size size = MediaQuery.of(context).size;
-
+    final Size size = MediaQuery.of(context).size;
     return Container(
       width: size.width,
       color: Color(0xffF1F9F9),
@@ -929,53 +778,11 @@ class _ProductDetailState extends State<ProductDetail> {
                   ),
                 ],
               ),
-              // SizedBox(
-              //   width: size.width * .3,
-              // ),
-              // ElevatedButton(
-              //   onPressed: () {
-              //
-              //   },
-              //   style: ButtonStyle(
-              //       elevation: MaterialStateProperty.all<double>(0),
-              //       backgroundColor:
-              //       MaterialStateProperty.all<Color>(Color(0xffF6DBE5)),
-              //       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              //           RoundedRectangleBorder(
-              //               borderRadius: BorderRadius.circular(size.width * .3),
-              //               side: BorderSide(
-              //                 color: Color(0xffF6DBE5),
-              //               )))),
-              //   child: Row(
-              //     crossAxisAlignment: CrossAxisAlignment.center,
-              //     children: [
-              //
-              //       Icon(Icons.thumb_up_alt_outlined,color: ColorsVariables.pinkColor,size: 15,),
-              //       // Image.asset(
-              //       //   'assets/app_icon/body_icon/thumb_up.png',
-              //       // ),
-              //       SizedBox(
-              //         width: size.width * .01,
-              //       ),
-              //       Text(
-              //         'Helpful (6)',
-              //         style: TextStyle(
-              //           color: Colors.black,
-              //           fontSize: size.width * .025,
-              //           fontWeight: FontWeight.w500,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // )
             ],
           ),
-          SizedBox(
-            height: size.width * .01,
-          ),
+          SizedBox(height: size.width * .01),
           Row(
             children: [
-
               publicProvider.reviews!.data![index].rating==1?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
                   :publicProvider.reviews!.data![index].rating==2?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
                   :publicProvider.reviews!.data![index].rating==3?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
@@ -1000,45 +807,11 @@ class _ProductDetailState extends State<ProductDetail> {
               publicProvider.reviews!.data![index].rating==5?Icon(Icons.star, size: size.width * .032, color: Color(0xffC31A65))
                   :publicProvider.reviews!.data![index].rating==4.5?Icon(Icons.star_half,size: size.width * .032, color: Color(0xffC31A65))
                   :Icon(Icons.star_border,size: size.width * .032,),
-
-
-
-
-              // Text(
-              //   '  (101)',
-              //   style: TextStyle(
-              //       fontFamily: 'taviraj',
-              //       color: Colors.grey,
-              //       fontStyle: FontStyle.normal,
-              //       fontWeight: FontWeight.bold,
-              //       fontSize: size.width * .03),
-              // ),
             ],
           ),
-          SizedBox(
-            height: size.width * .02,
-          ),
+          SizedBox(height: size.width * .02),
           Text(
               publicProvider.reviews!.data![index].comment!),
-          // Container(
-          //   height: size.width * .3,
-          //   width: size.width,
-          //   child: ListView.builder(
-          //       scrollDirection: Axis.horizontal,
-          //       itemCount: 6,
-          //       itemBuilder: (context, index) {
-          //         return Container(
-          //             height: size.width * .15,
-          //             width: size.width * .3,
-          //             child: Padding(
-          //               padding: const EdgeInsets.all(8.0),
-          //               child: Image.asset(
-          //                 'assets/app_icon/body_icon/joy_stick.png',
-          //                 fit: BoxFit.fill,
-          //               ),
-          //             ));
-          //       }),
-          // ),
           reviewCount!=publicProvider.reviews!.data!.length?Center(
             child: GradientButton(
               onPressed: () {
@@ -1065,4 +838,215 @@ class _ProductDetailState extends State<ProductDetail> {
       ),
     );
   }
+
+  Widget _showColorSizeDialog(PublicProvider publicProvider,Size size)=>StatefulBuilder(
+    builder: (context,setState) {
+      return AlertDialog(
+        scrollable: true,
+        insetPadding: EdgeInsets.all(10.0),
+        content: Column(
+          children:[
+            Align(
+                alignment: Alignment.topRight,
+                child: InkWell(
+                  onTap: ()=> Navigator.pop(context),
+                  child: Icon(
+                    Icons.cancel_outlined,
+                    color: Colors.grey,
+                  ),
+                )),
+
+            ///Product Row
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CachedNetworkImage(
+                  imageUrl: "https://bafdo.com/public/${publicProvider.productDetails!.data![0].thumbnailImage!}",
+                  placeholder: (context, url) => CupertinoActivityIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  fit: BoxFit.cover,
+                  height: 60,
+                  width: 60,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${publicProvider.productDetails!.data![0].mainPrice}',
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color:
+                            ColorsVariables.textColor,
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.bold,
+                            fontSize: size.width * .04),
+                      ),
+                      Text(
+                        publicProvider.productDetails!.data![0].currentStock==0?'Out of Stock':'In Stock',
+                        style: TextStyle(
+                            fontFamily: 'taviraj',
+                            color: Colors.grey,
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.bold,
+                            fontSize: size.width * .035),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            ///Color
+            publicProvider.productDetails!.data![0].colors!.isNotEmpty?Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10,top:20),
+                child: Text(
+                  'Color:',
+                  style: TextStyle(
+                      fontFamily: 'taviraj',
+                      color: ColorsVariables.textColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: size.width * .045),
+                ),
+              ),
+            ):Container(),
+            publicProvider.productDetails!.data![0].colors!.isNotEmpty?SizedBox(
+              height: size.width*.09,
+              width: size.width,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: publicProvider.productDetails!.data![0].colors!.length,
+                separatorBuilder: (context, index)=>SizedBox(width:  size.width*.04),
+                itemBuilder: (context,index)=>InkWell(
+                  onTap: (){
+                    setState(()=>_selectedColor=publicProvider.productDetails!.data![0].colors![index]);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(horizontal:size.width*.02,vertical:size.width*.01),
+                    decoration: BoxDecoration(
+                      color: _selectedColor==publicProvider.productDetails!.data![0].colors![index]?ColorsVariables.pinkColor.withOpacity(0.15):Colors.transparent,
+                      borderRadius: BorderRadius.all(Radius.circular(size.width*.03)),
+                      border: Border.all(color:_selectedColor==clrList[index]?Colors.transparent:Colors.grey)
+                    ),
+                    child: Text(clrList[index],style: TextStyle(
+                        fontFamily: 'taviraj',
+                        color: _selectedColor==publicProvider.productDetails!.data![0].colors![index]?ColorsVariables.pinkColor:Colors.grey.shade700,
+                        fontWeight: FontWeight.w500,
+                        fontSize: size.width * .04))
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(size.width*.03)),
+                ),
+              ),
+            ):Container(),
+
+            ///Quantity
+            Padding(
+              padding:
+              const EdgeInsets.only(top: 15, bottom: 10),
+              child: Row(
+                children: [
+                  Text(
+                    'Quantity:',
+                    style: TextStyle(
+                        fontFamily: 'taviraj',
+                        color: ColorsVariables.textColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: size.width * .045),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          if (quantity > 1) {
+                            quantity = quantity - 1;
+                          }
+                        });
+                      },
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.grey.shade200,
+                        child: Image.asset(
+                          'assets/app_icon/body_icon/minus.png',
+                          scale: .5,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 25,
+                      right: 25,
+                    ),
+                    child: Text(
+                      '$quantity',
+                      style: TextStyle(
+                          fontFamily: 'taviraj',
+                          color: ColorsVariables.textColor,
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w500,
+                          fontSize: size.width * .05),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: ()=> setState(()=>quantity = quantity + 1),
+                    child: CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.grey.shade200,
+                      child: Image.asset(
+                        'assets/app_icon/body_icon/plus.png',
+                        scale: .5,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+
+            SizedBox(height: 30),
+            Center(
+              child: GradientButton(
+                onPressed: () async{
+                  if(publicProvider.prefUserModel!=null){
+                    showLoadingDialog(context);
+                    publicProvider.addCart(widget.productId!, quantity).then((value)async{
+                      if(value){
+                        await publicProvider.fetchCartList();
+                        showToast('Product added to cart');
+                        closeLoadingDialog(context);
+                        closeLoadingDialog(context);
+                      }else{
+                        closeLoadingDialog(context);
+                        showToast('Stock out');
+                      }
+                    });
+                  }else showToast('Please Login First');
+                },
+                child: Text(
+                  'Add To Cart',
+                  style: TextStyle(
+                      fontFamily: 'taviraj',
+                      fontWeight: FontWeight.bold,
+                      color: ColorsVariables.splashSkip,
+                      fontStyle: FontStyle.normal,
+                      fontSize: size.width * .045),
+                ),
+                borderRadius: 6.97,
+                height: size.width * .13,
+                width: size.width * .5,
+                gradientColors: [
+                  Colors.pink.shade600,
+                  Colors.pink.shade400
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+  );
 }

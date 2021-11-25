@@ -6,8 +6,6 @@ import 'dart:convert';
 
 ProductDetails productDetailsFromJson(String str) => ProductDetails.fromJson(json.decode(str));
 
-String productDetailsToJson(ProductDetails data) => json.encode(data.toJson());
-
 class ProductDetails {
   ProductDetails({
     this.data,
@@ -15,25 +13,19 @@ class ProductDetails {
     this.status,
   });
 
-  List<Datum>? data;
+  List<ProductDetailsModel>? data;
   bool? success;
   int? status;
 
   factory ProductDetails.fromJson(Map<String, dynamic> json) => ProductDetails(
-    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+    data: List<ProductDetailsModel>.from(json["data"].map((x) => ProductDetailsModel.fromJson(x))),
     success: json["success"],
     status: json["status"],
   );
-
-  Map<String, dynamic> toJson() => {
-    "data": List<dynamic>.from(data!.map((x) => x.toJson())),
-    "success": success,
-    "status": status,
-  };
 }
 
-class Datum {
-  Datum({
+class ProductDetailsModel {
+  ProductDetailsModel({
     this.id,
     this.name,
     this.addedBy,
@@ -87,7 +79,7 @@ class Datum {
   String? description;
   String? link;
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory ProductDetailsModel.fromJson(Map<String, dynamic> json) => ProductDetailsModel(
     id: json["id"],
     name: json["name"],
     addedBy: json["added_by"],
@@ -114,34 +106,6 @@ class Datum {
     description: json["description"],
     link: json["link"],
   );
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "added_by": addedBy,
-    "seller_id": sellerId,
-    "shop_id": shopId,
-    "shop_name": shopName,
-    "shop_logo": shopLogo,
-    "photos": List<dynamic>.from(photos!.map((x) => x.toJson())),
-    "thumbnail_image": thumbnailImage,
-    "tags": List<dynamic>.from(tags!.map((x) => x)),
-    "price_high_low": priceHighLow,
-    "choice_options": List<dynamic>.from(choiceOptions!.map((x) => x.toJson())),
-    "colors": List<dynamic>.from(colors!.map((x) => x)),
-    "has_discount": hasDiscount,
-    "stroked_price": strokedPrice,
-    "main_price": mainPrice,
-    "calculable_price": calculablePrice,
-    "currency_symbol": currencySymbol,
-    "current_stock": currentStock,
-    "unit": unit,
-    "rating": rating,
-    "rating_count": ratingCount,
-    "earn_point": earnPoint,
-    "description": description,
-    "link": link,
-  };
 }
 
 class ChoiceOption {
@@ -160,12 +124,6 @@ class ChoiceOption {
     title: json["title"],
     options: List<String>.from(json["options"].map((x) => x)),
   );
-
-  Map<String, dynamic> toJson() => {
-    "name": name,
-    "title": title,
-    "options": List<dynamic>.from(options!.map((x) => x)),
-  };
 }
 
 class Photo {
@@ -182,8 +140,4 @@ class Photo {
     path: json["path"],
   );
 
-  Map<String, dynamic> toJson() => {
-    "variant": variant,
-    "path": path,
-  };
 }

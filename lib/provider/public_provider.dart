@@ -90,6 +90,7 @@ class PublicProvider extends AuthProvider{
 
   Future<ProductDetails?> getProductDetails(int productId)async{
     try{
+      print(productId);
       String url = "https://bafdo.com/api/v2/products/$productId";
       var response = await http.get(Uri.parse(url));
       ProductDetails productDetails = productDetailsFromJson(response.body);
@@ -457,10 +458,20 @@ class PublicProvider extends AuthProvider{
 
   Future<void> getFilteredProducts({name = "",sortKey = "",page = 1,
         brands = "",categories = "",min = "",max = ""})async{
-
-    final String url = "https://bafdo.com/api/v2/products/search" +
-        "?page=$page&name=$name&sort_key=$sortKey&brands=$brands&categories=$categories&min=$min&max=$max";
-    final response = await http.get(Uri.parse(url));
+    try{
+      final String url = "https://bafdo.com/api/v2/products/search" +
+          "?page=$page&name=$name&sort_key=$sortKey&brands=$brands&categories=$categories&min=$min&max=$max";
+      final response = await http.get(Uri.parse(url));
+      if(response.statusCode==200){
+        _searchProducts = productListFromJson(response.body);
+        notifyListeners();
+      }
+    }on SocketException{
+      showToast("No internet connection!");
+    }
+    catch(error){
+      showToast(error.toString());
+    }
   }
 
   Future<bool> createNewOrder(String ownerId, String paymentMethod) async {

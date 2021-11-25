@@ -30,7 +30,7 @@ class _HomeNavState extends State<HomeNav> {
   TextEditingController _searchController = TextEditingController();
 
   Future<void> _fetch(PublicProvider publicProvider)async{
-    setState(()=> _counter++);
+    _counter++;
     if(publicProvider.prefUserModel==null) await publicProvider.getPrefUser();
     if(publicProvider.sliderList.isEmpty) await publicProvider.fetchSliders();
     if(publicProvider.categories==null) await publicProvider.fetchSpecialCategories();

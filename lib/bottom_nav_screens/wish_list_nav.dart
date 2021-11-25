@@ -3,13 +3,14 @@ import 'package:bafdo/provider/public_provider.dart';
 import 'package:bafdo/widgets/drawer_nav_page.dart';
 import 'package:bafdo/widgets/nav_page-appbar.dart';
 import 'package:bafdo/widgets/notification_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:bafdo/sub_pages/product_details.dart';
 import 'package:flutter/material.dart';
 
 class WishListNav extends StatefulWidget {
   const WishListNav({Key? key}) : super(key: key);
-
   @override
   _WishListNavState createState() => _WishListNavState();
 }
@@ -18,11 +19,10 @@ class _WishListNavState extends State<WishListNav>{
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   int _counter=0;
   Future<void> _fetch(PublicProvider publicProvider)async{
-    setState(() => _counter++);
+    _counter++;
     if(publicProvider.prefUserModel!=null){
       if(publicProvider.wishlistModel==null) await publicProvider.fetchWishList();
     }else showToast('Please Login First');
-
   }
 
   @override
@@ -67,6 +67,7 @@ class _WishListNavState extends State<WishListNav>{
                                      MaterialPageRoute(builder: (context) => ProductDetail(productId: publicProvider.wishlistModel!.data![index].product!.id,)));
                                },
                                child: Row(
+                                 crossAxisAlignment: CrossAxisAlignment.start,
                                  children: [
                                    ///Image
                                    Container(
@@ -76,10 +77,14 @@ class _WishListNavState extends State<WishListNav>{
                                        color: Colors.white,
                                        borderRadius: BorderRadius.circular(9.5),
                                      ),
-                                     padding: EdgeInsets.all(size.width * .04),
-                                     child: Image.network(
-                                       'https://bafdo.com/public/${publicProvider.wishlistModel!.data![index].product!.thumbnailImage!}',
-                                       fit: BoxFit.fill,
+                                     child: ClipRRect(
+                                       borderRadius: BorderRadius.all(Radius.circular(5)),
+                                       child: CachedNetworkImage(
+                                           imageUrl: "https://bafdo.com/public/${publicProvider.wishlistModel!.data![index].product!.thumbnailImage!}",
+                                           placeholder: (context, url) => CupertinoActivityIndicator(),
+                                           errorWidget: (context, url, error) => Icon(Icons.error),
+                                           fit: BoxFit.cover
+                                       ),
                                      ),
                                    ),
 
@@ -87,6 +92,8 @@ class _WishListNavState extends State<WishListNav>{
                                        child: Container(
                                          padding: EdgeInsets.fromLTRB(size.width * .03, 0, 0, 0),
                                          child: Column(
+                                           crossAxisAlignment: CrossAxisAlignment.start,
+                                           mainAxisAlignment: MainAxisAlignment.start,
                                            children: [
                                              Text(
                                                'Title: ${publicProvider.wishlistModel!.data![index].product!.name!}',
@@ -98,31 +105,6 @@ class _WishListNavState extends State<WishListNav>{
                                                    fontSize: size.width * .037),
                                              ),
                                              SizedBox(height: size.width * .01),
-                                             // Row(
-                                             //   children: [
-                                             //     Text(
-                                             //       'Category: ',
-                                             //       style: TextStyle(
-                                             //           fontFamily: 'taviraj',
-                                             //           fontWeight: FontWeight.w500,
-                                             //           color: ColorsVariables.pinkCategoryTextColor,
-                                             //           fontStyle: FontStyle.normal,
-                                             //           fontSize: size.width * .035),
-                                             //     ),
-                                             //     Text(
-                                             //       'Computer & Acce...',
-                                             //       style: TextStyle(
-                                             //           fontFamily: 'taviraj',
-                                             //           fontWeight: FontWeight.w500,
-                                             //           color: ColorsVariables.pinkCategoryTextColor,
-                                             //           fontStyle: FontStyle.normal,
-                                             //           fontSize: size.width * .035),
-                                             //     ),
-                                             //   ],
-                                             // ),
-                                             // SizedBox(
-                                             //   height: size.width * .01,
-                                             // ),
                                              publicProvider.wishlistModel!=null?
                                              _starBuilder(publicProvider.wishlistModel!.data![index].product!.rating, size)
                                                  :Container(),

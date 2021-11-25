@@ -353,6 +353,7 @@ class _OTPPageState extends State<OTPPage> {
         });
       }else{
         closeLoadingDialog(context);
+        closeLoadingDialog(context);
         showToast(authProvider!.signupModel.message);
       }
     });

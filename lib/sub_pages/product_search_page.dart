@@ -57,9 +57,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
         preferredSize: Size.fromHeight(70.0),
         child: CustomAppBar(
           leading: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
+              onTap: ()=> Navigator.pop(context),
               child: Image.asset('assets/app_icon/app_bar_icon/arrow_left.png')),
           trailing1: InkWell(
             onTap: () {
